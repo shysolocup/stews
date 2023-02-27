@@ -1,5 +1,5 @@
 {
-    "name": "rego",
+    "name": "rego.js",
     "version": "1.0.0",
     "author": "nutmeg",
     "description": "A JavaScript package meant to make storing info easier by combining elements of arrays, objects, maps and sets",
