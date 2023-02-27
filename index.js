@@ -27,6 +27,10 @@ class Rego {
             this.insides = new Set();
             this.type = "set";
         }
+        else if (object instanceof String) {
+            if (object == "set" || object == "array") { this.insides = new Set(); this.type = "set"; }
+            else if (object == "map" || object == "object") { this.insides = new Map(); this.type = "map"; }
+        }
         else if (object instanceof Array) {
             this.insides = new Set(object);
             this.type = "set";
