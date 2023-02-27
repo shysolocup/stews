@@ -1,0 +1,26 @@
+{
+    "name": "rego",
+    "version": "1.0.0",
+    "author": "nutmeg",
+    "description": "A JavaScript package meant to make storing info easier.",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/nuttmegg/rego.git"
+    },
+    "bugs": {
+        "url": "https://github.com/nuttmegg/rego/issues"
+    },
+    "keywords": [
+        "rego",
+        "array",
+        "arrays",
+        "object",
+        "objects",
+        "set",
+        "sets",
+        "map",
+        "maps",
+    ],
+    "homepage": "https://github.com/nuttmegg/rego",
+    "main": "./index.js"
+}
