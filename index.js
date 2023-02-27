@@ -28,11 +28,11 @@ class Rego {
             this.type = "set";
         }
         else if (typeof object == "string") {
-            if (object == "set" || object == "array") {
+            if (object.toLowerCase() == "set" || object.toLowerCase() == "array") {
                 this.insides = new Set();
                 this.type = "set";
             }
-            else if (object == "map" || object == "object") {
+            else if (object.toLowerCase() == "map" || object.toLowerCase() == "object") {
                 this.insides = new Map();
                 this.type = "map";
             }
