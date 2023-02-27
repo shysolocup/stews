@@ -5,6 +5,8 @@ It takes a more index based style similar to that of arrays while still maintain
 ## Usage
 here are some of the things you can do with regos:
 ```js
+const { Rego } = require('rego');
+
 let obj = new Rego( {"a": 1, "b": 2, "c": 3, "d": 4} );
 let arr = new Rego( [1, 2, 3, 4] );
 // it also works for sets and maps
