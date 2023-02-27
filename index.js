@@ -215,3 +215,5 @@ class Rego {
         this.random = new Random(this.insides, this.type);
     }
 }
+
+module.exports = { Rego, Random }
