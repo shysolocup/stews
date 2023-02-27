@@ -21,7 +21,7 @@ class Random {
 }
 
 
-class Rego {
+class Stew {
     constructor(object) {
         if (!object) {
             this.insides = new Set();
@@ -247,4 +247,4 @@ class Rego {
     }
 }
 
-module.exports = { Rego, Random }
+module.exports = { Stew, Random }
