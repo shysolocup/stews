@@ -172,6 +172,8 @@ class Rego {
     joinKeys(joiner=",") {
     	return Array.from(this.insides.keys()).join(joiner);
     }
+    join(joiner=",") { return this.joinKeys(joiner); }
+    
     joinValues(joiner=",") {
     	return Array.from(this.insides.values()).join(joiner);
     }
