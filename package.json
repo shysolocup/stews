@@ -14,8 +14,7 @@
         "rego",
         "arrays",
         "objects",
-        "sets",
-        "maps"
+        "sets"
     ],
     "homepage": "https://github.com/nuttmegg/rego",
     "main": "./index.js"
