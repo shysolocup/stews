@@ -1,4 +1,4 @@
-# Rego
+# <ins> Rego </ins>
 Rego is a JavaScript package meant to make storing info easier. Regos are combinations of arrays, objects, sets and maps.<br>
 It takes a more index based style similar to that of arrays while still maintaining the style of objects, sets and maps.<br>
 <br>
