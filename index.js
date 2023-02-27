@@ -75,6 +75,21 @@ class Rego {
     }
     add(variable, value=null) { return this.push(variable, value); }
     set(variable, value=null) { return this.push(variable, value); }
+
+
+    // unshift
+    unshift(variable, value=null) {
+        if (this.type == "set") {
+            let thing = Array.from(this.insides);
+            thing.unshift(variable);
+            this.insides = new Set(thing);
+        }
+        else if (this.type == "map") {
+            let thing = Array.from(this.entries);
+            thing.unshift( [variable, value] );
+            this.insides = new Map(thing);
+        }
+    }
     
     
     // indexOf
