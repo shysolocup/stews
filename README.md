@@ -1,14 +1,14 @@
-# <ins> Rego </ins>
-Rego is a JavaScript package meant to make storing info easier. Regos are combinations of arrays, objects, sets and maps.<br>
+# <ins> Stew </ins>
+Stew is a JavaScript package meant to make storing info easier. Stews are combinations of arrays, objects, sets and maps.<br>
 It takes a more index based style similar to that of arrays while still maintaining the style of objects, sets and maps.<br>
 <br>
 ## Usage
-here are some of the things you can do with regos:
+here are some of the things you can do with stews:
 ```js
-const { Rego } = require('rego.js');
+const { Stew } = require('stews');
 
-let obj = new Rego( {"a": 1, "b": 2, "c": 3, "d": 4} );
-let arr = new Rego( [1, 2, 3, 4] );
+let obj = new Stew( {"a": 1, "b": 2, "c": 3, "d": 4} );
+let arr = new Stew( [1, 2, 3, 4] );
 // it also works for sets and maps
 
 obj.indexOf("a"); // 0
@@ -34,8 +34,8 @@ obj.includes("c"); // false
 
 ## Installation
 ```console
-npm i rego.js
+npm i stews
 ```
 ```console
-npm i nuttmegg/rego
+npm i nuttmegg/stew
 ```
