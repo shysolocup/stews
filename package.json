@@ -1,21 +1,21 @@
 {
-    "name": "rego.js",
+    "name": "stews",
     "version": "1.0.0",
     "author": "nutmeg",
     "description": "A JavaScript package meant to make storing info easier by combining elements of arrays, objects, maps and sets",
     "repository": {
         "type": "git",
-        "url": "https://github.com/nuttmegg/rego.git"
+        "url": "https://github.com/nuttmegg/stew.git"
     },
     "bugs": {
-        "url": "https://github.com/nuttmegg/rego/issues"
+        "url": "https://github.com/nuttmegg/stew/issues"
     },
     "keywords": [
-        "rego",
+        "stew",
         "arrays",
         "objects",
         "sets"
     ],
-    "homepage": "https://github.com/nuttmegg/rego",
+    "homepage": "https://github.com/nuttmegg/stew",
     "main": "./index.js"
 }
