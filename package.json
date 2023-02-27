@@ -12,6 +12,7 @@
     },
     "keywords": [
         "rego",
+        "rego.js",
         "array",
         "arrays",
         "object",
@@ -19,7 +20,7 @@
         "set",
         "sets",
         "map",
-        "maps",
+        "maps"
     ],
     "homepage": "https://github.com/nuttmegg/rego",
     "main": "./index.js"
