@@ -15,7 +15,7 @@ class Random {
     choice() {
         let index = Math.floor(Math.random() * (Array.from(this.insides.entries()).length))
     	let thing = Array.from(this.insides.entries()) [index];
-    	if (this.type == "set") return thing[0];
+    	if (this.type == "set") return { value: thing[0], index: index };
     	else if (this.type == "map") return { key: thing[0], value: thing[1], index: index };
     }
 }
