@@ -34,7 +34,7 @@ obj.includes("c"); // false
 
 ## Installation
 ```console
-npm i rego
+npm i rego.js
 ```
 ```console
 npm i nuttmegg/rego
