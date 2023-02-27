@@ -77,8 +77,8 @@ class Rego {
     set(variable, value=null) { return this.push(variable, value); }
 
 
-    // unshift
-    unshift(variable, value=null) {
+    // pull
+    pull(variable, value=null) {
         if (this.type == "set") {
             let thing = Array.from(this.insides);
             thing.unshift(variable);
@@ -90,6 +90,7 @@ class Rego {
             this.insides = new Map(thing);
         }
     }
+    unshift(variable, value=null) { return this.pull(variable, value); }
     
     
     // indexOf
