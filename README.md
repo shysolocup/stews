@@ -20,7 +20,7 @@ obj.pair(); // {a: 1, b: 2, c: 3, d: 4}
 
 obj.delete(3); // deletes d (you can also just do obj.delete("d")) 
 
-obj.pop(); // deletes one entry at the end of the rego
+obj.pop(); // deletes one entry at the end of the stew
 
 obj.list(); // [ [ 'a', 1 ], [ 'b', 2 ] ]
 
