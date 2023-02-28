@@ -15,7 +15,8 @@
         "soups",
         "arrays",
         "objects",
-        "sets"
+        "sets",
+        "maps"
     ],
     "homepage": "https://github.com/nuttmegg/stews",
     "main": "./index.js"
