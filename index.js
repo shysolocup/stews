@@ -103,18 +103,18 @@ class Stew {
     fetch(entry) {
         if (this.type == "map") {
             if (typeof entry == "string") {
-                return { key: entry, value: this.insides.get(entry), index: Array.from(this.insides.keys()).indexOf(entry) };
+                return this.insides.get(entry);
             }
             else if (typeof entry == "number") {
-                return { key: Array.from(this.insides.keys())[entry], value: Array.from(this.insides.values())[entry], index: entry };
+                return Array.from(this.insides.values())[entry];
             }
         }
         else if (this.type == "set") {
             if (typeof entry == "string") {
-                return { value: entry, index: Array.from(this.insides).indexOf(entry) };
+                return Array.from(this.insides.values())[Array.from(this.insides.values()).indexOf(entry)]
             }
             else if (typeof entry == "number") {
-                return { value: Array.from(this.insides)[entry], index: entry };
+                return Array.from(this.insides.values())[entry];
             }
         }
     }
