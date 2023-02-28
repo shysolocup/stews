@@ -1,22 +1,256 @@
-class Random {
-    constructor(insides, type) {
-        this.insides = insides;
-        this.type = type;
+/* :: Stews :: Version 1.1.0 | 02/28/23 :: */
+
+class Soup {
+    constructor(object) {
+        if (!object) {
+            this.insides = [];
+            this.type = "array";
+        }
+        else if (typeof object == "string") {
+            if (object.toLowerCase() == "set" || object.toLowerCase() == "array") {
+                this.insides = [];
+                this.type = "array";
+            }
+            else if (object.toLowerCase() == "map" || object.toLowerCase() == "object") {
+                this.insides = {};
+                this.type = "object";
+            }
+        }
+        else if (object instanceof Array) {
+            this.insides = object;
+            this.type = "array";
+        }
+        else if (Object.keys(object)[0]) {
+            this.insides = object;
+            this.type = "object";
+        }
+        else if (object instanceof Set) {
+            this.insides = Array.from(object);
+            this.type = "array";
+        }
+        else if (object instanceof Map) {
+            this.insides = Object.fromEntries(object.entries());
+            this.type = "object";
+        }
+        else {
+            return null;
+        }
     }
-    
-    key() {
-        return Array.from(this.insides.keys()) [Math.floor(Math.random() * (Array.from(this.insides.keys()).length))];
+
+
+    // delete
+    delete(entry) {
+        if (typeof entry == "string") {
+            if (this.type == "object") delete this.insides[entry];
+            else if (this.type == "array") delete this.insides[this.insides.indexOf(entry)];
+        }
+        else if (typeof entry == "number") {
+            if (this.type == "object") delete this.insides[Object.keys(this.insides)[entry]];
+            else if (this.type == "array") delete this.insides[entry];
+        }
+        if (this.type == "array") return this.insides = this.insides.filter( (entry) => { return entry != null; } )
     }
-    
-    value() {
-        return Array.from(this.insides.values()) [Math.floor(Math.random() * (Array.from(this.insides.values()).length))];
+    remove(entry) { return this.delete(entry); }
+
+
+    // push
+    push(entry, value=null) {
+        if (this.type == "object") return this.insides[entry] = value;
+        else if (this.type == "array") return this.insides.push(entry);
     }
+    add(entry) { return this.push(entry); }
     
-    choice() {
-        let index = Math.floor(Math.random() * (Array.from(this.insides.entries()).length))
-    	let thing = Array.from(this.insides.entries()) [index];
-    	if (this.type == "set") return { value: thing[0], index: index };
-    	else if (this.type == "map") return { key: thing[0], value: thing[1], index: index };
+
+    // set
+    set(entry, set_to=null) {
+        if (typeof entry == "string") {
+            if (this.type == "object") return this.insides[entry] = set_to;
+            else if (this.type == "array") return this.insides[this.insides.indexOf(entry)] = set_to;
+        }
+        else if (typeof entry == "number") {
+            if (this.type == "object") return this.insides[Object.keys(this.insides)[entry]] = set_to;
+            else if (this.type == "array") return this.insides[entry] = set_to;
+        }
+    }
+
+
+    // pull
+    pull(entry, value=null) {
+        if (this.type == "object") {
+            let thing = Object.entries(this.insides);
+            thing.unshift( [entry, value] );
+            return this.insides = Object.fromEntries(thing);
+        }
+        else if (this.type == "array") return this.insides.unshift(entry);
+    }
+    unshift(entry) { return this.pull(entry); }
+
+
+    // pop
+    pop() {
+        if (this.type == "object") {
+            let thing = Object.entries(this.insides);
+            thing.pop();
+            return this.insides = Object.fromEntries(thing);
+        }
+        else if (this.type == "array") return this.insides.pop();
+    }
+
+
+    // shift
+    shift() {
+        if (this.type == "object") {
+            let thing = Object.entries(this.insides);
+            thing.shift();
+            return this.insides = Object.fromEntries(thing);
+        }
+        else if (this.type == "array") return this.insides.shift();
+    }
+
+
+    // list
+    list() {
+        return Array.from(this.insides);
+    }
+    toList() { return this.list(); }
+    array() { return this.list(); }
+    toArray() { return this.list(); }
+    arrayify() { return this.list(); }
+
+
+    // pair
+    pair() {
+        return Object.fromEntries(Object.entries(this.insides));
+    }
+    toPair() { return this.pair(); }
+    object() { return this.pair(); }
+    toObject() { return this.pair(); }
+    objectify() { return this.pair(); }
+
+
+    // stir
+    stir() {
+        return this.insides;
+    }
+    merge() { return this.stir(); }
+
+
+    // indexOf
+    indexOf(entry) {
+        if (this.type == "object") return Object.keys(this.insides).indexOf(entry);
+        else if (this.type == "array") return this.insides.indexOf(entry);
+    }
+
+
+    // length
+    get length() {
+        if (this.type == "object") return Object.keys(this.insides).length;
+        else if (this.type == "array") return this.insides.length;
+    }
+    get size() { return this.length; }
+
+
+    // fetch
+    fetch(entry) {
+        if (typeof entry == "string") {
+            if (this.type == "object") return this.insides[entry];
+            else if (this.type == "array") return this.insides[this.insides.indexOf(entry)];
+        }
+        else if (typeof entry == "number") {
+            if (this.type == "object") return this.insides[Object.keys(this.insides)[entry]];
+            else if (this.type == "array") return this.insides[entry];
+        }
+    }
+    get(entry) { return this.fetch(entry); }
+    find(entry) { return this.fetch(entry); }
+
+
+    // forEach
+    forEach(func) {
+        for (let i = 0; i < this.length; i++) {
+            if (this.type == "object") {
+                func( Object.keys(this.insides)[i], Object.values(this.insides)[i], i );
+            }
+            else if (this.type == "array") {
+                func( this.insides[i], i );
+            }
+        }
+    }
+
+
+    // toString
+    toString() {
+        return this.insides.toString();
+    }
+
+
+    // join
+    join(joiner=",") {
+        return this.insides.join(joiner);
+    }
+
+
+    // includes
+    includes(entry) {
+        if (this.type == "object") return Object.keys(this.insides).includes(entry);
+        else if (this.type == "array") return this.insides.includes(entry);
+    }
+    contains(entry) { return this.insides.includes(entry); }
+    has(entry) { return this.insides.includes(entry); }
+
+    
+    // clear
+    clear() {
+        if (this.type == "object") return this.insides = {};
+        else if (this.type == "array") return this.insides = [];
+    }
+
+
+    // stringify
+    stringify(replacer=null, indent=null) {
+        return JSON.stringify(this.insides, replacer, indent);
+    }
+
+
+    // parse
+    parse(reviver=null) {
+        return JSON.parse(this.insides, reviver);
+    }
+
+
+    // filter
+    filter(func) {
+        if (this.type == "object") {
+            let entries = Object.entries(this.insides);
+            entries.forEach( (entry, index) => {
+                entries[index] = { key: entry[0], value: entry[1], index: index };
+            });
+
+            let filt = entries.filter( (stuff) => func(stuff));
+
+            filt.forEach( (entry, index) => {
+                filt[index] = [ entry.key, entry.value ];
+            })
+
+            return new Soup(Object.fromEntries(filt));
+        }
+        else if (this.type == "array") {
+            return new Soup(this.insides.filter( (stuff, index) => func(stuff, index)));
+        }
+    }
+
+
+    // keys
+    get keys() {
+        return Object.keys(this.insides);
+    }
+    // values
+    get values() {
+        return Object.values(this.insides);
+    }
+    // entries
+    get entries() {
+        return Object.entries(this.insides);
     }
 }
 
@@ -56,8 +290,6 @@ class Stew {
         else {
             return null;
         }
-        
-        this.RandomHandler();
     }
     
     
@@ -70,11 +302,50 @@ class Stew {
     
     // push
     push(variable, value=null) {
+        if (this.type == "set") {
+            let thing = Array.from(this.insides);
+            thing.push(variable);
+            this.insides = new Set(thing);
+        }
+        else if (this.type == "map") {
+            let thing = Array.from(this.entries);
+            thing.push( [variable, value] );
+            this.insides = new Map(thing);
+        }
+    }
+
+
+    // add
+    add(variable, value=null) {
         if (this.type == "set") return this.insides.add(variable);
         else if (this.type == "map") return this.insides.set(variable, value);
     }
-    add(variable, value=null) { return this.push(variable, value); }
-    set(variable, value=null) { return this.push(variable, value); }
+
+    // set
+    set(entry, value=null) { 
+        if (typeof entry == "string") {
+            if (this.type == "set") {
+                let thing = Array.from(this.insides);
+                thing[thing.indexOf(entry)] = value;
+                return this.insides = new Set(thing);
+            }
+            else if (this.type == "map") {
+                return this.insides.set(entry, value);
+            }
+        }
+        else if (typeof entry == "number") {
+            if (this.type == "set") {
+                let thing = Array.from(this.insides);
+                thing[entry] = value;
+                return this.insides = new Set(thing);
+            }
+            else if (this.type == "map") {
+                let thing = Array.from(this.insides.entries());
+                thing[entry][1] = value;
+                return this.insides = new Map(thing);
+            }
+        }
+    }
 
 
     // pull
@@ -184,6 +455,7 @@ class Stew {
         return Array.from(this.insides);
     }
     toList() { return this.list(); }
+    array() { return this.list(); }
     toArray() { return this.list(); }
     arrayify() { return this.list(); }
     
@@ -193,8 +465,17 @@ class Stew {
         return Object.fromEntries(Array.from(this.insides));
     }
     toPair() { return this.pair(); }
+    object() { return this.pair(); }
     toObject() { return this.pair(); }
     objectify() { return this.pair(); }
+
+    
+    // stir
+    stir() {
+        if (this.type == "map") return Object.fromEntries(Array.from(this.insides));
+        else if (this.type == "set") return Array.from(this.insides);
+    }
+    merge() { return this.stir(); }
     
     
     // join
@@ -237,14 +518,28 @@ class Stew {
     clear() {
         return this.insides.clear();
     }
-    
-    
-    // random
-    random;
-    
-    RandomHandler() {
-        this.random = new Random(this.insides, this.type);
+
+
+    // filter
+    filter(func) {
+        if (this.type == "map") {
+            let entries = Array.from(this.insides.entries());
+            entries.forEach( (entry, index) => {
+                entries[index] = { key: entry[0], value: entry[1], index: index };
+            });
+
+            let filt = entries.filter( (stuff) => func(stuff));
+
+            filt.forEach( (entry, index) => {
+                filt[index] = [ entry.key, entry.value ];
+            })
+
+            return new Stew(new Map(filt));
+        }
+        else if (this.type == "set") {
+            return new Stew(Array.from(this.insides).filter( (stuff, index) => func(stuff, index)));
+        }
     }
 }
 
-module.exports = { Stew, Random }
+module.exports = { Stew, Soup };
