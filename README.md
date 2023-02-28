@@ -1,5 +1,5 @@
 # <ins> Stews </ins>
-Stews is a JavaScript package meant to make storing info easier. It makes two new classes with combinations of elements from arrays, objects, sets and maps.<br>
+Stews is a JavaScript package meant to make storing info easier. It makes two new classes with combinations of elements from arrays, objects, sets and maps.<br><br>
 It takes a more index based style similar to that of arrays while still maintaining the style of objects, sets and maps.<br>
 <br>
 ## Installation
