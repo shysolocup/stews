@@ -37,5 +37,5 @@ obj.includes("c"); // false
 npm i stews
 ```
 ```console
-npm i nuttmegg/stew
+npm i nuttmegg/stews
 ```
