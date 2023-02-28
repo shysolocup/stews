@@ -1,13 +1,17 @@
+---
 # Stews
 <a href="https://www.npmjs.com/package/stews"><img src="https://img.shields.io/npm/v/stews?style=flat&color=red&logo=npm&logoColor=white" alt="version" />
 <a href="https://www.npmjs.com/package/stews"><img src="https://img.shields.io/npm/dt/stews?style=flat&color=green&logo=npm&logoColor=white" alt="downloads" />
 <a href="https://github.com/nuttmegg/stews/discussions"><img src="https://img.shields.io/github/discussions/nuttmegg/stews?logo=wechat&logoColor=white" alt="discussions" />
 <a href="https://github.com/nuttmegg/stews/issues"><img src="https://img.shields.io/github/issues/nuttmegg/stews" alt="issues" />
-<br>
   
 Stews is a JavaScript package meant to make storing info easier. It makes two new classes with combinations of elements from arrays, objects, sets and maps.<br><br>
-It takes a more index based style similar to that of arrays while still maintaining the style of objects, sets and maps.<br>
+It takes a more index based style similar to that of arrays while still maintaining the style of objects, sets and maps.<br><br><br>
+
+---
+
 <br>
+
 ## Installation
 ```console
 npm i stews
