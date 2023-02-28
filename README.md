@@ -25,6 +25,9 @@ soups can have duplicates ( `[1, 1, 1, 1]` correctly outputs as `[1, 1, 1, 1]` )
 > stew.length; // 2
 > stew.indexOf("b"); // 0
 > 
+> stew.get("b"); // 1
+> stew.get(0); // 1
+> 
 > stew.pull("a", 0); // Map(3) { 'a' =>  0, 'b' => 1, 'c' => 2}
 > stew.push("d", 3); // Map(4) { 'a' =>  0, 'b' => 1, 'c' => 2, 'd' => 3}
 >
@@ -40,6 +43,9 @@ soups can have duplicates ( `[1, 1, 1, 1]` correctly outputs as `[1, 1, 1, 1]` )
 > 
 > soup.length; // 2
 > soup.indexOf("b"); // 0
+>
+> soup.get("b"); // 1
+> soup.get(0); // 1
 > 
 > soup.pull("a", 0); // {a: 0, b: 1, c: 2}
 > soup.push("d", 3); // {a: 0, b: 1, c: 2, d: 3}
