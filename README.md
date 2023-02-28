@@ -14,7 +14,7 @@ npm i nuttmegg/stews
 ## Usage
 The two classes included are stews and soups<br><br>
 stews can't have duplicates ( `[1, 1, 1, 1]` incorrectly outputs as just `[1]` )<br>
-soups can have duplicates ( `[1, 1, 1, 1]` correctly outputs as `[1, 1, 1, 1]` )
+soups can have duplicates ( `[1, 1, 1, 1]` correctly outputs as `[1, 1, 1, 1]` )<br><br>
 > ### Stews
 > Class that uses sets and maps (stews DON'T allow duplicates)
 > ```js
