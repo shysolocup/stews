@@ -5,17 +5,18 @@
     "description": "A JavaScript package meant to make storing info easier by combining elements of arrays, objects, maps and sets",
     "repository": {
         "type": "git",
-        "url": "https://github.com/nuttmegg/stew.git"
+        "url": "https://github.com/nuttmegg/stews.git"
     },
     "bugs": {
-        "url": "https://github.com/nuttmegg/stew/issues"
+        "url": "https://github.com/nuttmegg/stews/issues"
     },
     "keywords": [
-        "stew",
+        "stews",
+        "soups",
         "arrays",
         "objects",
         "sets"
     ],
-    "homepage": "https://github.com/nuttmegg/stew",
+    "homepage": "https://github.com/nuttmegg/stews",
     "main": "./index.js"
 }
