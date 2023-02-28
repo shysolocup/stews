@@ -13,8 +13,8 @@ let arr = new Stew( [1, 2, 3, 4] );
 
 obj.indexOf("a"); // 0
 
-obj.fetch("b"); // { key: 'b', value: 2, index: 1 }
-obj.fetch(1); // { key: 'b', value: 2, index: 1 }
+obj.fetch("b"); // 2
+obj.fetch(1); // 2
 
 obj.pair(); // {a: 1, b: 2, c: 3, d: 4}
 
