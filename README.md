@@ -32,8 +32,8 @@ soups can have duplicates ( `[1, 1, 1, 1]` correctly outputs as `[1, 1, 1, 1]` )
 > soup.length; // 2
 > soup.indexOf("b"); // 0
 > 
-> soup.pull("a", 0); // Map(3) { 'a' =>  0, 'b' => 1, 'c' => 2}
-> soup.push("d", 3); // Map(4) { 'a' =>  0, 'b' => 1, 'c' => 2, 'd' => 3}
+> soup.pull("a", 0); // {a: 0, b: 1, c: 2}
+> soup.push("d", 3); // {a: 0, b: 1, c: 2, d: 3}
 >
 > soup.stir(); // {a: 0, b: 1, c: 2, d: 3}
 > ```
