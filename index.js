@@ -2,6 +2,7 @@
 
 class Soup {
     constructor(object, splitter='') {
+        if (object instanceof Function) object = new object();
         if (object instanceof Stew || object instanceof Soup) {
             object = object.insides;
         }
@@ -27,16 +28,20 @@ class Soup {
             this.insides = object;
             this.type = "array";
         }
-        else if (Object.keys(object)[0]) {
-            this.insides = object;
-            this.type = "object";
-        }
         else if (object instanceof Set) {
             this.insides = Array.from(object);
             this.type = "array";
         }
         else if (object instanceof Map) {
             this.insides = Object.fromEntries(object.entries());
+            this.type = "object";
+        }
+        else if (object instanceof String) {
+            this.insides = [];
+            this.type = "array";
+        }
+        else if (object instanceof Object) {
+            this.insides = object;
             this.type = "object";
         }
     }
@@ -350,6 +355,7 @@ class Soup {
 
 class Stew {
     constructor(object, splitter='') {
+        if (object instanceof Function) object = new object();
         if (object instanceof Stew || object instanceof Soup) {
             object = object.insides;
         }
@@ -375,10 +381,6 @@ class Stew {
             this.insides = new Set(object);
             this.type = "set";
         }
-        else if (Object.keys(object)[0]) {
-            this.insides = new Map(Object.entries(object));
-            this.type = "map";
-        }
         else if (object instanceof Map) {
             this.insides = object;
             this.type = "map";
@@ -387,8 +389,13 @@ class Stew {
             this.insides = object;
             this.type = "set";
         }
-        else {
-            return null;
+        else if (object instanceof String) {
+            this.insides = new Set();
+            this.type = "set";
+        }
+        else if (object instanceof Object) {
+            this.insides = new Map(Object.entries(object));
+            this.type = "map";
         }
     }
     
