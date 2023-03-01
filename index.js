@@ -133,6 +133,7 @@ class Soup {
         return this.insides;
     }
     merge() { return this.stir(); }
+    brew() { return this.stir(); }
 
 
     // indexOf
@@ -539,6 +540,7 @@ class Stew {
         else if (this.type == "set") return Array.from(this.insides);
     }
     merge() { return this.stir(); }
+    brew() { return this.stir(); }
     
     
     // join
