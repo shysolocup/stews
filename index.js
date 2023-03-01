@@ -1,7 +1,7 @@
-/* :: Stews :: Version 1.1.2 | 03/01/23 :: */
+/* :: Stews :: Version 1.2.0 | 03/01/23 :: */
 
 class Soup {
-    constructor(object) {
+    constructor(object, splitter='') {
         if (object instanceof Stew || object instanceof Soup) {
             object = object.insides;
         }
@@ -17,6 +17,10 @@ class Soup {
             else if (object.toLowerCase() == "map" || object.toLowerCase() == "object") {
                 this.insides = {};
                 this.type = "object";
+            }
+            else {
+                this.insides = object.split(splitter);
+                this.type = "array";
             }
         }
         else if (object instanceof Array) {
@@ -129,11 +133,11 @@ class Soup {
 
 
     // stir
-    stir() {
+    pour() {
         return this.insides;
     }
-    merge() { return this.stir(); }
-    brew() { return this.stir(); }
+    merge() { return this.pour(); }
+    
 
 
     // indexOf
@@ -287,8 +291,8 @@ class Soup {
     isMap() { return this.isPair(); }
 
 
-    // some
-    some(func) {
+    // swig
+    swig(func) {
         if (this.type == "object") {
             for (let i = 0; i < this.length; i++) {
                 if (func(this.keys[i], this.values[i], i)) return true;
@@ -302,6 +306,7 @@ class Soup {
 
         return false;
     }
+    some(func) { return this.swig(func); }
 
 
     // slice
@@ -313,11 +318,38 @@ class Soup {
             return new Soup(this.insides.slice(start, end));
         }
     }
+
+
+    // sort
+    sort(func=null) {
+        if (this.type == "object") {
+            let thing = Object.entries(this.insides);
+            this.insides = Object.fromEntries( (func) ? thing.sort(func) : thing.sort() );
+            return this;
+        }
+        else if (this.type == "array") {
+            this.insides = (func) ? this.insides.sort(func) : this.insides.sort();
+            return this;
+        }
+    }
+
+
+    // reverse
+    reverse() {
+        if (this.type == "object") {
+            this.insides = Object.fromEntries( Object.entries(this.insides).reverse() );
+            return this;
+        }
+        else if (this.type == "array") {
+            this.insides = this.insides.reverse();
+            return this;
+        }
+    }
+    flip() { return this.reverse(); }
 }
 
-
 class Stew {
-    constructor(object) {
+    constructor(object, splitter='') {
         if (object instanceof Stew || object instanceof Soup) {
             object = object.insides;
         }
@@ -333,6 +365,10 @@ class Stew {
             else if (object.toLowerCase() == "map" || object.toLowerCase() == "object") {
                 this.insides = new Map();
                 this.type = "map";
+            }
+            else {
+                this.insides = new Set(object.split(splitter));
+                this.type = "set";
             }
         }
         else if (object instanceof Array) {
@@ -534,13 +570,12 @@ class Stew {
     objectify() { return this.pair(); }
 
     
-    // stir
-    stir() {
+    // pour
+    pour() {
         if (this.type == "map") return Object.fromEntries(Array.from(this.insides));
         else if (this.type == "set") return Array.from(this.insides);
     }
-    merge() { return this.stir(); }
-    brew() { return this.stir(); }
+    merge() { return this.pour(); }
     
     
     // join
@@ -624,8 +659,8 @@ class Stew {
     }
 
 
-    // some
-    some(func) {
+    // swig
+    swig(func) {
         if (this.type == "map") {
             for (let i = 0; i < this.length; i++) {
                 if (func(this.keys[i], this.values[i], i)) return true;
@@ -639,6 +674,7 @@ class Stew {
 
         return false;
     }
+    some(func) { return this.swig(func); }
 
 
     // isList
@@ -665,18 +701,61 @@ class Stew {
             return new Stew(Array.from(this.insides).slice(start, end));
         }
     }
+
+
+    // sort
+    sort(func=null) {
+        if (this.type == "map") {
+            let thing = Array.from(this.insides.entries());
+            this.insides = new Map( (func) ? thing.sort(func) : thing.sort() );
+            return this;
+        }
+        else if (this.type == "set") {
+            this.insides = new Set( (func) ? Array.from(this.insides).sort(func) : Array.from(this.insides).sort() );
+            return this;
+        }
+    }
+
+
+    // reverse
+    reverse() {
+        if (this.type == "object") {
+            this.insides = Object.fromEntries( Object.entries(this.insides).reverse() );
+            return this;
+        }
+        else if (this.type == "array") {
+            return this.insides = this.insides.reverse();
+            return this;
+        }
+    }
+    flip() { return this.reverse(); }
 }
 
 Object.defineProperty( Soup, "from", {
-    value: (soup) => {
-        return new Soup(soup);
+    value: (soup, splitter='') => {
+        return new Soup(soup, splitter);
     }
 });
 
 Object.defineProperty( Stew, "from", {
-    value: (stew) => {
-        return new Stew(stew);
+    value: (stew, splitter='') => {
+        return new Stew(stew, splitter);
     }
 });
+
+String.prototype.brew = function(type=Soup, splitter='') {
+    if (type instanceof Function) type = new type();
+    return (type instanceof Soup) ? new Soup(this.split(splitter)) : new Stew(this.split(splitter))
+}
+
+Array.prototype.brew = function(type=Soup) {
+    if (type instanceof Function) type = new type();
+    return (type instanceof Soup) ? new Soup(this) : new Stew(this);
+}
+
+Object.prototype.brew = function(type=Soup) {
+    if (type instanceof Function) type = new type();
+    return (type instanceof Soup) ? new Soup(this) : new Stew(this);
+}
 
 module.exports = { Stew, Soup };
