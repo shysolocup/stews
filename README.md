@@ -41,7 +41,7 @@ soups can have duplicates ( `[1, 1, 1, 1]` correctly outputs as `[1, 1, 1, 1]` )
 > stew.pull("a", 0); // Map(3) { 'a' =>  0, 'b' => 1, 'c' => 2}
 > stew.push("d", 3); // Map(4) { 'a' =>  0, 'b' => 1, 'c' => 2, 'd' => 3}
 >
-> stew.stir(); // {a: 0, b: 1, c: 2, d: 3}
+> stew.pour(); // {a: 0, b: 1, c: 2, d: 3}
 > ```
 
 > ### Soups
@@ -60,5 +60,5 @@ soups can have duplicates ( `[1, 1, 1, 1]` correctly outputs as `[1, 1, 1, 1]` )
 > soup.pull("a", 0); // {a: 0, b: 1, c: 2}
 > soup.push("d", 3); // {a: 0, b: 1, c: 2, d: 3}
 >
-> soup.stir(); // {a: 0, b: 1, c: 2, d: 3}
+> soup.pour(); // {a: 0, b: 1, c: 2, d: 3}
 > ```
