@@ -1,7 +1,10 @@
-/* :: Stews :: Version 1.1.0 | 02/28/23 :: */
+/* :: Stews :: Version 1.1.1 | 03/01/23 :: */
 
 class Soup {
     constructor(object) {
+        if (object instanceof Stew || object instanceof Soup) {
+            object = object.insides;
+        }
         if (!object) {
             this.insides = [];
             this.type = "array";
@@ -31,9 +34,6 @@ class Soup {
         else if (object instanceof Map) {
             this.insides = Object.fromEntries(object.entries());
             this.type = "object";
-        }
-        else {
-            return null;
         }
     }
 
@@ -252,11 +252,74 @@ class Soup {
     get entries() {
         return Object.entries(this.insides);
     }
+
+
+    // map
+    map(func) {
+        if (this.type == "object") {
+            let thing = Object.entries(this.insides);
+
+            this.forEach( (key, value, index) => {
+                thing[index][1] = func(value);
+            });
+            
+            return new Soup(Object.fromEntries(thing));
+        }
+        else if (this.type == "array") {
+            return new Soup( this.insides.map(func) );
+        }
+    }
+
+
+    // isList
+    isList() {
+        return (this.type == "array") ? true : false;
+    }
+    isArray() { return this.isList(); }
+    isSet() { return this.isList(); }
+    
+    // isPair
+    isPair() {
+        return this.type == "object" ? true : false;
+    }
+    isObject() { return this.isPair(); }
+    isMap() { return this.isPair(); }
+
+
+    // some
+    some(func) {
+        if (this.type == "object") {
+            for (let i = 0; i < this.length; i++) {
+                if (func(this.keys[i], this.values[i], i)) return true;
+            }
+        }
+        else if (this.type == "array") {
+            for (let i = 0; i < this.length; i++) {
+                if (func(this.insides[i])) return true;
+            }
+        }
+
+        return false;
+    }
+
+
+    // slice
+    slice(start, end) {
+        if (this.type == "object") {
+            return new Soup( Object.fromEntries( Object.entries(this.insides).slice(start, end)) );
+        }
+        else if (this.type == "array") {
+            return new Soup(this.insides.slice(start, end));
+        }
+    }
 }
 
 
 class Stew {
     constructor(object) {
+        if (object instanceof Stew || object instanceof Soup) {
+            object = object.insides;
+        }
         if (!object) {
             this.insides = new Set();
             this.type = "set";
@@ -540,6 +603,78 @@ class Stew {
             return new Stew(Array.from(this.insides).filter( (stuff, index) => func(stuff, index)));
         }
     }
+
+
+    // map
+    map(func) {
+        if (this.type == "map") {
+            let thing = Array.from(this.insides.entries());
+
+            this.forEach( (key, value, index) => {
+                thing[index][1] = func(value);
+            });
+            
+            return new Stew( Object.fromEntries(thing) );
+        }
+        else if (this.type == "set") {
+            return new Stew( Array.from(this.insides).map(func) );
+        }
+    }
+
+
+    // some
+    some(func) {
+        if (this.type == "map") {
+            for (let i = 0; i < this.length; i++) {
+                if (func(this.keys[i], this.values[i], i)) return true;
+            }
+        }
+        else if (this.type == "set") {
+            for (let i = 0; i < this.length; i++) {
+                if (func(Array.from(this.insides)[i])) return true;
+            }
+        }
+
+        return false;
+    }
+
+
+    // isList
+    isList() {
+        return (this.type == "set") ? true : false;
+    }
+    isArray() { return this.isList(); }
+    isSet() { return this.isList(); }
+    
+    // isPair
+    isPair() {
+        return this.type == "map" ? true : false;
+    }
+    isObject() { return this.isPair(); }
+    isMap() { return this.isPair(); }
+
+
+    // slice
+    slice(start, end) {
+        if (this.type == "map") {
+            return new Stew( Object.fromEntries( this.entries.slice(start, end)) );
+        }
+        else if (this.type == "set") {
+            return new Stew(Array.from(this.insides).slice(start, end));
+        }
+    }
 }
+
+Object.defineProperty( Soup, "from", {
+    value: (soup) => {
+        return new Soup(soup);
+    }
+});
+
+Object.defineProperty( Stew, "from", {
+    value: (stew) => {
+        return new Stew(stew);
+    }
+});
 
 module.exports = { Stew, Soup };
