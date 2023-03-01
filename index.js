@@ -1,4 +1,4 @@
-/* :: Stews :: Version 1.1.1 | 03/01/23 :: */
+/* :: Stews :: Version 1.1.2 | 03/01/23 :: */
 
 class Soup {
     constructor(object) {
