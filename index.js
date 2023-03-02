@@ -1,4 +1,4 @@
-/* :: Stews :: Version 1.2.0 | 03/01/23 :: */
+/* :: Stews :: Version 1.2.1 | 03/02/23 :: */
 
 class Soup {
     constructor(object, splitter='') {
@@ -726,12 +726,12 @@ class Stew {
 
     // reverse
     reverse() {
-        if (this.type == "object") {
-            this.insides = Object.fromEntries( Object.entries(this.insides).reverse() );
+        if (this.type == "map") {
+            this.insides = new Map( Array.from(this.insides.entries()).reverse() );
             return this;
         }
-        else if (this.type == "array") {
-            return this.insides = this.insides.reverse();
+        else if (this.type == "set") {
+            this.insides = new Set(Array.from(this.insides).reverse());
             return this;
         }
     }
