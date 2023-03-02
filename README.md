@@ -1,7 +1,8 @@
 ---
 # Stews
 <a href="https://www.npmjs.com/package/stews"><img src="https://img.shields.io/npm/v/stews?style=flat&color=red&logo=npm&logoColor=white" alt="version" />
-<a href="https://www.npmjs.com/package/stews"><img src="https://img.shields.io/npm/dt/stews?style=flat&color=green&logo=npm&logoColor=white" alt="downloads" />
+<a href="https://www.npmjs.com/package/stews"><img src="https://img.shields.io/npm/dt/stews?style=flat&color=green&logo=Codeforces&logoColor=white" alt="downloads" />
+<a href="https://github.com/nuttmegg/stews/wiki"><img src="https://img.shields.io/badge/documentation-stews?color=purple&logo=gitbook&logoColor=white" alt="documentation" />
 <a href="https://github.com/nuttmegg/stews/discussions"><img src="https://img.shields.io/github/discussions/nuttmegg/stews?logo=wechat&logoColor=white" alt="discussions" />
 <a href="https://github.com/nuttmegg/stews/issues"><img src="https://img.shields.io/github/issues/nuttmegg/stews" alt="issues" />
   
