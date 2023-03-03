@@ -1,4 +1,4 @@
-/* :: Stews :: Version 1.2.1 | 03/02/23 :: */
+/* :: Stews :: Version 1.2.2 | 03/03/23 :: */
 
 class Soup {
     constructor(object, splitter='') {
@@ -22,6 +22,7 @@ class Soup {
             else {
                 this.insides = object.split(splitter);
                 this.type = "array";
+                this.string = true;
             }
         }
         else if (object instanceof Array) {
@@ -137,12 +138,52 @@ class Soup {
     objectify() { return this.pair(); }
 
 
-    // stir
-    pour() {
-        return this.insides;
+    // setify
+    setify() {
+        return new Set(this.insides);
     }
-    merge() { return this.pour(); }
-    
+    toSet() { return this.setify(); }
+
+
+    // mapify
+    mapify() {
+        return new Map(Object.entries(this.insides));
+    }
+    toMap() { return this.mapify(); }
+
+
+    // pour
+    pour(type=null, joiner='') {
+        if (type instanceof Function) type = new type();
+
+        if (type instanceof Array || (typeof type == "string" && type.toLowerCase() == 'array') || (type == null && this.type == "array")) 
+            return (this.type=="object") ? Object.entries(this.insides)
+            : Array.from(this.insides);
+
+        else if (type instanceof Set || (typeof type == "string" && type.toLowerCase() == 'set')) 
+            return new Set( 
+                (this.type=="object") ? Object.entries(this.insides)
+                : this.insides
+            );
+        
+        else if (type instanceof Map || (typeof type == "string" && type.toLowerCase() == 'map')) 
+            return new Map(
+                (this.type=="object") ? Object.entries(this.insides) : this.insides
+            );
+
+        else if (type instanceof Stew || (typeof type == "string" && type.toLowerCase() == 'stew')) return new Stew(this.insides);
+        else if (type instanceof Soup || (typeof type == "string" && type.toLowerCase() == 'soup')) return new Soup(this.insides);
+
+        else if (type instanceof String || (typeof type == "string" && type.toLowerCase() == 'string'))
+            return (this.type=="object") ? Object.keys(this.insides).join(joiner) : this.insides.join(joiner);
+
+        else if (type instanceof Object || (typeof type == "string" && type.toLowerCase() == 'object') || (type == null && this.type == "object"))
+            return Object.fromEntries(
+                (this.type=="object") ? Object.entries(this.insides)
+                : this.insides
+            );
+    }
+    merge(type=null, joiner='') { return this.pour(type, joiner); }
 
 
     // indexOf
@@ -196,7 +237,7 @@ class Soup {
 
     // join
     join(joiner=",") {
-        return this.insides.join(joiner);
+        return (this.type == "array") ? this.insides.join(joiner) : Object.keys(this.insides).join(joiner);
     }
 
 
@@ -576,13 +617,54 @@ class Stew {
     toObject() { return this.pair(); }
     objectify() { return this.pair(); }
 
+
+    // setify
+    setify() {
+        return new Set(Array.from(this.insides));
+    }
+    toSet() { return this.setify(); }
+
+
+    // mapify
+    mapify() {
+        return new Map(Array.from(this.insides.entries()));
+    }
+    toMap() { return this.mapify(); }
+
     
     // pour
-    pour() {
-        if (this.type == "map") return Object.fromEntries(Array.from(this.insides));
-        else if (this.type == "set") return Array.from(this.insides);
+    pour(type=null, joiner='') {
+        if (type instanceof Function) type = new type();
+
+        if (type instanceof Array || (typeof type == "string" && type.toLowerCase() == 'array') || (type == null && this.type == "set")) 
+            return (this.type=="map") ? Array.from(this.insides.entries())
+            : Array.from(this.insides);
+
+        else if (type instanceof Set || (typeof type == "string" && type.toLowerCase() == 'set'))
+            return new Set(
+                (this.type=="map") ? Array.from(this.insides.entries())
+                : Array.from(this.insides)
+            );
+        
+        else if (type instanceof Map || (typeof type == "string" && type.toLowerCase() == 'map')) 
+            return new Map(
+                (this.type=="map") ? Array.from(this.insides.entries())
+                : Array.from(this.insides)
+            );
+
+        else if (type instanceof Stew || (typeof type == "string" && type.toLowerCase() == 'stew')) return new Stew(this.insides);
+        else if (type instanceof Soup || (typeof type == "string" && type.toLowerCase() == 'soup')) return new Soup(this.insides);
+
+        else if (type instanceof String || (typeof type == "string" && type.toLowerCase() == 'string'))
+            return (this.type=="map") ? Array.from(this.insides.keys()).join(joiner) : Array.from(this.insides).join(joiner);
+
+        else if (type instanceof Object || (typeof type == "string" && type.toLowerCase() == 'object') || (type == null && this.type == "map"))
+            return Object.fromEntries(
+                (this.type=="map") ? Array.from(this.insides.entries())
+                : Array.from(this.insides)
+            );
     }
-    merge() { return this.pour(); }
+    merge(type=null, joiner='') { return this.pour(type, joiner); }
     
     
     // join
