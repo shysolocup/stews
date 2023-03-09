@@ -6,7 +6,7 @@
 <a href="https://github.com/nuttmegg/stews/issues"><img src="https://img.shields.io/github/issues/nuttmegg/stews" alt="issues" />
 <a href="https://github.com/nuttmegg/stews/wiki"><img src="https://img.shields.io/badge/docs-stews?color=purple&logo=gitbook&logoColor=white" alt="docs" />
   
-Stews is a JavaScript package meant to make storing info easier. It makes two new classes with combinations of elements from arrays, objects, sets and maps.<br><br>
+Stews is a [Node.JS](https://nodejs.org/en/) package meant to make storing info easier. It makes two new classes with combinations of elements from arrays, objects, sets and maps.<br><br>
 It takes a more index based style similar to that of arrays while still maintaining the style of objects, sets and maps.<br><br>
 
 ---
