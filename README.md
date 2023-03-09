@@ -53,7 +53,7 @@ soups can have duplicates ( `[1, 1, 1, 1]` correctly outputs as `[1, 1, 1, 1]` )
 > const { Soup } = require('stews');
 > 
 > let soup = new Soup( {"b": 1, "c": 2} );
-> let soup2 = new Stew( ["a", "b", "c", "d"] );
+> let soup2 = new Soup( ["a", "b", "c", "d"] );
 > 
 > soup.length; // 2
 > soup.indexOf("b"); // 0
