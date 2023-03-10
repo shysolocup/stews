@@ -1,4 +1,4 @@
-/* :: Stews :: Version 1.3.0 | 03/10/23 :: */
+/* :: Stews :: Version 1.3.1 | 03/10/23 :: */
 
 class Stew {
     constructor(object, splitter='') {
@@ -96,7 +96,7 @@ class Stew {
         }
         else if (typeof entry == "number") {
             if (this.type == "pair") {
-                this[Array.from(this.insides.keys())[entry]] = set_to;
+                return this.insides.set(this.keys[entry], set_to);
             }
             else if (this.type == "list") {
                 let thing = Array.from(this.insides);
