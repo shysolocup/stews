@@ -1,4 +1,4 @@
-/* :: Stews :: Version 1.3.1 | 03/10/23 :: */
+/* :: Stews :: Version 1.3.2 | 03/13/23 :: */
 
 class Stew {
     constructor(object, splitter='') {
@@ -990,7 +990,7 @@ function SoapProxyHandler() { return {
                 }
                 else if (target.type == "list") {
                     delete target.insides[Number(prop)];
-                    target.insides = target.filter( (value) => {
+                    target.insides = target.insides.filter( (value) => {
                         return value != null;
                     });
                     return true;
@@ -1003,7 +1003,7 @@ function SoapProxyHandler() { return {
                 }
                 else if (target.type == "list") {
                     delete target.insides[target.indexOf(prop)];
-                    target.insides = target.filter( (value) => {
+                    target.insides = target.insides.filter( (value) => {
                         return value != null;
                     });
                     return true;
