@@ -1,4 +1,4 @@
-/* :: Stews :: Version 1.3.2 | 03/13/23 :: */
+/* :: Stews :: Version 1.3.3 | 03/15/23 :: */
 
 class Stew {
     constructor(object, splitter='') {
@@ -430,19 +430,21 @@ class Stew {
 
 
     // front
-    front() {
-        let entry = this.entries[0];
+    front(offset=0) {
+        let entry = this.entries[0+offset];
         return (this.type == "pair") ? {key: entry[0], value: entry[1], index: 0} : entry[1];
     }
-    first() { return this.front(); }
+    first(offset=0) { return this.front(offset); }
+	start(offset=0) { return this.front(offset); }
 
 
     // back
-    back() {
-        let entry = this.entries[this.length-1];
+    back(offset=0) {
+        let entry = this.entries[(this.length-1)-offset];
         return (this.type == "pair") ? {key: entry[0], value: entry[1], index: this.length-1} : entry[1];
     }
-    last() { return this.back(); }
+    last(offset=0) { return this.back(offset); }
+	end(offset=0) { return this.back(offset); }
 
 
     // rename
@@ -458,6 +460,17 @@ class Stew {
             return this.insides = new Set(thing);
         }
     }
+
+
+	// includesFor
+	includesFor(array) {
+		for (let i = 0; i < array.length; i++) {
+			if (this.includes(array[i])) return true;
+		}
+		return false;
+	}
+	hasFor(array) { return this.includesFor(array); }
+	containsFor(array) { return this.includesFor(array); }
 }
 
 function StewProxyHandler() { return {
@@ -920,19 +933,21 @@ class Soup {
 
 
     // front
-    front() {
-        let entry = this.entries[0];
+    front(offset=0) {
+        let entry = this.entries[0+offset];
         return (this.type == "pair") ? {key: entry[0], value: entry[1], index: 0} : entry[1];
     }
-    first() { return this.front(); }
+    first(offset=0) { return this.front(offset); }
+	start(offset=0) { return this.front(offset); }
 
 
     // back
-    back() {
-        let entry = this.entries[this.length-1];
+    back(offset=0) {
+        let entry = this.entries[(this.length-1)-offset];
         return (this.type == "pair") ? {key: entry[0], value: entry[1], index: this.length-1} : entry[1];
     }
-    last() { return this.back(); }
+    last(offset=0) { return this.back(offset); }
+	end(offset=0) { return this.back(offset); }
 
 
     // rename
@@ -946,6 +961,16 @@ class Soup {
             return this.insides[(typeof entry == "string") ? this.indexOf(entry) : entry] = name;
         }
     }
+
+	// includesFor
+	includesFor(array) {
+		for (let i = 0; i < array.length; i++) {
+			if (this.includes(array[i])) return true;
+		}
+		return false;
+	}
+	hasFor(array) { return this.includesFor(array); }
+	containsFor(array) { return this.includesFor(array); }
 }
 
 function SoapProxyHandler() { return {
@@ -1018,7 +1043,7 @@ function SoapProxyHandler() { return {
 }
 
 
-// from
+// froms
 Object.defineProperty( Soup, "from", {
     value: (object, splitter='') => {
         return new Soup(object, splitter);
@@ -1032,7 +1057,7 @@ Object.defineProperty( Stew, "from", {
 });
 
 
-// brew
+// brews
 String.prototype.brew = function(type=Soup, splitter='') {
     if (type instanceof Function) type = new type();
     return (type instanceof Soup) ? new Soup(this.split(splitter)) : new Stew(this.split(splitter))
@@ -1049,4 +1074,34 @@ Object.prototype.brew = function(type=Soup) {
 }
 
 
-module.exports = { Stew, Soup };
+// random
+var random = {
+	int: function(min, max) {
+		return Math.floor(Math.random() * (max - min + 1) ) + min;
+	},
+
+	choice: function(object, splitter='') {
+		if (typeof object == "string") {
+			return object.split(splitter)[Math.floor(Math.random() * (Number(object.split(splitter).length)))];
+		}
+        else if (object instanceof Array) {
+            return object[Math.floor(Math.random() * (Number(object.length)))];
+        }
+        else if (object instanceof Set) {
+            return Array.from(object)[Math.floor(Math.random() * (Number(Array.from(object).length)))];
+        }
+        else if (object instanceof Map) {
+            return Array.from(object.entries())[Math.floor(Math.random() * (Number(Array.from(object.entries()).length)))];
+        }
+		else if (object instanceof Stew || object instanceof Soup) {
+			if (object.type == "pair") return object.entries[Math.floor(Math.random() * (Number(object.length)))];
+			else return object[Math.floor(Math.random() * (Number(object.length)))];
+		}
+        else if (object instanceof Object) {
+            return Object.entries(object)[Math.floor(Math.random() * (Number(Object.entries(object).length)))];
+        }
+	}
+}
+
+
+module.exports = { Stew, Soup, random };
