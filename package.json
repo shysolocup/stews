@@ -1,6 +1,6 @@
 {
     "name": "stews",
-    "version": "1.3.3",
+    "version": "1.3.4",
     "author": "nutmeg",
     "description": "A Node.JS package meant to make storing info easier by combining elements of arrays, objects, maps and sets",
     "repository": {
