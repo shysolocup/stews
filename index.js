@@ -1,4 +1,4 @@
-/* :: Stews :: Version 1.3.3 | 03/15/23 :: */
+/* :: Stews :: Version 1.3.4 | 03/19/23 :: */
 
 class Stew {
     constructor(object, splitter='') {
@@ -1044,16 +1044,28 @@ function SoapProxyHandler() { return {
 
 
 // froms
-Object.defineProperty( Soup, "from", {
-    value: (object, splitter='') => {
-        return new Soup(object, splitter);
-    }
+Object.defineProperty( Stew, "from", {
+    value: (object, splitter='') => { return new Stew(object, splitter); }
 });
 
-Object.defineProperty( Stew, "from", {
-    value: (object, splitter='') => {
-        return new Stew(object, splitter);
-    }
+Object.defineProperty( Soup, "from", {
+    value: (object, splitter='') => { return new Soup(object, splitter); }
+});
+
+Object.defineProperty( Stew, "fromEntries", {
+	value: (entries) => { return new Stew(Object.fromEntries(entries)); }
+});
+
+Object.defineProperty( Soup, "fromEntries", {
+	value: (entries) => { return new Soup(Object.fromEntries(entries)); }
+});
+
+Object.defineProperty( Stew, "parse", {
+	value: (entries) => { return new Stew(JSON.parse(entries)); }
+});
+
+Object.defineProperty( Soup, "parse", {
+	value: (entries) => { return new Soup(JSON.parse(entries)); }
 });
 
 
@@ -1079,6 +1091,7 @@ var random = {
 	int: function(min, max) {
 		return Math.floor(Math.random() * (max - min + 1) ) + min;
 	},
+	number: function(min, max) {return this.int(min, max)},
 
 	choice: function(object, splitter='') {
 		if (typeof object == "string") {
