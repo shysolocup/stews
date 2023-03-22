@@ -6,9 +6,9 @@
 <a href="https://github.com/nuttmegg/stews/issues"><img src="https://img.shields.io/github/issues/nuttmegg/stews" alt="issues" />
 <a href="https://github.com/nuttmegg/stews/wiki"><img src="https://img.shields.io/badge/docs-stews?color=purple&logo=gitbook&logoColor=white" alt="docs" />
   
-Stews is a [Node.JS](https://nodejs.org/en/) package created to make storing data easier by combining elements from the basic data storing objects in Node.JS. It includes three new classes those being [stew](https://github.com/nuttmegg/stews/wiki/Stew), [soup](https://github.com/nuttmegg/stews/wiki/Soup), and [random](https://github.com/nuttmegg/stews/wiki/Random).<br><br>
+Stews is a Node.JS package meant to make storing info easier. It makes two new classes with combinations of elements from arrays, objects, sets and maps.<br><br>
 
-They use an index system like arrays as well as an entry system like objects sets and maps to make a better experience for the user without having to swap between them.<br><br>
+It uses an index system similar to that of arrays as well as an entry system similar to that of objects.<br><br>
 
 It's fully open source with full documentation and support for prototypes so you can create your own functions.<br><br>
 
