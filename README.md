@@ -82,7 +82,8 @@ The two main classes included are stews and soups. Random is a separate thing if
 >
 > pair.pour(); // {"key0": "value0", "key1": "value1"}
 > ```
-
+<br>
+  
 > ### Soup
 > Soup is a class that's built off of arrays and objects though they are compatable with strings, maps, and sets<br>
 > In a list soups CAN have duplicate entries
