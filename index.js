@@ -1,4 +1,4 @@
-/* :: Stews :: Version 1.3.4 | 03/19/23 :: */
+/* :: Stews :: Version 1.3.5 | 03/22/23 :: */
 
 class Stew {
     constructor(object, splitter='') {
@@ -63,7 +63,9 @@ class Stew {
         delete this[entry];
         return returns;
     }
+    del(entry) { return this.delete(entry); }
     remove(entry) { return this.delete(entry); }
+    rem(entry) { return this.delete(entry); }
 
 
     // push
@@ -588,7 +590,9 @@ class Soup {
         delete this[entry];
         return returns;
     }
+    del(entry) { return this.delete(entry); }
     remove(entry) { return this.delete(entry); }
+    rem(entry) { return this.delete(entry); }
 
 
     // push
@@ -962,6 +966,7 @@ class Soup {
         }
     }
 
+
 	// includesFor
 	includesFor(array) {
 		for (let i = 0; i < array.length; i++) {
@@ -971,6 +976,15 @@ class Soup {
 	}
 	hasFor(array) { return this.includesFor(array); }
 	containsFor(array) { return this.includesFor(array); }
+    
+
+    // deleteDupes
+    deleteDupes() {
+        return Soup.from(Stew.from(this));
+    }
+    delDupes() { return this.deleteDupes(); }
+    removeDupes() { return this.deleteDupes(); }
+    remDupes() { return this.deleteDupes(); }
 }
 
 function SoapProxyHandler() { return {
