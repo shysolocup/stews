@@ -1,4 +1,4 @@
-/* :: Stews :: Version 1.3.5 | 03/22/23 :: */
+/* :: Stews :: Version 1.3.6 | 03/22/23 :: */
 
 class Stew {
     constructor(object, splitter='') {
@@ -1131,4 +1131,7 @@ var random = {
 }
 
 
-module.exports = { Stew, Soup, random };
+try { // check if it's a .js file
+	module.exports = { Stew, Soup, random };
+}
+catch(err) {}
