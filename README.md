@@ -10,7 +10,7 @@ Stews is a Node.JS package meant to make storing info easier. It makes two new c
 
 It uses an index system similar to that of arrays as well as an entry system similar to that of objects.<br><br>
 
-It's fully open source with complete documentation and support for prototypes so you can create your own custom functions.<br><br>
+It's fully open source with complete documentation and support for prototypes to make your own custom methods.<br><br>
 
 ---
 
