@@ -1,4 +1,4 @@
-/* :: Stews :: Version 1.3.6 | 03/22/23 :: */
+/* :: Stews :: Version 1.4.0 | 03/23/23 :: */
 
 class Stew {
     constructor(object, splitter='') {
@@ -473,6 +473,35 @@ class Stew {
 	}
 	hasFor(array) { return this.includesFor(array); }
 	containsFor(array) { return this.includesFor(array); }
+
+
+    // toPrimitive
+    [Symbol.toPrimitive](hint) {
+        if (hint === "string") {
+            return this.toString();
+        }
+        return this;
+    }
+
+
+    // iterator ( for..of )
+    [Symbol.iterator]() {
+        var stuff = this;
+        return {
+            current: 0,
+            last: stuff.length-1,
+
+            next() {
+                if (this.current <= this.last) {
+                    let data = (stuff.type == "pair") ? stuff.entries[this.current++] : [stuff.get(this.current++)];
+                    data.push(this.current-1);
+                    return { done: false, value: data };
+                } else {
+                    return { done: true };
+                }
+            }
+        };
+    }
 }
 
 function StewProxyHandler() { return {
@@ -985,6 +1014,35 @@ class Soup {
     delDupes() { return this.deleteDupes(); }
     removeDupes() { return this.deleteDupes(); }
     remDupes() { return this.deleteDupes(); }
+
+
+    // toPrimitive
+    [Symbol.toPrimitive](hint) {
+        if (hint === "string") {
+            return this.toString();
+        }
+        return this;
+    }
+
+
+    // iterator ( for..of )
+    [Symbol.iterator]() {
+        var stuff = this;
+        return {
+            current: 0,
+            last: stuff.length-1,
+
+            next() {
+                if (this.current <= this.last) {
+                    let data = (stuff.type == "pair") ? stuff.entries[this.current++] : [stuff.get(this.current++)];
+                    data.push(this.current-1);
+                    return { done: false, value: data };
+                } else {
+                    return { done: true };
+                }
+            }
+        };
+    }
 }
 
 function SoapProxyHandler() { return {
@@ -1127,8 +1185,50 @@ var random = {
         else if (object instanceof Object) {
             return Object.entries(object)[Math.floor(Math.random() * (Number(Object.entries(object).length)))];
         }
+	},
+
+    index: function(object, splitter='') {
+		if (typeof object == "string") {
+			return Math.floor(Math.random() * (Number(object.split(splitter).length)));
+		}
+        else if (object instanceof Array) {
+            return Math.floor(Math.random() * (Number(object.length)));
+        }
+        else if (object instanceof Set) {
+            return Math.floor(Math.random() * (Number(Array.from(object).length)));
+        }
+        else if (object instanceof Map) {
+            return Math.floor(Math.random() * (Number(Array.from(object.entries()).length)));
+        }
+		else if (object instanceof Stew || object instanceof Soup) {
+			return Math.floor(Math.random() * (Number(object.length)));
+		}
+        else if (object instanceof Object) {
+            return Math.floor(Math.random() * (Number(Object.entries(object).length)));
+        }
 	}
 }
+
+Object.defineProperty(Stew.prototype, "random", {
+    get() {
+        var obj = this;
+        return {
+            choice: function() {return random.choice(obj.pour())},
+            index: function() {return random.int(0, obj.length-1)}
+        }
+    }
+});
+
+
+Object.defineProperty(Soup.prototype, "random", {
+    get() {
+        var obj = this;
+        return {
+            choice: function() {return random.choice(obj.pour())},
+            index: function() {return random.int(0, obj.length-1)}
+        }
+    }
+});
 
 
 try { // check if it's a .js file
