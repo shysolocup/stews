@@ -1,4 +1,4 @@
-/* :: Stews :: Version 1.4.0 | 03/23/23 :: */
+/* :: Stews :: Version 1.4.1 | 03/24/23 :: */
 
 class Stew {
     constructor(object, splitter='') {
@@ -23,6 +23,11 @@ class Stew {
                 this.insides = new Set(object.split(splitter));
                 this.type = "list";
             }
+        }
+        else if (typeof object == "number") {
+            object = object.toString().split("").map( (value) => { return Number(value) } );
+            this.insides = new Set(object);
+            this.type = "list";
         }
         else if (object instanceof Array) {
             this.insides = new Set(object);
@@ -126,21 +131,23 @@ class Stew {
 
 
     // pop
-    pop() {
-        let returns = (this.type == "pair") ? {key: this.keys[this.length-1], value: this.values[this.length-1], index: this.length-1} : {value: this.entries[this.length-1][1], index: this.length-1};
-        delete this[this.length-1];
+    pop(offset=0) {
+        let index = (this.length-1)-offset;
+        let returns = (this.type == "pair") ? {key: this.keys[index], value: this.values[index], index: index} : {value: this.entries[index][1], index: index};
+        delete this[index];
         return returns;
     }
-    unpush() { return this.pop(); }
+    unpush(offset=0) { return this.pop(offset); }
 
 
     // shift
-    shift() {
-        let returns = (this.type == "pair") ? {key: this.keys[0], value: this.values[0], index: this.length-1} : {value: this.entries[0][1], index: 0};
-        delete this[0];
+    shift(offset=0) {
+        let index = 0+offset;
+        let returns = (this.type == "pair") ? {key: this.keys[index], value: this.values[index], index: index} : {value: this.entries[index][1], index: index};
+        delete this[index];
         return returns;
     }
-    unpull() { return this.shift(); }
+    unpull(offset=0) { return this.shift(offset); }
 
 
     // pour
@@ -221,6 +228,7 @@ class Stew {
     }
     fetch(entry) { return this.get(entry); }
     find(entry) { return this.get(entry); }
+    at(entry) { return this.get(entry); }
 
 
     // forEach
@@ -488,6 +496,72 @@ class Stew {
     }
 
 
+    // merge
+    merge(/**/) {
+        var args = arguments;
+        if (typeof args[0] == "string" && args[0].startsWith("MERGE_ARGUMENTS")) args = args[1];
+
+        var stuffs = this;
+
+        for (obj of args) {
+            var obj = Stew.from(obj);
+
+            if (obj.type == "list") {
+                obj.forEach( (value, index) => {
+                    (this.type == "pair") ? stuffs.push(`${index}`, value) : stuffs.push(value);
+                });
+            }
+
+            if (obj.type == "pair") {
+                obj.forEach( (key, value) => {
+                    (this.type == "pair") ? stuffs.push(key, value) : stuffs.push( [key, value] );
+                });
+            }
+        };
+
+        return stuffs;
+    }
+    concat(/**/) { return this.merge(`MERGE_ARGUMENTS`, arguments); }
+
+
+    // flat
+    flat(depth=1) {
+        return Stew.from(Array.from(this.insides).flat(depth));
+    }
+
+    
+    // flatMap
+    flatMap(func, thisValue=null) {
+        return Stew.from(Array.from(this.insides).flatMap(func, thisValue));
+    };
+
+
+    // splice
+    splice(index, amount, /**/) {
+        var args = Array.from(arguments);
+        args.shift();
+        args.shift();
+
+        if (this.type == "list") { 
+            let thing = Array.from(this.insides);
+
+            thing.splice(index, amount, ...args);
+
+            this.insides = new Set(thing);
+        }
+
+        else if (this.type == "pair") {
+            let thing = Array.from(this.insides.entries());
+
+            if (!(args[0] instanceof Array) && args[0] instanceof Object) args = Object.entries(args[0]);
+
+            thing.splice(index, amount, ...args);
+
+            this.insides = new Map(thing);
+        }
+    }
+
+
     // properties
     get properties() {
         let proto = Stew.prototype;
@@ -617,6 +691,11 @@ class Soup {
                 this.type = "list";
             }
         }
+        else if (typeof object == "number") {
+            object = object.toString().split("").map( (value) => { return Number(value) } );
+            this.insides = object;
+            this.type = "list";
+        }
         else if (object instanceof Array) {
             this.insides = object;
             this.type = "list";
@@ -701,21 +780,23 @@ class Soup {
 
 
     // pop
-    pop() {
-        let returns = (this.type == "pair") ? {key: this.keys[this.length-1], value: this.values[this.length-1], index: this.length-1} : {value: this.entries[this.length-1][1], index: this.length-1};
-        delete this[this.length-1];
+    pop(offset=0) {
+        let index = (this.length-1)-offset;
+        let returns = (this.type == "pair") ? {key: this.keys[index], value: this.values[index], index: index} : {value: this.entries[index][1], index: index};
+        delete this[index];
         return returns;
     }
-    unpush() { return this.pop(); }
+    unpush(offset=0) { return this.pop(offset); }
 
 
     // shift
-    shift() {
-        let returns = (this.type == "pair") ? {key: this.keys[0], value: this.values[0], index: this.length-1} : {value: this.entries[0][1], index: 0};
-        delete this[0];
+    shift(offset=0) {
+        let index = 0+offset;
+        let returns = (this.type == "pair") ? {key: this.keys[index], value: this.values[index], index: index} : {value: this.entries[index][1], index: index};
+        delete this[index];
         return returns;
     }
-    unpull() { return this.shift(); }
+    unpull(offset=0) { return this.shift(offset); }
 
 
     // pour
@@ -749,7 +830,6 @@ class Soup {
                 : Soup.from(this.insides).entries
             );
     }
-    merge(type=null, joiner='') { return this.pour(type, joiner); }
     fix(type=null, joiner='') { return this.pour(type, joiner); }
 
 
@@ -799,6 +879,7 @@ class Soup {
     }
     fetch(entry) { return this.get(entry); }
     find(entry) { return this.get(entry); }
+    at(entry) { return this.get(entry); }
 
 
     // forEach
@@ -1063,6 +1144,66 @@ class Soup {
             return Soup.parse(fs.readFileSync(file, 'utf8'));
         }
         catch(err) {}
+    }
+
+
+    // merge
+    merge(/**/) {
+        var args = arguments;
+        if (typeof args[0] == "string" && args[0].startsWith("MERGE_ARGUMENTS")) args = args[1];
+
+        var stuffs = this;
+
+        for (obj of args) {
+            var obj = Soup.from(obj);
+
+            if (obj.type == "list") {
+                obj.forEach( (value, index) => {
+                    (this.type == "pair") ? stuffs.push(`${index}`, value) : stuffs.push(value);
+                });
+            }
+
+            if (obj.type == "pair") {
+                obj.forEach( (key, value) => {
+                    (this.type == "pair") ? stuffs.push(key, value) : stuffs.push( [key, value] );
+                });
+            }
+        };
+
+        return stuffs;
+    }
+    concat(/**/) { return this.merge(`MERGE_ARGUMENTS`, arguments); }
+
+
+    // flat
+    flat(depth=1) {
+        return Soup.from(this.insides.flat(depth));
+    }
+
+
+    // flatMap
+    flatMap(func) {
+        return Soup.from(this.insides.flatMap(func));
+    };
+
+
+    // splice
+    splice(index, amount, /**/) {
+        var args = Array.from(arguments);
+        args.shift();
+        args.shift();
+
+        if (this.type == "list") this.insides.splice(index, amount, ...args);
+
+        else if (this.type == "pair") {
+            let thing = Object.entries(this.insides);
+
+            if (!(args[0] instanceof Array) && args[0] instanceof Object) args = Object.entries(args[0]);
+
+            thing.splice(index, amount, ...args);
+
+            this.insides = Object.fromEntries(thing);
+        }
     }
 
 
