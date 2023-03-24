@@ -475,6 +475,43 @@ class Stew {
 	containsFor(array) { return this.includesFor(array); }
 
 
+    // dump
+    dump(file, replacer=null, indent=null) {
+        try {
+            const fs = require('fs');
+
+            fs.writeFileSync(file, this.stringify(replacer, indent));
+
+            return Stew.parse(fs.readFileSync(file, 'utf8'));
+        }
+        catch(err) {}
+    }
+
+
+    // properties
+    get properties() {
+        let proto = Stew.prototype;
+        let names = Object.getOwnPropertyNames(proto);
+        let methods = {};
+
+        Object.getOwnPropertyNames(this).forEach( (name) => {
+            methods[name] = Object.getOwnPropertyDescriptors(this)[name].value;
+            names.unshift(name);
+        });
+
+        Object.getOwnPropertyNames(proto).forEach( (name) => {
+            methods[name] = Object.getOwnPropertyDescriptors(proto)[name].value;
+        });
+
+        return {
+            names: names,
+            descriptors: Object.getOwnPropertyDescriptors(proto),
+            methods: methods
+        }
+    }
+    get props() { return this.properties; }
+
+
     // toPrimitive
     [Symbol.toPrimitive](hint) {
         if (hint === "string") {
@@ -697,7 +734,7 @@ class Soup {
         
         else if (type instanceof Map || (typeof type == "string" && type.toLowerCase() == 'map'))
             return new Map(
-                (this.type=="pair") ? Object.entries(this.insides) : this.insides
+                (this.type=="pair") ? Object.entries(this.insides) : Soup.from(this.insides).entries
             );
 
         else if (type instanceof Stew || (typeof type == "string" && type.toLowerCase() == 'stew')) return new Stew(this.insides);
@@ -709,7 +746,7 @@ class Soup {
         else if (type instanceof Object || (typeof type == "string" && type.toLowerCase() == 'object') || (type == null && this.type == "pair"))
             return Object.fromEntries(
                 (this.type=="pair") ? Object.entries(this.insides)
-                : this.insides
+                : Soup.from(this.insides).entries
             );
     }
     merge(type=null, joiner='') { return this.pour(type, joiner); }
@@ -1014,6 +1051,43 @@ class Soup {
     delDupes() { return this.deleteDupes(); }
     removeDupes() { return this.deleteDupes(); }
     remDupes() { return this.deleteDupes(); }
+
+
+    // dump
+    dump(file, replacer=null, indent=null) {
+        try {
+            const fs = require('fs');
+
+            fs.writeFileSync(file, this.stringify(replacer, indent));
+
+            return Soup.parse(fs.readFileSync(file, 'utf8'));
+        }
+        catch(err) {}
+    }
+
+
+    // properties
+    get properties() {
+        let proto = Soup.prototype;
+        let names = Object.getOwnPropertyNames(proto);
+        let methods = {};
+
+        Object.getOwnPropertyNames(this).forEach( (name) => {
+            methods[name] = Object.getOwnPropertyDescriptors(this)[name].value;
+            names.unshift(name);
+        });
+
+        Object.getOwnPropertyNames(proto).forEach( (name) => {
+            methods[name] = Object.getOwnPropertyDescriptors(proto)[name].value;
+        });
+
+        return {
+            names: names,
+            descriptors: Object.getOwnPropertyDescriptors(proto),
+            methods: methods
+        }
+    }
+    get props() { return this.properties; }
 
 
     // toPrimitive
