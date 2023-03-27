@@ -1,4 +1,4 @@
-/* :: Stews :: Version 1.4.1 | 03/24/23 :: */
+/* :: Stews :: Version 1.4.2 | 03/27/23 :: */
 
 class Stew {
     constructor(object, splitter='') {
@@ -112,6 +112,7 @@ class Stew {
             }
         }
     }
+    edit(entry, set_to=null) { return this.set(entry, set_to) };
 
 
     // pull
@@ -186,9 +187,13 @@ class Stew {
 
     // keyOf
     keyOf(entry) {
-        if (this.type == "pair") return Array.from(this.insides.keys())[ (typeof entry == "string") ? this.indexOf(entry) : entry];
+        if (this.type == "pair") {
+            if (typeof entry == "string" && this.hasValue(entry)) return Array.from(this.insides.keys())[this.values.indexOf(entry)];
+            else return Array.from(this.insides.keys())[ (typeof entry == "string") ? this.indexOf(entry) : entry];
+        }
         else if (this.type == "list") return Array.from(this.insides)[ (typeof entry == "string") ? this.indexOf(entry) : entry ];
     }
+
 
     // keyOf
     valueOf(entry) {
@@ -196,11 +201,21 @@ class Stew {
         else if (this.type == "list") return Array.from(this.insides)[ (typeof entry == "string") ? this.indexOf(entry) : entry ];
     }
 
+
     // indexOf
     indexOf(entry) {
         if (this.type == "pair") return Array.from(this.insides.keys()).indexOf(entry);
         else if (this.type == "list") return Array.from(this.insides).indexOf(entry);
     }
+    indexOfKey(entry) { return this.indexOf(entry); }
+    
+
+    // indexOfValue
+    indexOfValue(entry) {
+        if (this.type == "pair") return Array.from(this.insides.values()).indexOf(entry);
+        else if (this.type == "list") return Array.from(this.insides).indexOf(entry);
+    }
+
 
     // entryOf
     entryOf(entry) {
@@ -265,12 +280,22 @@ class Stew {
 
 
     // includes
-    includes(entry) {
-        if (this.type == "pair") return Array.from(this.insides.keys()).includes(entry);
-        else if (this.type == "list") return Array.from(this.insides).includes(entry);
+    includes(/**/) {
+        let args = Array.from(arguments);
+
+        if (args.length == 1 && typeof args[0] != "object") {
+            var entry = args[0];
+
+            if (this.type == "pair") return Array.from(this.insides.keys()).includes(entry);
+            else if (this.type == "list") return Array.from(this.insides).includes(entry);
+        }
+        else {
+            if (args[0] instanceof Array) args = args[0];
+            return this.includesFor(args);
+        }
     }
-    contains(entry) { return this.includes(entry); }
-    has(entry) { return this.includes(entry); }
+    contains(/**/) { return this.includes(...Array.from(arguments)); }
+    has(/**/) { return this.includes(...Array.from(arguments)); }
 
     
     // clear
@@ -499,8 +524,6 @@ class Stew {
     // merge
     merge(/**/) {
         var args = arguments;
-        if (typeof args[0] == "string" && args[0].startsWith("MERGE_ARGUMENTS")) args = args[1];
-
         var stuffs = this;
 
         for (obj of args) {
@@ -521,7 +544,7 @@ class Stew {
 
         return stuffs;
     }
-    concat(/**/) { return this.merge(`MERGE_ARGUMENTS`, arguments); }
+    concat(/**/) { return this.merge(...Array.from(arguments)); }
 
 
     // flat
@@ -542,7 +565,7 @@ class Stew {
         args.shift();
         args.shift();
 
-        if (this.type == "list") { 
+        if (this.type == "list") {
             let thing = Array.from(this.insides);
 
             thing.splice(index, amount, ...args);
@@ -560,6 +583,51 @@ class Stew {
             this.insides = new Map(thing);
         }
     }
+
+
+    // includesValue
+    includesValue(/**/) {
+        let args = Array.from(arguments);
+
+        if (args.length == 1 && typeof args[0] != "object") {
+            let value = args[0];
+            return this.values.includes(value);
+        }
+        else {
+            if (args[0] instanceof Array) args = args[0];
+            for (let i = 0; i < args.length; i++) {
+                if (this.values.includes(args[i])) return true;
+            }
+            return false;
+        }
+    }
+    hasValue(/**/) { return this.includesValue(...Array.from(arguments)); }
+    containsValue(/**/) { return this.includesValue(...Array.from(arguments)); }
+    includesValues(/**/) { return this.includesValue(...Array.from(arguments)); }
+    hasValues(/**/) { return this.includesValue(...Array.from(arguments)); }
+    containsValues(/**/) { return this.includesValue(...Array.from(arguments)); }
+
+
+    // multiDelete
+    multiDelete(array) {
+        if (this.type == "list") {
+            this.insides = this.filter( (value, index) => {
+                return !array.includes(value);
+            }).pour(Set);
+            
+            return this;
+        }
+        else if (this.type == "pair") {
+            this.insides = this.filter( (key, value, index) => {
+                return !array.includes(key);
+            }).pour(Map);
+            
+            return this;
+        }
+    }
+    multiRemove(array) { return this.multiDelete(array); }
+    multiDel(array) { return this.multiDelete(array); }
+    multiRem(array) { return this.multiDelete(array); }
 
 
     // properties
@@ -590,6 +658,9 @@ class Stew {
     [Symbol.toPrimitive](hint) {
         if (hint === "string") {
             return this.toString();
+        }
+        else if (hint == "number") {
+            return Number(this.join(""));
         }
         return this;
     }
@@ -765,6 +836,7 @@ class Soup {
             else if (this.type == "list") return this.insides[entry] = set_to;
         }
     }
+    edit(entry, set_to=null) { return this.set(entry, set_to) };
 
 
     // pull
@@ -835,9 +907,13 @@ class Soup {
 
     // keyOf
     keyOf(entry) {
-        if (this.type == "pair") return Object.keys(this.insides)[ (typeof entry == "string") ? this.indexOf(entry) : entry];
+        if (this.type == "pair") {
+            if (typeof entry == "string" && this.hasValue(entry)) return Object.keys(this.insides)[ this.values.indexOf(entry) ];
+            else return Object.keys(this.insides)[ (typeof entry == "string") ? this.indexOf(entry) : entry];
+        }
         else if (this.type == "list") return this.insides[ (typeof entry == "string") ? this.indexOf(entry) : entry ];
     }
+
 
     // keyOf
     valueOf(entry) {
@@ -845,11 +921,21 @@ class Soup {
         else if (this.type == "list") return this.insides[ (typeof entry == "string") ? this.indexOf(entry) : entry ];
     }
 
+
     // indexOf
     indexOf(entry) {
         if (this.type == "pair") return Object.keys(this.insides).indexOf(entry);
         else if (this.type == "list") return this.insides.indexOf(entry);
     }
+    indexOfKey(entry) { return this.indexOf(entry); }
+
+
+    // indexOfValue
+    indexOfValue(entry) {
+        if (this.type == "pair") return Object.values(this.insides).indexOf(entry);
+        else if (this.type == "list") return this.insides.indexOf(entry);
+    }
+
 
     // entryOf
     entryOf(entry) {
@@ -916,12 +1002,22 @@ class Soup {
 
 
     // includes
-    includes(entry) {
-        if (this.type == "pair") return Object.keys(this.insides).includes(entry);
-        else if (this.type == "list") return this.insides.includes(entry);
+    includes(/**/) {
+        let args = Array.from(arguments);
+
+        if (args.length == 1 && typeof args[0] != "object") {
+            var entry = args[0];
+
+            if (this.type == "pair") return Object.keys(this.insides).includes(entry);
+            else if (this.type == "list") return this.insides.includes(entry);
+        }
+        else {
+            if (args[0] instanceof Array) args = args[0];
+            return this.includesFor(args);
+        }
     }
-    contains(entry) { return this.includes(entry); }
-    has(entry) { return this.includes(entry); }
+    contains(/**/) { return this.includes(...Array.from(arguments)); }
+    has(/**/) { return this.includes(...Array.from(arguments)); }
 
     
     // clear
@@ -1150,8 +1246,6 @@ class Soup {
     // merge
     merge(/**/) {
         var args = arguments;
-        if (typeof args[0] == "string" && args[0].startsWith("MERGE_ARGUMENTS")) args = args[1];
-
         var stuffs = this;
 
         for (obj of args) {
@@ -1172,18 +1266,18 @@ class Soup {
 
         return stuffs;
     }
-    concat(/**/) { return this.merge(`MERGE_ARGUMENTS`, arguments); }
+    concat(/**/) { return this.merge(...Array.from(arguments)); }
 
 
     // flat
     flat(depth=1) {
-        return Soup.from(this.insides.flat(depth));
+        return Soup.from( (this.type == "list") ? this.insides.flat(depth) : this.entries.flat(depth));
     }
 
 
     // flatMap
     flatMap(func) {
-        return Soup.from(this.insides.flatMap(func));
+        return Soup.from( (this.type == "list") ? this.insides.flatMap(func) : this.entries.flatMap(func));
     };
 
 
@@ -1205,6 +1299,51 @@ class Soup {
             this.insides = Object.fromEntries(thing);
         }
     }
+
+
+    // includesValue
+    includesValue(/**/) {
+        let args = Array.from(arguments);
+
+        if (args.length == 1 && typeof args[0] != "object") {
+            let value = args[0];
+            return this.values.includes(value);
+        }
+        else {
+            if (args[0] instanceof Array) args = args[0];
+            for (let i = 0; i < args.length; i++) {
+                if (this.values.includes(args[i])) return true;
+            }
+            return false;
+        }
+    }
+    hasValue(/**/) { return this.includesValue(...Array.from(arguments)); }
+    containsValue(/**/) { return this.includesValue(...Array.from(arguments)); }
+    includesValues(/**/) { return this.includesValue(...Array.from(arguments)); }
+    hasValues(/**/) { return this.includesValue(...Array.from(arguments)); }
+    containsValues(/**/) { return this.includesValue(...Array.from(arguments)); }
+
+
+    // multiDelete
+    multiDelete(array) {
+        if (this.type == "list") {
+            this.insides = this.filter( (value, index) => {
+                return !array.includes(value);
+            }).pour();
+            
+            return this;
+        }
+        else if (this.type == "pair") {
+            this.insides = this.filter( (key, value, index) => {
+                return !array.includes(key);
+            }).pour();
+            
+            return this;
+        }
+    }
+    multiRemove(array) { return this.multiDelete(array); }
+    multiDel(array) { return this.multiDelete(array); }
+    multiRem(array) { return this.multiDelete(array); }
 
 
     // properties
@@ -1235,6 +1374,9 @@ class Soup {
     [Symbol.toPrimitive](hint) {
         if (hint === "string") {
             return this.toString();
+        }
+        else if (hint == "number") {
+            return Number(this.join(""));
         }
         return this;
     }
@@ -1297,26 +1439,28 @@ function SoapProxyHandler() { return {
         deleteProperty(target, prop) {
             if (Number(prop)+1) { // if it is a number
                 if (target.type == "pair") {
-                    delete target.insides[target.keys[Number(prop)]];
+                    target.insides = Object.fromEntries(Object.entries(target.insides).filter( (value, index) => {
+                        return index != Number(prop);
+                    }));
                     return true;
                 }
                 else if (target.type == "list") {
-                    delete target.insides[Number(prop)];
-                    target.insides = target.insides.filter( (value) => {
-                        return value != null;
+                    target.insides = target.insides.filter( (value, index) => {
+                        return index != Number(prop);
                     });
                     return true;
                 }
             }
             else if (typeof prop == "string") { // if it is a string
                 if (target.type == "pair") {
-                    delete target.insides[prop];
+                    target.insides = Object.fromEntries(Object.entries(target.insides).filter( (value, index) => {
+                        return value[0] != prop;
+                    }));
                     return true;
                 }
                 else if (target.type == "list") {
-                    delete target.insides[target.indexOf(prop)];
                     target.insides = target.insides.filter( (value) => {
-                        return value != null;
+                        return value != prop;
                     });
                     return true;
                 }
