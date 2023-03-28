@@ -1,4 +1,4 @@
-/* :: Stews :: Version 1.4.2 | 03/27/23 :: */
+/* :: Stews :: Version 1.4.3 | 03/28/23 :: */
 
 class Stew {
     constructor(object, splitter='') {
@@ -208,6 +208,7 @@ class Stew {
         else if (this.type == "list") return Array.from(this.insides).indexOf(entry);
     }
     indexOfKey(entry) { return this.indexOf(entry); }
+    findFirst(entry) { return this.indexOf(entry); }
     
 
     // indexOfValue
@@ -291,7 +292,10 @@ class Stew {
         }
         else {
             if (args[0] instanceof Array) args = args[0];
-            return this.includesFor(args);
+            for (let i = 0; i < args.length; i++) {
+			    if (this.includes(args[i])) return true;
+		    }
+		    return false;
         }
     }
     contains(/**/) { return this.includes(...Array.from(arguments)); }
@@ -425,6 +429,24 @@ class Stew {
     some(func) { return this.swig(func); }
 
 
+    // chug
+    chug(func) {
+        if (this.type == "pair") {
+            for (let i = 0; i < this.length; i++) {
+                if (!func(this.keys[i], this.values[i], i)) return false;
+            }
+        }
+        else if (this.type == "list") {
+            for (let i = 0; i < this.length; i++) {
+                if (!func(Array.from(this.insides)[i], i)) return false;
+            }
+        }
+
+        return true;
+    }
+    every(func) { return this.chug(func); }
+
+
     // slice
     slice(start, end) {
         if (this.type == "pair") {
@@ -497,17 +519,6 @@ class Stew {
     }
 
 
-	// includesFor
-	includesFor(array) {
-		for (let i = 0; i < array.length; i++) {
-			if (this.includes(array[i])) return true;
-		}
-		return false;
-	}
-	hasFor(array) { return this.includesFor(array); }
-	containsFor(array) { return this.includesFor(array); }
-
-
     // dump
     dump(file, replacer=null, indent=null) {
         try {
@@ -565,7 +576,7 @@ class Stew {
         args.shift();
         args.shift();
 
-        if (this.type == "list") {
+        if (this.type == "list") { 
             let thing = Array.from(this.insides);
 
             thing.splice(index, amount, ...args);
@@ -608,26 +619,55 @@ class Stew {
     containsValues(/**/) { return this.includesValue(...Array.from(arguments)); }
 
 
-    // multiDelete
-    multiDelete(array) {
+    // scoop
+    scoop(/**/) {
+        let args = Array.from(arguments);
+        var stuff = Stew.from(this);
+
+        if (args[0] instanceof Array) args = args[0];
+
         if (this.type == "list") {
             this.insides = this.filter( (value, index) => {
-                return !array.includes(value);
+                return !args.includes(index) && !args.includes(value);
             }).pour(Set);
-            
-            return this;
+            return stuff;
         }
+        
         else if (this.type == "pair") {
             this.insides = this.filter( (key, value, index) => {
-                return !array.includes(key);
+                return !args.includes(index) && !args.includes(key);
             }).pour(Map);
-            
-            return this;
+            return stuff;
         }
     }
-    multiRemove(array) { return this.multiDelete(array); }
-    multiDel(array) { return this.multiDelete(array); }
-    multiRem(array) { return this.multiDelete(array); }
+
+
+    // find
+    find(key) {
+        var indexes = [];
+        if (this.type == "list") {
+            for (let i = 0; i < this.length; i++) {
+                if (this[i] == key) indexes.push(i);
+            }
+        }
+        else if (this.type == "pair") {
+            for (let i = 0; i < this.keys.length; i++) {
+                if (this.keys[i] == key) indexes.push(i);
+            }
+        }
+        return indexes;
+    }
+    findIndexesOf(key) { return this.find(key); }
+    findIndexes(key) { return this.find(key); }
+    indexesOf(key) { return this.find(key); }
+
+
+    // lastIndexOf
+    lastIndexOf(key) {
+        let stuff = this.find(key);
+        return stuff[stuff.length-1];
+    }
+    findLast(key) { return this.lastIndexOf(key); }
 
 
     // properties
@@ -692,7 +732,7 @@ function StewProxyHandler() { return {
             if (Object.getOwnPropertyNames(Stew.prototype).includes(prop) || target[prop]) { // if it's a function or main thing
                 return target[prop];
             }
-            else if (Number(prop)+1) { // if it's a number
+            else if (Number(prop)+1 && Number(prop) <= target.length-1) { // if it's a number
                 return target.values[Number(prop)];
             }
             else if (typeof prop == "string") { // if it's string
@@ -708,7 +748,7 @@ function StewProxyHandler() { return {
             if (target[prop]) { // if it's a main thing like insides or type
                 return target[prop] = value;
             }
-            else if (Number(prop)+1) { // if it's a number
+            else if (Number(prop)+1 && Number(prop) <= target.length-1) { // if it's a number
                 return target.set(Number(prop), value);
             }
             else if (typeof prop == "string") { // if it's a string
@@ -721,7 +761,7 @@ function StewProxyHandler() { return {
         
 
         deleteProperty(target, prop) {
-            if (Number(prop)+1) { // if it is a number
+            if (Number(prop)+1 && Number(prop) <= target.length-1) { // if it is a number
                 target.insides.delete(target.keys[Number(prop)]);
                 return true;
             }
@@ -928,6 +968,7 @@ class Soup {
         else if (this.type == "list") return this.insides.indexOf(entry);
     }
     indexOfKey(entry) { return this.indexOf(entry); }
+    findFirst(entry) { return this.indexOf(entry); }
 
 
     // indexOfValue
@@ -964,7 +1005,6 @@ class Soup {
         }
     }
     fetch(entry) { return this.get(entry); }
-    find(entry) { return this.get(entry); }
     at(entry) { return this.get(entry); }
 
 
@@ -1013,7 +1053,10 @@ class Soup {
         }
         else {
             if (args[0] instanceof Array) args = args[0];
-            return this.includesFor(args);
+            for (let i = 0; i < args.length; i++) {
+			    if (this.includes(args[i])) return true;
+		    }
+		    return false;
         }
     }
     contains(/**/) { return this.includes(...Array.from(arguments)); }
@@ -1140,6 +1183,24 @@ class Soup {
     some(func) { return this.swig(func); }
 
 
+    // chug
+    chug(func) {
+        if (this.type == "pair") {
+            for (let i = 0; i < this.length; i++) {
+                if (!func(this.keys[i], this.values[i], i)) return false;
+            }
+        }
+        else if (this.type == "list") {
+            for (let i = 0; i < this.length; i++) {
+                if (!func(this.insides[i], i)) return false;
+            }
+        }
+
+        return true;
+    }
+    every(func) { return this.chug(func); }
+
+
     // slice
     slice(start, end) {
         if (this.type == "pair") {
@@ -1208,17 +1269,6 @@ class Soup {
             return this.insides[(typeof entry == "string") ? this.indexOf(entry) : entry] = name;
         }
     }
-
-
-	// includesFor
-	includesFor(array) {
-		for (let i = 0; i < array.length; i++) {
-			if (this.includes(array[i])) return true;
-		}
-		return false;
-	}
-	hasFor(array) { return this.includesFor(array); }
-	containsFor(array) { return this.includesFor(array); }
     
 
     // deleteDupes
@@ -1324,26 +1374,55 @@ class Soup {
     containsValues(/**/) { return this.includesValue(...Array.from(arguments)); }
 
 
-    // multiDelete
-    multiDelete(array) {
+    // scoop
+    scoop(/**/) {
+        let args = Array.from(arguments);
+        var stuff = Soup.from(this);
+
+        if (args[0] instanceof Array) args = args[0];
+
         if (this.type == "list") {
             this.insides = this.filter( (value, index) => {
-                return !array.includes(value);
+                return !args.includes(index) && !args.includes(value);
             }).pour();
-            
-            return this;
+            return stuff;
         }
+
         else if (this.type == "pair") {
             this.insides = this.filter( (key, value, index) => {
-                return !array.includes(key);
+                return !args.includes(index) && !args.includes(key);
             }).pour();
-            
-            return this;
+            return stuff;
         }
     }
-    multiRemove(array) { return this.multiDelete(array); }
-    multiDel(array) { return this.multiDelete(array); }
-    multiRem(array) { return this.multiDelete(array); }
+
+
+    // find
+    find(key) {
+        var indexes = [];
+        if (this.type == "list") {
+            for (let i = 0; i < this.length; i++) {
+                if (this[i] == key) indexes.push(i);
+            }
+        }
+        else if (this.type == "pair") {
+            for (let i = 0; i < this.keys.length; i++) {
+                if (this.keys[i] == key) indexes.push(i);
+            }
+        }
+        return indexes;
+    }
+    findIndexesOf(key) { return this.find(key); }
+    findIndexes(key) { return this.find(key); }
+    indexesOf(key) { return this.find(key); }
+
+
+    // lastIndexOf
+    lastIndexOf(key) {
+        let stuff = this.find(key);
+        return stuff[stuff.length-1];
+    }
+    findLast(key) { return this.lastIndexOf(key); }
 
 
     // properties
@@ -1408,7 +1487,7 @@ function SoapProxyHandler() { return {
             if (Object.getOwnPropertyNames(Soup.prototype).includes(prop) || target[prop]) { // if it's a function or main thing
                 return target[prop];
             }
-            else if (Number(prop)+1) { // if it's a number
+            else if (Number(prop)+1 && Number(prop) <= target.length-1) { // if it's a number
                 return target.values[Number(prop)];
             }
             else if (typeof prop == "string") { // if it's string
@@ -1424,7 +1503,7 @@ function SoapProxyHandler() { return {
             if (target[prop]) { // if it's a main thing like insides or type
                 return target[prop] = value;
             }
-            else if (Number(prop)+1) { // if it's a number
+            else if (Number(prop)+1 && Number(prop) <= target.length-1) { // if it's a number
                 return target.set(Number(prop), value);
             }
             else if (typeof prop == "string") { // if it's a string
@@ -1437,7 +1516,7 @@ function SoapProxyHandler() { return {
         
 
         deleteProperty(target, prop) {
-            if (Number(prop)+1) { // if it is a number
+            if (Number(prop)+1 && Number(prop) <= target.length-1) { // if it is a number
                 if (target.type == "pair") {
                     target.insides = Object.fromEntries(Object.entries(target.insides).filter( (value, index) => {
                         return index != Number(prop);
