@@ -15,7 +15,9 @@
         "html",
         "json",
         "stews",
+        "stew",
         "soups",
+        "soup",
         "arrays",
         "array",
         "objects",
@@ -27,6 +29,7 @@
         "dataType",
         "data",
         "classes",
+        "class",
         "types",
         "type"
     ],
