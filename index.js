@@ -465,7 +465,7 @@ class Stew {
 
         /* 
             "the dumbass shit below is so that it can check the stuff in the function to see if it needs to reverse 
-            please ignore how absolutely dog shit it is"
+             please ignore how absolutely dog shit it is"
 
             - Megan "meg" "nut" "nutmeg" "nuttmegg" The Nut | 04/03/2023
         */
@@ -1429,7 +1429,7 @@ class Soup {
 
         /* 
             "the dumbass shit below is so that it can check the stuff in the function to see if it needs to reverse 
-            please ignore how absolutely dog shit it is"
+             please ignore how absolutely dog shit it is"
 
             - Megan "meg" "nut" "nutmeg" "nuttmegg" The Nut | 04/03/2023
         */
