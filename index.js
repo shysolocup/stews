@@ -1,4 +1,4 @@
-/* :: Stews :: Version 1.4.3 | 03/28/23 :: */
+/* :: Stews :: Version 1.4.4 | 04/03/23 :: */
 
 class Stew {
     constructor(object, splitter='') {
@@ -155,6 +155,8 @@ class Stew {
     pour(type=null, joiner='') {
         if (type instanceof Function) type = new type();
 
+        if (typeof type == "string" && (type.toLowerCase() == "def" || type.toLowerCase() == "default")) return this.insides;
+
         if (type instanceof Array || (typeof type == "string" && type.toLowerCase() == 'array') || (type == null && this.type == "list"))
             return (this.type=="pair") ? Array.from(this.insides.entries())
             : Array.from(this.insides);
@@ -181,8 +183,8 @@ class Stew {
                 this.entries
             );
     }
-    merge(type=null, joiner='') { return this.pour(type, joiner); }
     fix(type=null, joiner='') { return this.pour(type, joiner); }
+    to(type=null, joiner='') { return this.pour(type, joiner); }
 
 
     // keyOf
@@ -460,15 +462,56 @@ class Stew {
 
     // sort
     sort(func=null) {
+
+        /* 
+            "the dumbass shit below is so that it can check the stuff in the function to see if it needs to reverse 
+            please ignore how absolutely dog shit it is"
+
+            - Megan "meg" "nut" "nutmeg" "nuttmegg" The Nut | 04/03/2023
+        */
+
+        function stupid(dumb) {
+            let args = Soup.from(dumb.toString(), ",");
+            args.replaceAll("(", "");
+            args.replaceAll(")", "");
+            args.replaceAll(" ", "");
+            args[1] = args[1].split("{");
+            args[1][0] = args[1][0].replace("=>", "");
+            args[1] = args[1][0];
+
+            const [ [a], [b]] = args;
+
+            let fixedString = dumb.toString().replace(/(?:\/\*(?:[\s\S]*?)\*\/)|(?:([\s;])+\/\/(?:.*)$)/gm, '$1')
+            let fixed = Soup.from(fixedString.substring(fixedString.indexOf('{')+1, fixedString.lastIndexOf('}')));
+
+            fixed.scoop("\n");
+            fixed.scoop(";");
+            fixed.scoop(" "); 
+
+            return fixed.join("") == `return${b}-${a}`;
+        }
+
         if (this.type == "pair") {
             let thing = Array.from(this.insides.entries());
-            this.insides = new Map( (func) ? thing.sort(func) : thing.sort() );
-            return this;
+
+            if (func && stupid(func)) {
+                this.insides = new Map( thing.reverse() );
+            }
+            else {
+                this.insides = new Map( (func) ? thing.sort(func) : thing.sort() );
+            }
         }
         else if (this.type == "list") {
-            this.insides = new Set((func) ? Array.from(this.insides).sort(func) : Array.from(this.insides).sort());
-            return this;
+            if (func && stupid(func)) {
+                this.insides = new Set(Array.from(this.insides).reverse());
+
+            }
+            else {
+                this.insides = new Set((func) ? Array.from(this.insides).sort(func) : Array.from(this.insides).sort());
+            }
         }
+
+        return this;
     }
 
 
@@ -668,6 +711,172 @@ class Stew {
         return stuff[stuff.length-1];
     }
     findLast(key) { return this.lastIndexOf(key); }
+
+
+    // then
+    then(func, func2) {
+        if (this.type == "list") {
+            this.forEach( (value, index) => {
+                if (func(value, index)) func2(value, index);
+            });
+
+        }
+        else if (this.type == "pair") {
+            this.forEach( (key, value, index) => {
+                if (func(key, value, index)) func2(key, value, index);
+            });
+        }
+    }
+
+
+    // filterBy
+    filterBy(obj, func) {
+        if (!obj.type) obj = Stew.from(obj);
+
+        if (this.type == "list") {
+            return this.filter( (value, index) => {
+                return func(obj.values[index], index);
+            });
+        }
+        else if (this.type == "pair") {
+            return this.filter( (key, value, index) => {
+                return func(obj.keys[index], obj.values[index], index);
+            });
+        }
+    }
+    filterWith(obj, func) { return this.filterBy(obj, func) }
+
+
+    // startsWith
+    startsWith(/**/) {
+        let args = Array.from(arguments);
+        if (args[0] instanceof Array) args = args[0];
+        let stuff = this.join("");
+
+        for (let i = 0; i < args.length; i++) {
+            if (stuff.startsWith(args[i])) return true;
+        }
+        return false;
+    }
+
+
+    // endsWith
+    endsWith(/**/) {
+        let args = Array.from(arguments);
+        if (args[0] instanceof Array) args = args[0];
+        let stuff = this.join("");
+
+        for (let i = 0; i < args.length; i++) {
+            if (stuff.endsWith(args[i])) return true;
+        }
+        return false;
+    }
+
+
+    // toUpperCase
+    toUpperCase() {
+        var stuff = this;
+        if (stuff.type == "list") {
+            stuff.forEach( (value, index) => {
+                if (typeof value == "string") stuff.set(index, value.toUpperCase());
+            });
+        }
+        else if (stuff.type == "pair") {
+            stuff.forEach( (key, value, index) => {
+                if (typeof value == "string") stuff.set(index, value.toUpperCase());
+                if (typeof key == "string") stuff.rename(index, key.toUpperCase());
+            });
+        }
+        return stuff;
+    }
+
+
+    // toLowerCase
+    toLowerCase() {
+        var stuff = this;
+        if (stuff.type == "list") {
+            stuff.forEach( (value, index) => {
+                if (typeof value == "string") stuff.set(index, value.toLowerCase());
+            });
+        }
+        else if (stuff.type == "pair") {
+            stuff.forEach( (key, value, index) => {
+                if (typeof value == "string") stuff.set(index, value.toLowerCase());
+                if (typeof key == "string") stuff.rename(index, key.toLowerCase());
+            });
+        }
+        return stuff;
+    }
+
+
+    // replace
+    replace(entry, replaceWith) {
+        let thing = this;
+        if (thing.type == "list") {
+            for (let i = 0; i < thing.length; i++) {
+                if (thing[i].includes(entry)) {
+                    thing.set(i, thing[i].replace(entry, replaceWith));
+                    break;
+                }
+            }
+        }
+        else if (thing.type == "pair") {
+            for (let i = 0; i < thing.length; i++) {
+                if (thing.keys[i].includes(entry)) {
+                    thing.rename(i, thing.keys[i].replace(entry, replaceWith));
+                    break;
+                }
+            }
+        }
+
+        return thing;
+    }
+
+
+    // replaceAll
+    replaceAll(entry, replaceWith) {
+        let thing = this;
+        if (thing.type == "list") {
+            thing.forEach( (value, index) => {
+                var stuff = value; while (stuff.includes(entry)) stuff = stuff.replace(entry, replaceWith);
+                
+                if (value.includes(entry)) thing.set(index, stuff);
+            });
+        }
+        else if (thing.type == "pair") {
+            thing.forEach( (key, value, index) => {
+                var stuff = key; while (stuff.includes(entry)) stuff = stuff.replace(entry, replaceWith);
+                
+                if (key.includes(entry)) thing.rename(index, stuff);
+            });
+        }
+        
+        return thing;
+    }
+
+
+    // append
+    append(index, key, value=null) {
+        var stuff;
+        if (this.type == "list") {
+            stuff = new Stew(Array);
+            this.forEach( (v, i) => {
+                if (i == index) stuff.push(key);
+                stuff.push(v);
+            });
+
+            this.insides = stuff.pour(Set);
+        }
+        else if (this.type == "pair") {
+            stuff = new Stew(Object);
+            this.forEach( (k, v, i) => {
+                if (i == index) stuff.push(key, value);
+                stuff.push(k, v);
+            });
+
+            this.insides = stuff.pour(Map);
+        }
+    }
 
 
     // properties
@@ -914,8 +1123,10 @@ class Soup {
     // pour
     pour(type=null, joiner='') {
         if (type instanceof Function) type = new type();
+        
+        if (typeof type == "string" && (type.toLowerCase() == "def" || type.toLowerCase() == "default")) return this.insides;
 
-        if (type instanceof Array || (typeof type == "string" && type.toLowerCase() == 'array') || (type == null && this.type == "list"))
+        else if (type instanceof Array || (typeof type == "string" && type.toLowerCase() == 'array') || (type == null && this.type == "list"))
             return (this.type=="pair") ? Object.entries(this.insides)
             : Array.from(this.insides);
 
@@ -943,6 +1154,7 @@ class Soup {
             );
     }
     fix(type=null, joiner='') { return this.pour(type, joiner); }
+    to(type=null, joiner='') { return this.pour(type, joiner); }
 
 
     // keyOf
@@ -1210,19 +1422,59 @@ class Soup {
             return new Soup(this.insides.slice(start, end));
         }
     }
-
+    
 
     // sort
     sort(func=null) {
+
+        /* 
+            "the dumbass shit below is so that it can check the stuff in the function to see if it needs to reverse 
+            please ignore how absolutely dog shit it is"
+
+            - Megan "meg" "nut" "nutmeg" "nuttmegg" The Nut | 04/03/2023
+        */
+
+        function stupid(dumb) {
+            let args = Soup.from(dumb.toString(), ",");
+            args.replaceAll("(", "");
+            args.replaceAll(")", "");
+            args.replaceAll(" ", "");
+            args[1] = args[1].split("{");
+            args[1][0] = args[1][0].replace("=>", "");
+            args[1] = args[1][0];
+
+            const [ [a], [b]] = args;
+
+            let fixedString = dumb.toString().replace(/(?:\/\*(?:[\s\S]*?)\*\/)|(?:([\s;])+\/\/(?:.*)$)/gm, '$1')
+            let fixed = Soup.from(fixedString.substring(fixedString.indexOf('{')+1, fixedString.lastIndexOf('}')));
+
+            fixed.scoop("\n");
+            fixed.scoop(";");
+            fixed.scoop(" "); 
+
+            return fixed.join("") == `return${b}-${a}`;
+        }
+
         if (this.type == "pair") {
             let thing = Object.entries(this.insides);
-            this.insides = Object.fromEntries( (func) ? thing.sort(func) : thing.sort() );
-            return this;
+
+            if (func && stupid(func)) {
+                this.insides = Object.fromEntries( thing.reverse() );
+            }
+            else {
+                this.insides = Object.fromEntries( (func) ? thing.sort(func) : thing.sort() );
+            }
         }
         else if (this.type == "list") {
-            this.insides = (func) ? this.insides.sort(func) : this.insides.sort();
-            return this;
+            if (func && stupid(func)) {
+                this.insides = this.insides.reverse();
+            }
+            else {
+                this.insides = (func) ? this.insides.sort(func) : this.insides.sort();
+            }
         }
+
+        return this;
     }
 
 
@@ -1425,6 +1677,170 @@ class Soup {
     findLast(key) { return this.lastIndexOf(key); }
 
 
+    // then
+    then(func, func2) {
+        if (this.type == "list") {
+            this.forEach( (value, index) => {
+                if (func(value, index)) func2(value, index);
+            });
+
+        }
+        else if (this.type == "pair") {
+            this.forEach( (key, value, index) => {
+                if (func(key, value, index)) func2(key, value, index);
+            });
+        }
+    }
+
+
+    // filterBy
+    filterBy(obj, func) {
+        if (!obj.type) obj = Soup.from(obj);
+
+        if (this.type == "list") {
+            return this.filter( (value, index) => {
+                return func(obj.values[index], index);
+            });
+        }
+        else if (this.type == "pair") {
+            return this.filter( (key, value, index) => {
+                return func(obj.keys[index], obj.values[index], index);
+            });
+        }
+    }
+    filterWith(obj, func) { return this.filterBy(obj, func) }
+
+
+    // startsWith
+    startsWith(/**/) {
+        let args = Array.from(arguments);
+        if (args[0] instanceof Array) args = args[0];
+        let stuff = this.join("");
+
+        for (let i = 0; i < args.length; i++) {
+            if (stuff.startsWith(args[i])) return true;
+        }
+        return false;
+    }
+
+
+    // endsWith
+    endsWith(/**/) {
+        let args = Array.from(arguments);
+        if (args[0] instanceof Array) args = args[0];
+        let stuff = this.join("");
+
+        for (let i = 0; i < args.length; i++) {
+            if (stuff.endsWith(args[i])) return true;
+        }
+        return false;
+    }
+
+
+    // toUpperCase
+    toUpperCase() {
+        var stuff = this;
+        if (stuff.type == "list") {
+            stuff.forEach( (value, index) => {
+                if (typeof value == "string") stuff.set(index, value.toUpperCase());
+            });
+        }
+        else if (stuff.type == "pair") {
+            stuff.forEach( (key, value, index) => {
+                if (typeof value == "string") stuff.set(index, value.toUpperCase());
+                if (typeof key == "string") stuff.rename(index, key.toUpperCase());
+            });
+        }
+        return stuff;
+    }
+
+
+    // toLowerCase
+    toLowerCase() {
+        var stuff = this;
+        if (stuff.type == "list") {
+            stuff.forEach( (value, index) => {
+                if (typeof value == "string") stuff.set(index, value.toLowerCase());
+            });
+        }
+        else if (stuff.type == "pair") {
+            stuff.forEach( (key, value, index) => {
+                if (typeof value == "string") stuff.set(index, value.toLowerCase());
+                if (typeof key == "string") stuff.rename(index, key.toLowerCase());
+            });
+        }
+        return stuff;
+    }
+
+
+    // replace
+    replace(entry, replaceWith) {
+        let thing = this;
+        if (thing.type == "list") {
+            for (let i = 0; i < thing.length; i++) {
+                if (thing[i].includes(entry)) {
+                    thing.set(i, thing[i].replace(entry, replaceWith));
+                    break;
+                }
+            }
+        }
+        else if (thing.type == "pair") {
+            for (let i = 0; i < thing.length; i++) {
+                if (thing.keys[i].includes(entry)) {
+                    thing.rename(i, thing.keys[i].replace(entry, replaceWith));
+                    break;
+                }
+            }
+        }
+
+        return thing;
+    }
+
+
+    // replaceAll
+    replaceAll(entry, replaceWith) {
+        let thing = this;
+        if (thing.type == "list") {
+            thing.forEach( (value, index) => {
+                var stuff = value; while (stuff.includes(entry)) stuff = stuff.replace(entry, replaceWith);
+
+                if (value.includes(entry)) thing.set(index, stuff );
+            });
+        }
+        else if (thing.type == "pair") {
+            thing.forEach( (key, value, index) => {
+                var stuff = key; while (stuff.includes(entry)) stuff = stuff.replace(entry, replaceWith);
+
+                if (key.includes(entry)) thing.rename(index, stuff);
+            });
+        }
+        
+        return thing;
+    }
+
+
+    // append
+    append(index, key, value=null) {
+        var stuff;
+        if (this.type == "list") {
+            stuff = new Soup(Array);
+            this.forEach( (v, i) => {
+                if (i == index) stuff.push(key);
+                stuff.push(v);
+            });
+        }
+        else if (this.type == "pair") {
+            stuff = new Soup(Object);
+            this.forEach( (k, v, i) => {
+                if (i == index) stuff.push(key, value);
+                stuff.push(k, v);
+            });
+        }
+        
+        this.insides = stuff.pour();
+    }
+
+
     // properties
     get properties() {
         let proto = Soup.prototype;
@@ -1571,11 +1987,17 @@ Object.defineProperty( Soup, "fromEntries", {
 });
 
 Object.defineProperty( Stew, "parse", {
-	value: (entries) => { return new Stew(JSON.parse(entries)); }
+	value: (entries) => {
+        if (entries.startsWith("{") && entries.endsWith("}")) return new Stew(JSON.parse(entries));
+        else if (entries.startsWith("[") && entries.endsWith("]")) return new Stew(new Function(`return ${entries}`)());
+    }
 });
 
 Object.defineProperty( Soup, "parse", {
-	value: (entries) => { return new Soup(JSON.parse(entries)); }
+	value: (entries) => {
+        if (entries.startsWith("{") && entries.endsWith("}")) return new Soup(JSON.parse(entries));
+        else if (entries.startsWith("[") && entries.endsWith("]")) return new Soup(new Function(`return ${entries}`)());
+    }
 });
 
 
@@ -1603,6 +2025,7 @@ var random = {
 	},
 	number: function(min, max) {return this.int(min, max)},
 
+
 	choice: function(object, splitter='') {
 		if (typeof object == "string") {
 			return object.split(splitter)[Math.floor(Math.random() * (Number(object.split(splitter).length)))];
@@ -1624,6 +2047,7 @@ var random = {
             return Object.entries(object)[Math.floor(Math.random() * (Number(Object.entries(object).length)))];
         }
 	},
+
 
     index: function(object, splitter='') {
 		if (typeof object == "string") {
