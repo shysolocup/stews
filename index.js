@@ -1,4 +1,4 @@
-/* :: Stews :: Version 1.4.4 | 04/03/23 :: */
+/* :: Stews :: Version 1.4.5 | 04/04/23 :: */
 
 class Stew {
     constructor(object, splitter='') {
@@ -49,6 +49,10 @@ class Stew {
             this.insides = new Map(Object.entries(object));
             this.type = "pair";
         }
+
+        Object.defineProperty(this, "splitter", {
+            get() { return new String(splitter); }
+        });
 
         return new Proxy(this, StewProxyHandler());
     }
@@ -245,7 +249,6 @@ class Stew {
         }
     }
     fetch(entry) { return this.get(entry); }
-    find(entry) { return this.get(entry); }
     at(entry) { return this.get(entry); }
 
 
@@ -495,6 +498,7 @@ class Stew {
             let thing = Array.from(this.insides.entries());
 
             if (func && stupid(func)) {
+                thing = thing.sort();
                 this.insides = new Map( thing.reverse() );
             }
             else {
@@ -503,6 +507,7 @@ class Stew {
         }
         else if (this.type == "list") {
             if (func && stupid(func)) {
+                this.insides = new Set(Array.from(this.insides).sort());
                 this.insides = new Set(Array.from(this.insides).reverse());
 
             }
@@ -664,13 +669,14 @@ class Stew {
 
     // scoop
     scoop(/**/) {
-        let args = Array.from(arguments);
+        var args = Array.from(arguments);
         var stuff = Stew.from(this);
 
         if (args[0] instanceof Array) args = args[0];
 
         if (this.type == "list") {
             this.insides = this.filter( (value, index) => {
+                if (args[0] instanceof Function) return !args[0](value, index);
                 return !args.includes(index) && !args.includes(value);
             }).pour(Set);
             return stuff;
@@ -678,6 +684,7 @@ class Stew {
         
         else if (this.type == "pair") {
             this.insides = this.filter( (key, value, index) => {
+                if (args[0] instanceof Function) return !args[0](key, value, index);
                 return !args.includes(index) && !args.includes(key);
             }).pour(Map);
             return stuff;
@@ -686,23 +693,27 @@ class Stew {
 
 
     // find
-    find(key) {
+    find(entry, exact=false) {
         var indexes = [];
         if (this.type == "list") {
             for (let i = 0; i < this.length; i++) {
-                if (this[i] == key) indexes.push(i);
+                if (entry instanceof Function) if (entry(this[i], i)) indexes.push(i);
+                if (!exact && this[i].includes(entry)) indexes.push(i);
+                else if (this[i] == entry) indexes.push(i);
             }
         }
         else if (this.type == "pair") {
             for (let i = 0; i < this.keys.length; i++) {
-                if (this.keys[i] == key) indexes.push(i);
+                if (entry instanceof Function) if (entry(this.keys[i], this.values[i], i)) indexes.push(i);
+                if (!exact && this.keys[i].includes(entry)) indexes.push(i);
+                else if (this.keys[i] == entry) indexes.push(i);
             }
         }
         return indexes;
     }
-    findIndexesOf(key) { return this.find(key); }
-    findIndexes(key) { return this.find(key); }
-    indexesOf(key) { return this.find(key); }
+    findIndexesOf(entry) { return this.find(entry); }
+    findIndexes(entry) { return this.find(entry); }
+    indexesOf(entry) { return this.find(entry); }
 
 
     // lastIndexOf
@@ -903,6 +914,12 @@ class Stew {
     get props() { return this.properties; }
 
 
+    // this part isn't documented bc it's for JSON.stringify()
+    toJSON() {
+        return this.pour(Object);
+    }
+
+
     // toPrimitive
     [Symbol.toPrimitive](hint) {
         if (hint === "string") {
@@ -924,8 +941,26 @@ class Stew {
 
             next() {
                 if (this.current <= this.last) {
-                    let data = (stuff.type == "pair") ? stuff.entries[this.current++] : [stuff.get(this.current++)];
-                    data.push(this.current-1);
+                    let data = (stuff.type == "pair") ? stuff.entries[this.current++] : stuff.get(this.current++);
+                    return { done: false, value: data };
+                } else {
+                    return { done: true };
+                }
+            }
+        };
+    }
+
+
+    // async iterator ( for await..of )
+    [Symbol.asyncIterator]() {
+        var stuff = this;
+        return {
+            current: 0,
+            last: stuff.length-1,
+
+            async next() {
+                if (this.current <= this.last) {
+                    let data = (stuff.type == "pair") ? stuff.entries[this.current++] : stuff.get(this.current++);
                     return { done: false, value: data };
                 } else {
                     return { done: true };
@@ -1036,6 +1071,10 @@ class Soup {
             this.insides = object;
             this.type = "pair";
         }
+
+        Object.defineProperty(this, "splitter", {
+            get() { return new String(splitter); }
+        });
 
         return new Proxy(this, SoapProxyHandler());
     }
@@ -1459,6 +1498,7 @@ class Soup {
             let thing = Object.entries(this.insides);
 
             if (func && stupid(func)) {
+                thing = thing.sort();
                 this.insides = Object.fromEntries( thing.reverse() );
             }
             else {
@@ -1467,6 +1507,7 @@ class Soup {
         }
         else if (this.type == "list") {
             if (func && stupid(func)) {
+                this.insides = this.insides.sort();
                 this.insides = this.insides.reverse();
             }
             else {
@@ -1628,13 +1669,14 @@ class Soup {
 
     // scoop
     scoop(/**/) {
-        let args = Array.from(arguments);
+        var args = Array.from(arguments);
         var stuff = Soup.from(this);
 
         if (args[0] instanceof Array) args = args[0];
 
         if (this.type == "list") {
             this.insides = this.filter( (value, index) => {
+                if (args[0] instanceof Function) return !args[0](value, index);
                 return !args.includes(index) && !args.includes(value);
             }).pour();
             return stuff;
@@ -1642,6 +1684,7 @@ class Soup {
 
         else if (this.type == "pair") {
             this.insides = this.filter( (key, value, index) => {
+                if (args[0] instanceof Function) return !args[0](key, value, index);
                 return !args.includes(index) && !args.includes(key);
             }).pour();
             return stuff;
@@ -1650,23 +1693,27 @@ class Soup {
 
 
     // find
-    find(key) {
+    find(entry, exact=false) {
         var indexes = [];
         if (this.type == "list") {
             for (let i = 0; i < this.length; i++) {
-                if (this[i] == key) indexes.push(i);
+                if (entry instanceof Function) if (entry(this[i], i)) indexes.push(i);
+                if (!exact && this[i].includes(entry)) indexes.push(i);
+                else if (this[i] == entry) indexes.push(i);
             }
         }
         else if (this.type == "pair") {
             for (let i = 0; i < this.keys.length; i++) {
-                if (this.keys[i] == key) indexes.push(i);
+                if (entry instanceof Function) if (entry(this.keys[i], this.values[i], i)) indexes.push(i);
+                if (!exact && this.keys[i].includes(entry)) indexes.push(i);
+                else if (this.keys[i] == entry) indexes.push(i);
             }
         }
         return indexes;
     }
-    findIndexesOf(key) { return this.find(key); }
-    findIndexes(key) { return this.find(key); }
-    indexesOf(key) { return this.find(key); }
+    findIndexesOf(entry) { return this.find(entry); }
+    findIndexes(entry) { return this.find(entry); }
+    indexesOf(entry) { return this.find(entry); }
 
 
     // lastIndexOf
@@ -1865,6 +1912,12 @@ class Soup {
     get props() { return this.properties; }
 
 
+    // this part isn't documented bc it's for JSON.stringify()
+    toJSON() {
+        return this.pour(Object);
+    }
+
+
     // toPrimitive
     [Symbol.toPrimitive](hint) {
         if (hint === "string") {
@@ -1886,8 +1939,26 @@ class Soup {
 
             next() {
                 if (this.current <= this.last) {
-                    let data = (stuff.type == "pair") ? stuff.entries[this.current++] : [stuff.get(this.current++)];
-                    data.push(this.current-1);
+                    let data = (stuff.type == "pair") ? stuff.entries[this.current++] : stuff.get(this.current++);
+                    return { done: false, value: data };
+                } else {
+                    return { done: true };
+                }
+            }
+        };
+    }
+
+
+    // async iterator ( for await..of )
+    [Symbol.asyncIterator]() {
+        var stuff = this;
+        return {
+            current: 0,
+            last: stuff.length-1,
+
+            async next() {
+                if (this.current <= this.last) {
+                    let data = (stuff.type == "pair") ? stuff.entries[this.current++] : stuff.get(this.current++);
                     return { done: false, value: data };
                 } else {
                     return { done: true };
@@ -1986,6 +2057,8 @@ Object.defineProperty( Soup, "fromEntries", {
 	value: (entries) => { return new Soup(Object.fromEntries(entries)); }
 });
 
+
+// parses
 Object.defineProperty( Stew, "parse", {
 	value: (entries) => {
         if (entries.startsWith("{") && entries.endsWith("}")) return new Stew(JSON.parse(entries));
