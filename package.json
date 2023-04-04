@@ -1,6 +1,6 @@
 {
     "name": "stews",
-    "version": "1.4.4",
+    "version": "1.4.5",
     "author": "nutmeg",
     "description": "Stews is a Node.JS package meant to make storing info easier by combining elements of arrays, objects, maps and sets",
     "repository": {
