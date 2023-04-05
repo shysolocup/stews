@@ -10,7 +10,7 @@ Stews is a [Node.JS](https://nodejs.org/en/) package meant to make storing data 
 
 It uses an index system similar to that of arrays as well as an entry system similar to that of objects.<br><br>
 
-It's fully open source with complete documentation and support for modding.<br><br>
+It's fully open source with complete documentation and support for modding with a way to create new functions.<br><br>
 
 ---
 
