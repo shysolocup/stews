@@ -5,12 +5,15 @@
 <a href="https://github.com/nuttmegg/stews/discussions"><img src="https://img.shields.io/github/discussions/nuttmegg/stews?logo=google%20chat&logoColor=white" alt="discussions" /></a>
 <a href="https://github.com/nuttmegg/stews/issues"><img src="https://img.shields.io/github/issues/nuttmegg/stews" alt="issues" /></a>
 <a href="https://github.com/nuttmegg/stews/wiki"><img src="https://img.shields.io/badge/docs-stews?color=purple&logo=gitbook&logoColor=white" alt="docs" /></a>
-  
-Stews is a [Node.JS](https://nodejs.org/en/) package meant to make storing data easier. It has two new classes with combinations of elements from arrays, objects, sets and maps.<br><br>
 
-It uses an index system similar to that of arrays as well as an entry system similar to that of objects.<br><br>
+**Stews is a [Node.JS](https://nodejs.org/en/) package meant to make storing data easier by mixing parts from common data types.**
+  - Fully open source
+  - Full modding support
+  - Built in random class
+  - Index & entry systems
+  - HTML and JSON compatible
 
-It's fully open source with complete documentation and support for modding with a way to make new functions.<br><br>
+<br>
 
 ---
 
@@ -25,117 +28,99 @@ npm i nuttmegg/stews
 ```
 <br>
 
-## Usage
-The two main classes included are stews and soups. Random is a separate thing if you want to look into it the link is [here](https://github.com/nuttmegg/stews/wiki/Random)<br><br>
-> ### Stew
-> Stew is a class that's built off of sets and maps though they are compatable with arrays, strings, and other objects<br>
-> In a list stews CANNOT have duplicate entries
-> ```js
-> const { Stew } = require('stews');
-> 
-> /* LISTS */
-> var list = new Stew( ["a", "a", "b", "c"] ); // Stew { insides: Set(3) { "a", "b", "c" }, type: "list" }
->
-> list.length; // 3
-> list.indexOf("b"); // 1
->
-> // all output "a"
-> list.get(0);
-> list.get("a");
->
-> list[0];
-> list["a"];
-> list.a;
-> 
-> list.shift(); // Set(2) { "b", "c" }
-> list.pop(); // Set(1) { "b" }
-> delete list[0]; // Set(0) { }
->
-> list.set(0, "b"); // Set(1) { "b" }
-> list[0] = "b"; // Set(1) { "b" }
->
-> list.pull("a"); // Set(2) { "a", "b" }
-> list.push("c"); // Set(3) { "a", "b", "c" }
->
-> list.pour(); // ["a", "b", "c"]
->
->
-> /* PAIRS */
-> var pair = new Stew( {"key0": "value0", "key1": "value1"} ); // Stew { insides: Map(2) { "key0" => "value0", "key1" => "value1" }, type: "pair" }
->
-> pair.length; // 2
-> pair.indexOf("key1"); // 1
->
-> // all output "value0"
-> pair.get(0);
-> pair.get("key0");
->
-> pair[0];
-> pair["key0"];
-> pair.key0;
-> 
-> pair.shift(); // Map(1) { "key1" => "value1" }
-> pair.pop(); // Map(0) { }
->
-> pair.pull("key0", "value0"); // Map(1) { "key0" => "value0" }
-> pair.push("key1", "value1"); // Map(2) { "key0" => "value0", "key1" => "value1" }
->
-> pair.pour(); // {"key0": "value0", "key1": "value1"}
-> ```
+## Types
+The two main classes included in stews are stews and soups and are both compatible with the common data types<br>
+- Stews are made using [Sets](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set) and [Maps](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map) so they ***DON'T*** allow duplicate entries
+- Soups are made using [Arrays](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) and [Objects](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) so they ***DO*** allow duplicate entries
+
 <br>
-  
-> ### Soup
-> Soup is a class that's built off of arrays and objects though they are compatable with strings, maps, and sets<br>
-> In a list soups CAN have duplicate entries
+
+> ## Stew
 > ```js
-> const { Soup } = require('stews');
+> // Stew { insides: Set(3) { "a", "b", "c" }, type: "list" }
+> new Stew( ["a", "a", "a", "b", "b", "c"] );
 > 
-> /* LISTS */
-> var list = new Soup( ["a", "a", "b", "c"] ); // Soup { insides: ["a", "a", "b", "c"], type: "list" }
->
-> list.length; // 4
-> list.indexOf("b"); // 2
->
-> // all output "a"
-> list.get(0);
-> list.get("a");
->
-> list[0];
-> list["a"];
-> list.a;
-> 
-> list.shift(); // ["a", "b", "c"]
-> list.pop(); // ["a", "b"]
-> delete list[0]; // ["b"]
->
-> list.set(0, "b"); // ["b"]
-> list[0] = "b"; // ["b"]
->
-> list.pull("a"); // ["a", "b"]
-> list.push("c"); // ["a", "b", "c"]
->
-> list.pour(); // ["a", "b", "c"]
->
->
-> /* PAIRS */
-> var pair = new Soup( {"key0": "value0", "key1": "value1"} ); // Soup { insides: {"key0": "value0", "key1": "value1"}, type: "pair" }
->
-> pair.length; // 2
-> pair.indexOf("key1"); // 1
->
-> // all output "value0"
-> pair.get(0);
-> pair.get("key0");
->
-> pair[0];
-> pair["key0"];
-> pair.key0;
-> 
-> pair.shift(); // {"key1": "value1"}
-> pair.pop(); // {}
->
-> pair.pull("key0", "value0"); // {"key0": "value0"}
-> pair.push("key1", "value1"); // {"key0": "value0", "key1": "value1"}
->
-> pair.pour(); // {"key0": "value0", "key1": "value1"}
+> // Stew { insides: Map(2) { "key0" => "value0", "key1" => "value1" }, type: "pair" }
+> new Stew( {key0: "value0", key1: "value1"} );
 > ```
+
+> ## Soup
+> ```js
+> // Soup { insides: [ "a", "a", "a", "b", "b", "c" ], type: "list" }
+> new Soup( ["a", "a", "a", "b", "b", "c"] );
+>
+> // Soup { insides: { key0: "value0", key1: "value1" }, type: "pair" }
+> new Soup( {key0: "value0", key1: "value1"} );
+> ```
+
+<br>
+
+## Usage
+```js
+const { Stew, Soup } = require('stews');
+
+let list = new Stew( ["b", "c"] );
+let pair = new Stew( {k1: "v1", k2: "v2"} );
+
+
+// push and pull
+list.push("d"); // ["b", "c", "d"]
+list.pull("a"); // ["a", "b", "c", "d"]
+
+pair.push("k3", "v3"); // {k1: "v1", "k2": "v2", "k3", "v3"}
+pair.pull("k0", "v0"); // {k0: "v0", k1: "v1", "k2": "v2", "k3", "v3"}
+
+
+// get
+list[0]; // "a"
+list[1]; // "b"
+
+pair[0]; // "v0"
+pair[1]; // "v1"
+
+
+// length
+list.length; // 4
+pair.length; // 4
+
+
+// keys values and entries
+list.keys; // ['0', '1', '2']
+list.values; // ['a', 'b', 'c']
+list.entries; // [ ['0', 'a'], ['1', 'b'], ['2', 'c'] ]
+
+pair.keys; // ['k0', 'k1', 'k2', 'k3']
+pair.values; // ['v0', 'v1', 'v2', 'v3']
+pair.entries; // [ ['k0', 'v0'], ['k1', 'v1'], ['k2', 'v2'], ['k3', 'v3'] ]
+
+
+// set and rename
+list[1] = "set"; // ["a", "set", "c", "d"]
+pair[1] = "set"; // {k0: 'v0', k1: 'set', k2: 'v2', k3: 'v3'}
+
+list.rename(1, "rename"); // ["a", "rename", "c", "d"]
+pair.rename(1, "rename"); // {k0: 'v0', rename: 'set', k2: 'v2', k3: 'v3'}
+
+
+// delete pop and shift
+list.pop(); // ["a", "rename", "c"]
+pair.pop(); // {k0: 'v0', rename: 'set', k2: 'v2'}
+
+list.shift(); // ["rename", "c"]
+pair.shift(); // {rename: 'set', k2: 'v2'}
+
+delete list[0]; // ["c"]
+delete pair[0]; // {k2: 'v2'}
+
+
+// pour
+list.pour(); // ["c"]
+list.pour(Object); // {'0': 'c'}
+list.pour(Set); // Set(1) {"c"}
+list.pour(Map); // Map(0) { '0' => 'c' }
+
+pair.pour(); // {k2: "v2"}
+pair.pour(Array); // [ ["k2", "v2"] ]
+pair.pour(Set); // Set(1) { ["k2", "v2"] }
+pair.pour(Map); // Map(1) { "k2" => "v2" }
+```
