@@ -1,4 +1,4 @@
-/* :: Stews :: Version 1.4.6 | 04/06/23 :: */
+/* :: Stews :: Version 1.5.0 | 04/14/23 :: */
 
 class Stew {
     constructor(object, splitter='') {
@@ -51,7 +51,7 @@ class Stew {
         }
 
         Object.defineProperty(this, "splitter", {
-            get() { return new String(splitter); }
+            value: new String(splitter)
         });
 
         return new Proxy(this, StewProxyHandler());
@@ -91,6 +91,7 @@ class Stew {
         }
     }
     add(entry, value=null) { return this.push(entry, value); }
+    push_back(entry, value=null) { return this.push(entry, value); }
     
 
     // set
@@ -132,7 +133,8 @@ class Stew {
             this.insides = new Set(thing);
         }
     }
-    unshift(entry) { return this.pull(entry); }
+    unshift(entry, value=null) { return this.pull(entry, value); }
+    push_front(entry, value=null) { return this.pull(entry, value); }
 
 
     // pop
@@ -209,12 +211,13 @@ class Stew {
 
 
     // indexOf
-    indexOf(entry) {
-        if (this.type == "pair") return this.keys.indexOf(entry);
-        else if (this.type == "list") return Array.from(this.insides).indexOf(entry);
+    indexOf(entry, exact=true) {
+        let stuff = this.find(entry, exact);
+        return stuff[0];
     }
-    indexOfKey(entry) { return this.indexOf(entry); }
-    findFirst(entry) { return this.indexOf(entry); }
+    indexOfKey(entry, exact=true) { return this.indexOf(entry, exact); }
+    firstIndexOf(entry, exact=true) { return this.indexOf(entry, exact); }
+    findFirst(entry, exact=true) { return this.indexOf(entry, exact); }
     
 
     // indexOfValue
@@ -389,7 +392,12 @@ class Stew {
             return new Stew(Object.fromEntries(thing));
         }
         else if (this.type == "list") {
-            return new Stew( Array.from(this.insides).map(func) );
+            let thing = Array.from(this.insides);
+            this.forEach( (value, index) => {
+                thing[index] = func(value, index);
+            });
+
+            return new Stew(thing);
         }
     }
 
@@ -710,17 +718,19 @@ class Stew {
         }
         return indexes;
     }
-    findIndexesOf(entry, exact=false) { return this.find(entry, exact); }
-    findIndexes(entry, exact=false) { return this.find(entry, exact); }
-    indexesOf(entry, exact=false) { return this.find(entry, exact); }
+    allIndexesOf(entry, exact=true) { return this.find(entry, exact); }
+    findIndexesOf(entry, exact=true) { return this.find(entry, exact); }
+    findIndexes(entry, exact=true) { return this.find(entry, exact); }
+    indexesOf(entry, exact=true) { return this.find(entry, exact); }
+    findAll(entry, exact=false) { return this.find(entry, exact); }
 
 
     // lastIndexOf
-    lastIndexOf(key) {
-        let stuff = this.find(key);
+    lastIndexOf(entry, exact=true) {
+        let stuff = this.find(entry, exact);
         return stuff[stuff.length-1];
     }
-    findLast(key) { return this.lastIndexOf(key); }
+    findLast(entry, exact=true) { return this.lastIndexOf(entry, exact); }
 
 
     // then
@@ -841,6 +851,7 @@ class Stew {
 
         return thing;
     }
+    replaceOne(entry, replaceWith) { return this.replace(entry, replaceWith); }
 
 
     // replaceAll
@@ -887,6 +898,19 @@ class Stew {
             this.insides = stuff.pour(Map);
         }
     }
+    insert(index, key, value=null) { return this.append(index, key, value); }
+    push_to(index, key, value=null) { return this.append(index, key, value); }
+    push_at(index, key, value=null) { return this.append(index, key, value); }
+
+
+    // vary
+    vary(obj) {
+        let thing = Soup.from(obj).toLowerCase()[this.type];
+        this.constructor.prototype.TyperFunction = thing;
+        let returns = this.TyperFunction();
+        delete this.constructor.prototype.TyperFunction;
+        return returns;
+    }
 
 
     // properties
@@ -908,7 +932,7 @@ class Stew {
             else if (name == "props" || name == "properties") {
                 methods[name] = Object.getOwnPropertyDescriptors(proto)[name].get
             }
-            else if ( ["length", "size", "keys", "values", "entries"].includes(name) ) {
+            else if ( Stew.primaryInfo.includes(name) ) {
                 let entries = [];
 
                 Object.entries(methods).forEach( (entry, index) => {
@@ -923,7 +947,7 @@ class Stew {
         });
 
         info = Object.fromEntries(Object.entries(methods).filter( (entry, index) => {
-            return ["insides", "type", "splitter", "length", "size", "keys", "values", "entries", "constructor"].includes(entry[0]);
+            return Stew.primaryInfo.includes(entry[0]);
         }));
 
         return {
@@ -1100,7 +1124,7 @@ class Soup {
         }
 
         Object.defineProperty(this, "splitter", {
-            get() { return new String(splitter); }
+            value: new String(splitter)
         });
 
         return new Proxy(this, SoapProxyHandler());
@@ -1134,6 +1158,7 @@ class Soup {
         else if (this.type == "list") return this.insides.push(entry);
     }
     add(entry, value=null) { return this.push(entry, value); }
+    push_back(entry, value=null) { return this.push(entry, value); }
     
 
     // set
@@ -1163,7 +1188,8 @@ class Soup {
         }
         else if (this.type == "list") return this.insides.unshift(entry);
     }
-    unshift(entry) { return this.pull(entry); }
+    unshift(entry, value=null) { return this.pull(entry, value); }
+    push_front(entry, value=null) { return this.pull(entry, value); }
 
 
     // pop
@@ -1241,12 +1267,13 @@ class Soup {
 
 
     // indexOf
-    indexOf(entry) {
-        if (this.type == "pair") return this.keys.indexOf(entry);
-        else if (this.type == "list") return this.insides.indexOf(entry);
+    indexOf(entry, exact=true) {
+        let stuff = this.find(entry, exact);
+        return stuff[0];
     }
-    indexOfKey(entry) { return this.indexOf(entry); }
-    findFirst(entry) { return this.indexOf(entry); }
+    indexOfKey(entry, exact=true) { return this.indexOf(entry, exact); }
+    firstIndexOf(entry, exact=true) { return this.indexOf(entry, exact); }
+    findFirst(entry, exact=true) { return this.indexOf(entry, exact); }
 
 
     // indexOfValue
@@ -1414,7 +1441,13 @@ class Soup {
             return new Soup(Object.fromEntries(thing));
         }
         else if (this.type == "list") {
-            return new Soup( this.insides.map(func) );
+            let thing = this.insides;
+
+            this.forEach( (value, index) => {
+                thing[index] = func(value, index);
+            });
+
+            return new Soup(thing);
         }
     }
 
@@ -1735,17 +1768,19 @@ class Soup {
         }
         return indexes;
     }
-    findIndexesOf(entry, exact=false) { return this.find(entry, exact); }
-    findIndexes(entry, exact=false) { return this.find(entry, exact); }
-    indexesOf(entry, exact=false) { return this.find(entry, exact); }
+    allIndexesOf(entry, exact=true) { return this.find(entry, exact); }
+    findIndexesOf(entry, exact=true) { return this.find(entry, exact); }
+    findIndexes(entry, exact=true) { return this.find(entry, exact); }
+    indexesOf(entry, exact=true) { return this.find(entry, exact); }
+    findAll(entry, exact=false) { return this.find(entry, exact); }
 
 
     // lastIndexOf
-    lastIndexOf(key) {
-        let stuff = this.find(key);
+    lastIndexOf(entry, exact=true) {
+        let stuff = this.find(entry, exact);
         return stuff[stuff.length-1];
     }
-    findLast(key) { return this.lastIndexOf(key); }
+    findLast(entry, exact=true) { return this.lastIndexOf(entry, exact); }
 
 
     // then
@@ -1866,6 +1901,7 @@ class Soup {
 
         return thing;
     }
+    replaceOne(entry, replaceWith) { return this.replace(entry, replaceWith); }
 
 
     // replaceAll
@@ -1910,6 +1946,19 @@ class Soup {
         
         this.insides = stuff.pour();
     }
+    insert(index, key, value=null) { return this.append(index, key, value); }
+    push_to(index, key, value=null) { return this.append(index, key, value); }
+    push_at(index, key, value=null) { return this.append(index, key, value); }
+
+
+    // vary
+    vary(obj) {
+        let thing = Soup.from(obj).toLowerCase()[this.type];
+        this.constructor.prototype.TyperFunction = thing;
+        let returns = this.TyperFunction();
+        delete this.constructor.prototype.TyperFunction;
+        return returns;
+    }
 
 
     // properties
@@ -1931,7 +1980,7 @@ class Soup {
             else if (name == "props" || name == "properties") {
                 methods[name] = Object.getOwnPropertyDescriptors(proto)[name].get
             }
-            else if ( ["length", "size", "keys", "values", "entries"].includes(name) ) {
+            else if ( Soup.primaryInfo.includes(name) ) {
                 let entries = [];
 
                 Object.entries(methods).forEach( (entry, index) => {
@@ -1946,7 +1995,7 @@ class Soup {
         });
 
         info = Object.fromEntries(Object.entries(methods).filter( (entry, index) => {
-            return ["insides", "type", "splitter", "length", "size", "keys", "values", "entries", "constructor"].includes(entry[0]);
+            return Soup.primaryInfo.includes(entry[0]);
         }));
 
         return {
@@ -2107,7 +2156,51 @@ Object.defineProperty( Soup, "fromEntries", {
 });
 
 
-// waa waa I hate js
+// fromDOM
+var dom_attributes = [
+	"accessKey", "addEventListener", "appendChild", "attributes", "blur", "childElementCount", "childNodes", "children", "classList", "className", "click", "clientHeight", "clientLeft", "clientTop", "clientWidth", "cloneNode", "closest", "compareDocumentPosition", "contains", "contentEditable", "dir", "firstChild", "firstElementChild", "focus", "getAttribute", "getAttributeNode", "getBoundingClientRect", "getElementsByClassName", "getElementsByTagName", "hasAttribute", "hasAttributes", "hasChildNodes", "id", "innerHTML", "innerText", "insertAdjacentElement", "insertAdjacentHTML", "insertAdjacentText", "insertBefore", "isContentEditable", "isDefaultNamespace", "isEqualNode", "isSameNode", "lang", "lastChild", "lastElementChild", "matches", "namespaceURI", "nextSibling", "nextElementSibling", "nodeName", "nodeType", "nodeValue", "normalize", "offsetHeight", "offsetWidth", "offsetLeft", "offsetParent", "offsetTop", "outerHTML", "outerText", "ownerDocument", "parentNode", "parentElement", "previousSibling", "previousElementSibling", "querySelector", "querySelectorAll", "remove", "removeAttribute", "removeAttributeNode", "removeChild", "removeEventListener", "replaceChild", "scrollHeight", "scrollIntoView", "scrollLeft", "scrollTop", "scrollWidth", "setAttribute", "setAttributeNode", "style", "tabIndex", "tagName", "textContent", "title", "toString"
+];
+
+Object.defineProperty( Stew, "fromDOM", {
+    value: (element, every=false) => {
+        var info = new Stew({});
+
+        if (every) {
+            dom_attributes.forEach( (attr) => { info.push(attr, element[attr]); });
+        }
+        else {
+            Array.from(element.attributes).forEach( (attr) => { info.push(attr.name, attr); });
+        }
+        
+        info.push("origin", element);
+        
+        return new Proxy(info, ElementProxyHandler());
+    }
+});
+
+Object.defineProperty( Soup, "fromDOM", {
+    value: (element, every=false) => {
+        var info = new Soup({});
+
+        if (every) {
+            dom_attributes.forEach( (attr) => { info.push(attr, element[attr]); });
+        }
+        else {
+            Array.from(element.attributes).forEach( (attr) => { info.push(attr.name, attr); });
+        }
+        
+        info.push("origin", element);
+        
+        return new Proxy(info, ElementProxyHandler());
+    }
+});
+
+function ElementProxyHandler() {
+	return {
+		set(target, prop, value) { target.origin[prop] = value; return true; },
+		deleteProperty(target, prop) { target.origin.remove(prop); return true; }
+	};
+}
 
 
 // parse
@@ -2128,23 +2221,15 @@ Object.defineProperty( Soup, "parse", {
 
 // function
 class StewFunctionMaker {
-    constructor(name, func) {
-        if (func instanceof Function) {
-            var stuff = func.toString();
-            if (!stuff.startsWith("function")) stuff = `function${stuff.replace("=>", "")}`;
-            stuff = new Function(` return ${stuff}` )();
-            Object.defineProperty(stuff, "name", { value: name });
+    constructor(name, func, primary=false) {
+        var stuff = (func instanceof Function) ? func : function() { return func; }
 
-            Stew.prototype[name] = stuff;
-            return stuff;
-        }
-        else {
-            var stuff = function() { return func; };
-            Object.defineProperty(stuff, "name", { value: name });
-            
-            Object.defineProperty( Stew.prototype, name, { value: stuff });
-            return stuff;
-        }
+        Object.defineProperty(stuff, "name", { value: name });
+        Object.defineProperty( Stew.prototype, name, { value: stuff });
+
+        if (primary) Stew.primaryInfo.push(name);
+
+        return stuff;
     }
 }
 
@@ -2153,54 +2238,41 @@ Object.defineProperties(Stew, {
     "Func": { value: StewFunctionMaker }, "func": { value: StewFunctionMaker}
 });
 
-class SoupFunctionMaker {
-    constructor(name, func) {
-        if (func instanceof Function) {
-            var stuff = func.toString();
-            if (!stuff.startsWith("function")) stuff = `function${stuff.replace("=>", "")}`;
-            stuff = new Function(` return ${stuff}` )();
-            Object.defineProperty(stuff, "name", { value: name });
+class SoapFunctionMaker {
+    constructor(name, func, primary=false) {
+        var stuff = (func instanceof Function) ? func : function() { return func; }
 
-            Soup.prototype[name] = stuff;
-            return stuff;
-        }
-        else {
-            var stuff = function() { return func; };
-            Object.defineProperty(stuff, "name", { value: name });
-            
-            Object.defineProperty( Soup.prototype, name, { value: stuff });
-            return stuff;
-        }
+        Object.defineProperty(stuff, "name", { value: name });
+        Object.defineProperty( Soup.prototype, name, { value: stuff });
+
+        if (primary) Soup.primaryInfo.push(name);
+
+        return stuff;
     }
 }
 
 Object.defineProperties(Soup, {
-    "Function": { value: SoupFunctionMaker }, "function": { value: SoupFunctionMaker },
-    "Func": { value: SoupFunctionMaker }, "func": { value: SoupFunctionMaker}
+    "Function": { value: SoapFunctionMaker }, "function": { value: SoapFunctionMaker },
+    "Func": { value: SoapFunctionMaker }, "func": { value: SoapFunctionMaker}
 });
 
 
 // property
 class StewPropertyMaker {
-    constructor(name, value, attributes={set:undefined, writable:true, enumerable:false, configurable:false}) {
-        if (value instanceof Function) { 
-            var stuff = value.toString();
-            if (!stuff.startsWith("function") && stuff.endsWith("}")) stuff = `function${stuff.replace("=>", "")}`;
-            var func = new Function(`return ${stuff}`)();
-        }
-        else {
-            var func = function() { return value }
-        }
+    constructor(name, value, attributes={set:undefined, enumerable:false, configurable:false, primary:false}) {
+        var func = (value instanceof Function) ? value : function() { return value; };
         
         Object.defineProperty(func, "name", { value: name });
 
-        Object.defineProperty(Stew.prototype, name, { 
-            get: func, 
+        Object.defineProperty(Stew.prototype, name, {
+            get: func,
             set: attributes.set,
-            writable: attributes.writable,
             enumerable: attributes.enumerable,
             configurable: attributes.configurable
         });
+
+        if (attributes.primary) Stew.primaryInfo.push(name);
+
         return func;
     }
 }
@@ -2210,33 +2282,36 @@ Object.defineProperties(Stew, {
     "Prop": { value: StewPropertyMaker }, "prop": { value: StewPropertyMaker }
 });
 
-class SoupPropertyMaker {
-    constructor(name, value, attributes={set:undefined, writable:true, enumerable:false, configurable:false}) {
-        if (value instanceof Function) { 
-            var stuff = value.toString();
-            if (!stuff.startsWith("function") && stuff.endsWith("}")) stuff = `function${stuff.replace("=>", "")}`;
-            var func = new Function(`return ${stuff}`)();
-        }
-        else {
-            var func = function() { return value }
-        }
+class SoapPropertyMaker {
+    constructor(name, value, attributes={set:undefined, enumerable:false, configurable:false, primary:false}) {
+        var func = (value instanceof Function) ? value : function() { return value; };
         
         Object.defineProperty(func, "name", { value: name });
 
-        Object.defineProperty(Soup.prototype, name, { 
+        Object.defineProperty(Soup.prototype, name, {
             get: func,
             set: attributes.set,
-            writable: attributes.writable,
             enumerable: attributes.enumerable,
             configurable: attributes.configurable
         });
+
+        if (attributes.primary) Soup.primaryInfo.push(name);
+
         return func;
     }
 }
 
 Object.defineProperties(Soup, {
-    "Property": { value: SoupPropertyMaker }, "property": { value: SoupPropertyMaker },
-    "Prop": { value: SoupPropertyMaker }, "prop": { value: SoupPropertyMaker }
+    "Property": { value: SoapPropertyMaker }, "property": { value: SoapPropertyMaker },
+    "Prop": { value: SoapPropertyMaker }, "prop": { value: SoapPropertyMaker }
+});
+
+Object.defineProperty(Soup, "primaryInfo", {
+    value: ["insides", "type", "splitter", "length", "size", "keys", "values", "entries", "constructor"]
+});
+
+Object.defineProperty(Stew, "primaryInfo", {
+    value: ["insides", "type", "splitter", "length", "size", "keys", "values", "entries", "constructor"]
 });
 
 
@@ -2339,7 +2414,7 @@ Object.defineProperty(Soup.prototype, "random", {
 
 try { // check if it's a .js file
 
-	module.exports = { Stew, Soup, random };
+	module.exports = { Stew, Soup, random, StewFunctionMaker, SoapFunctionMaker, StewPropertyMaker, SoapPropertyMaker };
 
-} 
+}
 catch(err) {}
