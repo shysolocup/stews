@@ -1,6 +1,6 @@
 {
     "name": "stews",
-    "version": "1.5.1",
+    "version": "1.5.2",
     "author": "nutmeg",
     "description": "Stews is a Node.JS package meant to make storing data easier by mixing parts from common data types.",
     "repository": {
