@@ -1,4 +1,4 @@
-/* :: Stews :: Version 1.5.2 | 04/14/23 :: */
+/* :: Stews :: Version 1.6.0 | 04/18/23 :: */
 
 class Stew {
     constructor(object, splitter='') {
@@ -203,7 +203,7 @@ class Stew {
     }
 
 
-    // keyOf
+    // valueOf
     valueOf(entry) {
         if (this.type == "pair") return this.values[ (typeof entry == "string") ? this.indexOf(entry) : entry];
         else if (this.type == "list") return Array.from(this.insides)[ (typeof entry == "string") ? this.indexOf(entry) : entry ];
@@ -389,7 +389,8 @@ class Stew {
                 thing[index][1] = func(key, value, index);
             });
             
-            return new Stew(Object.fromEntries(thing));
+            this.insides = new Map(thing);
+            return this;
         }
         else if (this.type == "list") {
             let thing = Array.from(this.insides);
@@ -397,7 +398,58 @@ class Stew {
                 thing[index] = func(value, index);
             });
 
-            return new Stew(thing);
+            this.insides = new Set(thing);
+            return this;
+        }
+    }
+    mapValue(func) { return this.map(func); }
+
+
+    // mapKey
+    mapKey(func) {
+        if (this.type == "pair") {
+            let thing = this;
+
+            this.forEach( (key, value, index) => {
+                thing.rename(index, func(key, value, index));
+            });
+            
+            this.insides = new Map(thing);
+            return this;
+        }
+        else if (this.type == "list") {
+            let thing = Array.from(this.insides);
+            this.forEach( (value, index) => {
+                thing[index] = func(value, index);
+            });
+
+            this.insides = new Set(thing);
+            return this;
+        }
+    }
+
+
+    // mapEntry
+    mapEntry(func) {
+        if (this.type == "pair") {
+            let thing = this.entries;
+
+            this.forEach( (key, value, index) => {
+                let stuff = func(key, value, index);
+                thing[index] = stuff;
+            });
+            
+            this.insides = new Map(thing);
+            return this;
+        }
+        else if (this.type == "list") {
+            let thing = Array.from(this.insides);
+            this.forEach( (value, index) => {
+                thing[index] = func(value, index);
+            });
+
+            this.insides = new Set(thing);
+            return this;
         }
     }
 
@@ -590,7 +642,7 @@ class Stew {
     // merge
     merge(/**/) {
         var args = arguments;
-        var stuffs = this;
+        var stuffs = this.copy();
 
         for (obj of args) {
             var obj = Stew.from(obj);
@@ -795,7 +847,7 @@ class Stew {
 
     // toUpperCase
     toUpperCase() {
-        var stuff = this;
+        var stuff = this.copy();
         if (stuff.type == "list") {
             stuff.forEach( (value, index) => {
                 if (typeof value == "string") stuff.set(index, value.toUpperCase());
@@ -813,7 +865,7 @@ class Stew {
 
     // toLowerCase
     toLowerCase() {
-        var stuff = this;
+        var stuff = this.copy();
         if (stuff.type == "list") {
             stuff.forEach( (value, index) => {
                 if (typeof value == "string") stuff.set(index, value.toLowerCase());
@@ -831,7 +883,7 @@ class Stew {
 
     // replace
     replace(entry, replaceWith) {
-        let thing = this;
+        let thing = this.copy();
         if (thing.type == "list") {
             for (let i = 0; i < thing.length; i++) {
                 if (thing[i].includes(entry)) {
@@ -856,7 +908,7 @@ class Stew {
 
     // replaceAll
     replaceAll(entry, replaceWith) {
-        let thing = this;
+        let thing = this.copy();
         if (thing.type == "list") {
             thing.forEach( (value, index) => {
                 var stuff = value; while (stuff.includes(entry)) stuff = stuff.replace(entry, replaceWith);
@@ -906,10 +958,60 @@ class Stew {
     // vary
     vary(obj) {
         let thing = Soup.from(obj).toLowerCase()[this.type];
-        this.constructor.prototype.TyperFunction = thing;
-        let returns = this.TyperFunction();
-        delete this.constructor.prototype.TyperFunction;
+        this.constructor.prototype.VaryFunction = thing;
+        let returns = this.VaryFunction();
+        delete this.constructor.prototype.VaryFunction;
         return returns;
+    }
+
+
+    // split
+    split(/**/) {
+        var args = Array.from(arguments);
+        if (args[0] instanceof Array) args = args[0];
+        var stuff = this.copy();
+        stuff = stuff.vary({
+            list() {
+                let things = stuff.map( (v) => {
+                    if (typeof v == "string") {
+                        args.forEach( (sep) => { v = v.split(sep).join("<=SPLITHERE=>") } );
+                        return v.split("<=SPLITHERE=>");
+                    }
+                    else {
+                        return [v];
+                    }
+                });
+
+                things = things.pour().flat();
+                things = things.filter( (v) => { return v != ""});
+                return things;
+            },
+            pair() {
+                let things = stuff.map( (k, v) => {
+                    if (typeof v == "string") {
+                        args.forEach( (sep) => { if (v.includes(sep)) v = v.split(sep).join("<=SPLITHERE=>") } );
+                        return v.split("<=SPLITHERE=>");
+                    }
+                    else {
+                        return v;
+                    }
+                });
+
+                things = things.map( (k, v) => {
+                    return (v instanceof Array) ? v.filter( (inner) => { return inner != ""}) : v;
+                });
+                
+                return things;
+            }
+        });
+
+        return new this.constructor(stuff);
+    }
+
+
+    // copy
+    copy() {
+        return new this.constructor(this.pour());
     }
 
 
@@ -1259,7 +1361,7 @@ class Soup {
     }
 
 
-    // keyOf
+    // valueOf
     valueOf(entry) {
         if (this.type == "pair") return this.values[ (typeof entry == "string") ? this.indexOf(entry) : entry];
         else if (this.type == "list") return this.insides[ (typeof entry == "string") ? this.indexOf(entry) : entry ];
@@ -1438,7 +1540,8 @@ class Soup {
                 thing[index][1] = func(key, value, index);
             });
             
-            return new Soup(Object.fromEntries(thing));
+            this.insides = Object.fromEntries(thing);
+            return this;
         }
         else if (this.type == "list") {
             let thing = this.insides;
@@ -1447,7 +1550,59 @@ class Soup {
                 thing[index] = func(value, index);
             });
 
-            return new Soup(thing);
+            this.insides = thing;
+            return this;
+        }
+    }
+    mapValue(func) { return this.map(func); }
+
+
+    // mapKey
+    mapKey(func) {
+        if (this.type == "pair") {
+            let thing = this;
+
+            this.forEach( (key, value, index) => {
+                thing.rename(index, func(key, value, index));
+            });
+            
+            this.insides = Object.fromEntries(thing);
+            return this;
+        }
+        else if (this.type == "list") {
+            let thing = Array.from(this.insides);
+            this.forEach( (value, index) => {
+                thing[index] = func(value, index);
+            });
+
+            this.insides = thing;
+            return this;
+        }
+    }
+
+
+    // mapEntry
+    mapEntry(func) {
+        if (this.type == "pair") {
+            let thing = this.entries;
+
+            this.forEach( (key, value, index) => {
+                let stuff = func(key, value, index);
+                thing[index] = stuff;
+            });
+            
+            this.insides = Object.fromEntries(thing);
+            return this;
+        }
+        else if (this.type == "list") {
+            let thing = this.insides;
+
+            this.forEach( (value, index) => {
+                thing[index] = func(value, index);
+            });
+
+            this.insides = thing;
+            return this;
         }
     }
 
@@ -1646,7 +1801,7 @@ class Soup {
     // merge
     merge(/**/) {
         var args = arguments;
-        var stuffs = this;
+        var stuffs = this.copy();
 
         for (obj of args) {
             var obj = Soup.from(obj);
@@ -1845,7 +2000,7 @@ class Soup {
 
     // toUpperCase
     toUpperCase() {
-        var stuff = this;
+        var stuff = this.copy();
         if (stuff.type == "list") {
             stuff.forEach( (value, index) => {
                 if (typeof value == "string") stuff.set(index, value.toUpperCase());
@@ -1863,7 +2018,7 @@ class Soup {
 
     // toLowerCase
     toLowerCase() {
-        var stuff = this;
+        var stuff = this.copy();
         if (stuff.type == "list") {
             stuff.forEach( (value, index) => {
                 if (typeof value == "string") stuff.set(index, value.toLowerCase());
@@ -1881,7 +2036,7 @@ class Soup {
 
     // replace
     replace(entry, replaceWith) {
-        let thing = this;
+        let thing = this.copy();
         if (thing.type == "list") {
             for (let i = 0; i < thing.length; i++) {
                 if (thing[i].includes(entry)) {
@@ -1906,7 +2061,7 @@ class Soup {
 
     // replaceAll
     replaceAll(entry, replaceWith) {
-        let thing = this;
+        let thing = this.copy();
         if (thing.type == "list") {
             thing.forEach( (value, index) => {
                 var stuff = value; while (stuff.includes(entry)) stuff = stuff.replace(entry, replaceWith);
@@ -1954,10 +2109,60 @@ class Soup {
     // vary
     vary(obj) {
         let thing = Soup.from(obj).toLowerCase()[this.type];
-        this.constructor.prototype.TyperFunction = thing;
-        let returns = this.TyperFunction();
-        delete this.constructor.prototype.TyperFunction;
+        this.constructor.prototype.VaryFunction = thing;
+        let returns = this.VaryFunction();
+        delete this.constructor.prototype.VaryFunction;
         return returns;
+    }
+
+
+    // split
+    split(/**/) {
+        var args = Array.from(arguments);
+        if (args[0] instanceof Array) args = args[0];
+        var stuff = this.copy();
+        stuff = stuff.vary({
+            list() {
+                let things = stuff.map( (v) => {
+                    if (typeof v == "string") {
+                        args.forEach( (sep) => { v = v.split(sep).join("<=SPLITHERE=>") } );
+                        return v.split("<=SPLITHERE=>");
+                    }
+                    else {
+                        return [v];
+                    }
+                });
+
+                things = things.pour().flat();
+                things = things.filter( (v) => { return v != ""});
+                return things;
+            },
+            pair() {
+                let things = stuff.map( (k, v) => {
+                    if (typeof v == "string") {
+                        args.forEach( (sep) => { if (v.includes(sep)) v = v.split(sep).join("<=SPLITHERE=>") } );
+                        return v.split("<=SPLITHERE=>");
+                    }
+                    else {
+                        return v;
+                    }
+                });
+
+                things = things.map( (k, v) => {
+                    return (v instanceof Array) ? v.filter( (inner) => { return inner != ""}) : v;
+                });
+                
+                return things;
+            }
+        });
+
+        return new this.constructor(stuff);
+    }
+
+
+    // copy
+    copy() {
+        return new this.constructor(this.pour());
     }
 
 
@@ -2295,6 +2500,8 @@ class SoapPropertyMaker {
             configurable: attributes.configurable
         });
 
+        console.log(Object.getOwnPropertyDescriptors(Soup.prototype)[name].get)
+
         if (attributes.primary) Soup.primaryInfo.push(name);
 
         return func;
@@ -2412,9 +2619,722 @@ Object.defineProperty(Soup.prototype, "random", {
 });
 
 
+class Bowl {
+    constructor(/**/) {
+        let contents = Soup.from(Array.from(arguments));
+
+        this.contents = contents;
+
+        return new Proxy(this, BowlProxyHandler());     
+    }
+
+
+    // head
+    get head() {
+        return this.contents[0];
+    }
+
+
+    // depth
+    get depth() {
+        return this.contents.length;
+    }
+
+
+    // grab
+    grab(entry) {
+        return this.contents.get(entry);
+    }
+
+
+    // put
+    put(/**/) {
+        let args = Array.from(arguments);
+
+        args.forEach( (cont) => {
+            this.contents.push(cont);
+        });
+    }
+
+
+    // take
+    take(/**/) {
+        let args = Array.from(arguments);
+
+        args.forEach( (entry) => {
+            this.contents.delete(entry);
+        });
+    }
+
+
+    // stir
+    stir(head=0) {
+        let contents = this.contents.filter( (cont) => {
+            return cont != this.grab(head);
+        });
+
+        return this.grab(head).merge(...contents);
+    }
+
+
+    // delete
+    delete(entry) {
+        this.contents.forEach( (cont) => {
+            cont.delete(entry);
+        });
+    }
+    del(entry) { return this.delete(entry); }
+    remove(entry) { return this.delete(entry); }
+    rem(entry) { return this.delete(entry); }
+
+
+    // push
+    push(entry, value=null) {
+        this.contents.forEach( (cont) => {
+            cont.push(entry, value);
+        });
+    }
+    add(entry, value=null) { return this.push(entry, value); }
+    push_back(entry, value=null) { return this.push(entry, value); }
+    
+
+    // set
+    set(entry, set_to=null) {
+        this.contents.forEach( (cont) => {
+            cont.set(entry, set_to);
+        });
+    }
+    edit(entry, set_to=null) { return this.set(entry, set_to) };
+
+
+    // pull
+    pull(entry, value=null) {
+        this.contents.forEach( (cont) => {
+            cont.pull(entry, value);
+        });
+    }
+    unshift(entry, value=null) { return this.pull(entry, value); }
+    push_front(entry, value=null) { return this.pull(entry, value); }
+
+
+    // pop
+    pop(offset=0) {
+        this.contents.forEach( (cont) => {
+            cont.pop(offset);
+        });
+    }
+    unpush(offset=0) { return this.pop(offset); }
+
+
+    // shift
+    shift(offset=0) {
+        this.contents.forEach( (cont) => {
+            cont.shift(offset);
+        });
+    }
+    unpull(offset=0) { return this.shift(offset); }
+
+
+    // pour
+    pour(type=null, joiner='') {
+        return this.contents.pour(type, joiner);
+    }
+
+
+    // length
+    get length() {
+        return this.keys.length;
+    }
+    get size() { return this.length; }
+
+
+    // forEach
+    forEach(vary) {
+        this.contents.forEach( (cont) => {
+            cont.vary({
+                list() {
+                    this.forEach( (value, index) => {
+                        vary.list = vary.list.bind(this);
+                        vary.list(value, index);
+                    });
+                },
+
+                pair() {
+                    this.forEach( (key, value, index) => {
+                        vary.pair = vary.pair.bind(this);
+                        vary.pair(key, value, index);
+                    });
+                }
+            });
+        });
+    }
+
+
+    // toString
+    toString() {
+        return this.contents.values.map( (cont) => {
+            return `[${cont.constructor.name}]`;
+        }).join(",");
+    }
+
+
+    // join
+    join(joiner=",") {
+        return this.contents.values.map( (cont) => {
+            return `[${cont.constructor.name}]`;
+        }).join(joiner);
+    }
+
+
+    // joinKeys
+    joinKeys(joiner=", ") {
+        return this.keys.join(joiner);
+    }
+
+
+    // joinValues
+    joinValues(joiner=",") {
+        return this.values.join(joiner);
+    }
+
+
+    // includes
+    includes(/**/) {
+        let args = Array.from(arguments);
+        if (args[0] instanceof Array) args = args[0];
+
+        for (let i = 0; i < this.depth; i++) {
+            if (this.grab(i).includes(...args)) return true;
+        }
+        return false;
+    }
+    contains(/**/) { return this.includes(...Array.from(arguments)); }
+    has(/**/) { return this.includes(...Array.from(arguments)); }
+
+    
+    // clear
+    clear() {
+        this.contents.forEach( (cont) => { return cont.clear(); });
+    }
+
+
+    // filter
+    filter(func) {
+        var stuff = this;
+        for (let d = 0; d < stuff.depth; d++) {
+            stuff.contents[d] = stuff.contents[d].filter(func);
+        }
+
+        return stuff;
+    }
+
+
+    // keys
+    get keys() {
+        let stuff = [];
+        this.contents.forEach( (cont) => { stuff.push(cont.keys); });
+        return stuff;
+    }
+    // values
+    get values() {
+        let stuff = [];
+        this.contents.forEach( (cont) => { stuff.push(cont.values); });
+        return stuff;
+    }
+    // entries
+    get entries() {
+        let stuff = [];
+        this.contents.forEach( (cont) => { stuff.push(cont.entries); });
+        return stuff;
+    }
+
+
+    // map
+    map(func) {
+        return this.contents.map( (cont) => {
+            return cont.map(func);
+        });
+    }
+    mapValue(func) { return this.map(func); }
+
+
+    // mapKey
+    mapKey(func) {
+        return this.contents.map( (cont) => {
+            return cont.mapKey(func);
+        });
+    }
+
+
+    // mapEntry
+    mapEntry(func) {
+        return this.contents.map( (cont) => {
+            return cont.mapEntry(func);
+        });
+    }
+
+
+    // isList
+    isList() {
+        return (this.head.type == "list") ? true : false;
+    }
+    isArray() { return this.isList(); }
+    isSet() { return this.isList(); }
+    
+    // isPair
+    isPair() {
+        return this.head.type == "pair" ? true : false;
+    }
+    isObject() { return this.isPair(); }
+    isMap() { return this.isPair(); }
+
+    // isStew
+    isStew() { return this.head instanceof Stew; }
+
+    // isSoup
+    isSoup() { return this.head instanceof Soup; }
+
+
+    // swig
+    swig(func) {
+        for (let i = 0; i < this.depth; i++) {
+            if (this.grab(i).swig(func)) return true;
+        }
+        return false;
+    }
+    some(func) { return this.swig(func); }
+
+
+    // chug
+    chug(func) {
+        for (let i = 0; i < this.depth; i++) {
+            if (this.grab(i).chug(func)) return true;
+        }
+        return false;
+    }
+    every(func) { return this.chug(func); }
+
+
+    // slice
+    slice(start, end) {
+        let stuff = this;
+        stuff.contents.map( (cont) => {
+            return cont.slice(start, end);
+        });
+
+        return stuff;
+    }
+
+
+    // sort
+    sort(func=null) {
+        this.contents.map( (cont) => {
+            return cont.sort(func);
+        });
+    }
+
+
+    // reverse
+    reverse() {
+        this.contents.map( (cont) => {
+            return cont.reverse();
+        });
+    }
+    flip() { return this.reverse(); }
+
+
+    // front
+    front(offset=0) {
+        return this.head.front(offset);
+    }
+    first(offset=0) { return this.front(offset); }
+	start(offset=0) { return this.front(offset); }
+
+
+    // back
+    back(offset=0) {
+        return this.head.back(offset);
+    }
+    last(offset=0) { return this.back(offset); }
+	end(offset=0) { return this.back(offset); }
+
+
+    // rename
+    rename(entry, name) {
+        this.contents.forEach( (cont) => {
+            cont.rename(entry, name);
+        });
+    }
+
+
+    // merge
+    merge(/**/) {
+        var args = Array.from(arguments);
+        let stuff = this;
+        
+        stuff.contents.map( (cont) => {
+            return cont.merge(...args);
+        });
+
+        return stuff;
+    }
+    concat(/**/) { return this.merge(...Array.from(arguments)); }
+
+
+    // flat
+    flat(depth=1) {
+        let stuff = this;
+        stuff.contents.map( (cont) => {
+            return cont.flat(depth);
+        });
+
+        return stuff;
+    }
+
+
+    // flatMap
+    flatMap(func) {
+        let stuff = this;
+        stuff.contents.map( (cont) => {
+            return cont.flatMap(func);
+        });
+
+        return stuff;
+    };
+
+
+    // splice
+    splice(index, amount, /**/) {
+        var args = Array.from(arguments);
+        args.shift();
+        args.shift();
+
+        this.contents.map( (cont) => {
+            return cont.splice(index, amount, ...args);
+        });
+    }
+
+
+    // includesValue
+    includesValue(/**/) {
+        let args = Array.from(arguments);
+        if (args[0] instanceof Array) args = args[0];
+
+        for (let i = 0; i < this.depth; i++) {
+            if (this.grab(i).includesValue(...args)) return true;
+        }
+        return false;
+    }
+    hasValue(/**/) { return this.includesValue(...Array.from(arguments)); }
+    containsValue(/**/) { return this.includesValue(...Array.from(arguments)); }
+    includesValues(/**/) { return this.includesValue(...Array.from(arguments)); }
+    hasValues(/**/) { return this.includesValue(...Array.from(arguments)); }
+    containsValues(/**/) { return this.includesValue(...Array.from(arguments)); }
+
+
+    // scoop
+    scoop(/**/) {
+        var args = Array.from(arguments);
+
+        if (args[0] instanceof Array) args = args[0];
+
+        this.contents.forEach( (cont) => {
+            cont.scoop(args);
+        });
+    }
+
+
+    // startsWith
+    startsWith(/**/) {
+        let args = Array.from(arguments);
+        if (args[0] instanceof Array) args = args[0];
+
+        for (let i = 0; i < this.depth; i++) {
+            if (this.grab(i).startsWith(...args)) return true;
+        }
+        return false;
+    }
+
+
+    // endsWith
+    endsWith(/**/) {
+        let args = Array.from(arguments);
+        if (args[0] instanceof Array) args = args[0];
+
+        for (let i = 0; i < this.depth; i++) {
+            if (this.grab(i).endsWith(...args)) return true;
+        }
+        return false;
+    }
+
+
+    // toUpperCase
+    toUpperCase() {
+        var stuff = this;
+        stuff.contents.map( (cont) => {
+            return cont.toUpperCase();
+        });
+
+        return stuff;
+    }
+
+
+    // toLowerCase
+    toLowerCase() {
+        var stuff = this;
+        stuff.contents.map( (cont) => {
+            return cont.toLowerCase();
+        });
+
+        return stuff;
+    }
+
+
+    // replace
+    replace(entry, replaceWith) {
+        let thing = this;
+        
+        thing.contents.map( (cont) => {
+            return cont.replace(entry, replaceWith);
+        });
+
+        return thing;
+    }
+    replaceOne(entry, replaceWith) { return this.replace(entry, replaceWith); }
+
+
+    // replaceAll
+    replaceAll(entry, replaceWith) {
+        let thing = this;
+        
+        thing.contents.map( (cont) => {
+            return cont.replaceAll(entry, replaceWith);
+        });
+
+        return thing;
+    }
+
+
+    // append
+    append(index, key, value=null) {
+        this.contents.forEach( (cont) => {
+            cont.append(index, key, value);
+        });
+        return this;
+    }
+    insert(index, key, value=null) { return this.append(index, key, value); }
+    push_to(index, key, value=null) { return this.append(index, key, value); }
+    push_at(index, key, value=null) { return this.append(index, key, value); }
+
+
+    // vary
+    vary(obj) {
+        let thing = Soup.from(obj).toLowerCase()[this.type];
+        this.constructor.prototype.VaryFunction = thing;
+        let returns = this.VaryFunction();
+        delete this.constructor.prototype.VaryFunction;
+        return returns;
+    }
+
+
+    // split
+    split(/**/) {
+        var stuff = this;
+        var args = Array.from(arguments);
+        if (args[0] instanceof Array) args = args[0];
+
+        stuff.contents.map( (cont) => {
+            return cont.split(args);
+        });
+
+        return stuff;
+    }
+
+
+    // properties
+    get properties() {
+        let proto = Bowl.prototype;
+        let names = Object.getOwnPropertyNames(proto);
+        let info = [];
+        let methods = {}
+
+        Object.getOwnPropertyNames(this).forEach( (name) => {
+            methods[name] = (Object.getOwnPropertyDescriptors(this)[name].value) ? Object.getOwnPropertyDescriptors(this)[name].value : this[name];
+            names.unshift(name);
+        });
+
+        Object.getOwnPropertyNames(proto).forEach( (name) => {
+            if (Object.getOwnPropertyDescriptors(proto)[name].value) {
+                methods[name] = Object.getOwnPropertyDescriptors(proto)[name].value;
+            }
+            else if (name == "props" || name == "properties") {
+                methods[name] = Object.getOwnPropertyDescriptors(proto)[name].get
+            }
+            else if ( Bowl.primaryInfo.includes(name) ) {
+                let entries = [];
+
+                Object.entries(methods).forEach( (entry, index) => {
+                    if (entry[0] == "constructor") entries.push( [name, this[name]] ); entries.push(entry);
+                });
+
+                methods = Object.fromEntries(entries);
+            }
+            else {
+                methods[name] = this[name];
+            }
+        });
+
+        info = Object.fromEntries(Object.entries(methods).filter( (entry, index) => {
+            return Bowl.primaryInfo.includes(entry[0]);
+        }));
+
+        return {
+            names: names,
+            descriptors: Object.getOwnPropertyDescriptors(proto),
+            methods: methods,
+            info: info
+        }
+    }
+    get props() { return this.properties; }
+
+
+    // this part isn't documented bc it's for JSON.stringify()
+    toJSON() {
+        return this.contents.pour(Object);
+    }
+
+
+    // toPrimitive
+    [Symbol.toPrimitive](hint) {
+        if (hint === "string") {
+            return this.contents.values.map( (cont) => {
+                return `[${cont.constructor.name}]`;
+            }).join(",");
+        }
+        return this;
+    }
+
+
+    // iterator ( for..of )
+    [Symbol.iterator]() {
+        var stuff = this.head;
+        return {
+            current: 0,
+            last: stuff.length-1,
+
+            next() {
+                if (this.current <= this.last) {
+                    let data = (stuff.type == "pair") ? stuff.entries[this.current++] : stuff.get(this.current++);
+                    return { done: false, value: data };
+                } else {
+                    return { done: true };
+                }
+            }
+        };
+    }
+
+
+    // async iterator ( for await..of )
+    [Symbol.asyncIterator]() {
+        var stuff = this.head;
+        return {
+            current: 0,
+            last: stuff.length-1,
+
+            async next() {
+                if (this.current <= this.last) {
+                    let data = (stuff.type == "pair") ? stuff.entries[this.current++] : stuff.get(this.current++);
+                    return { done: false, value: data };
+                } else {
+                    return { done: true };
+                }
+            }
+        };
+    }
+}
+
+function BowlProxyHandler() {
+    return {
+        get(target, prop) {
+            if (Object.getOwnPropertyNames(Bowl.prototype).includes(prop) || target[prop]) return target[prop];
+            else return target.head[prop];
+        },
+
+        set(target, prop, value) {
+            if (Object.getOwnPropertyNames(Bowl.prototype).includes(prop) || target[prop]) target[prop] = value;
+            else target.contents.forEach( (cont) => {
+                cont[prop] = value;
+            });
+        },
+
+        deleteProperty(target, prop) {
+            target.contents.forEach( (cont) => {
+                delete cont[prop];
+            });
+            return true;
+        }
+    }
+}
+
+
+class BowlFunctionMaker {
+    constructor(name, func, primary=false) {
+        var stuff = (func instanceof Function) ? func : function() { return func; }
+
+        Object.defineProperty(stuff, "name", { value: name });
+        Object.defineProperty( Bowl.prototype, name, { value: stuff });
+
+        if (primary) Bowl.primaryInfo.push(name);
+
+        return stuff;
+    }
+}
+
+Object.defineProperties(Bowl, {
+    "Function": { value: BowlFunctionMaker }, "function": { value: BowlFunctionMaker },
+    "Func": { value: BowlFunctionMaker }, "func": { value: BowlFunctionMaker}
+});
+
+
+class BowlPropertyMaker {
+    constructor(name, value, attributes={set:undefined, enumerable:false, configurable:false, primary:false}) {
+        var func = (value instanceof Function) ? value : function() { return value; };
+        
+        Object.defineProperty(func, "name", { value: name });
+
+        Object.defineProperty(Bowl.prototype, name, {
+            get: func,
+            set: attributes.set,
+            enumerable: attributes.enumerable,
+            configurable: attributes.configurable
+        });
+
+        if (attributes.primary) Bowl.primaryInfo.push(name);
+
+        return func;
+    }
+}
+
+Object.defineProperties(Bowl, {
+    "Property": { value: BowlPropertyMaker }, "property": { value: BowlPropertyMaker },
+    "Prop": { value: BowlPropertyMaker }, "prop": { value: BowlPropertyMaker }
+});
+
+Object.defineProperty(Bowl, "primaryInfo", {
+    value: ["contents", "head", "depth", "grab", "put", "take", "stir", "constructor"]
+});
+
+
 try { // check if it's a .js file
 
-	module.exports = { Stew, Soup, random, StewFunctionMaker, SoapFunctionMaker, StewPropertyMaker, SoapPropertyMaker };
+	module.exports = { 
+        Stew, 
+        Soup, 
+        Bowl, 
+        random, 
+        StewFunctionMaker, SoapFunctionMaker, BowlFunctionMaker, 
+        StewPropertyMaker, SoapPropertyMaker, BowlPropertyMaker
+    };
 
 }
 catch(err) {}
