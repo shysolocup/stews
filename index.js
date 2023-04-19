@@ -1,4 +1,4 @@
-/* :: Stews :: Version 1.6.1 | 04/19/23 :: */
+/* :: Stews :: Version 1.6.2 | 04/19/23 :: */
 
 class Stew {
     constructor(object, splitter='') {
@@ -631,7 +631,9 @@ class Stew {
         try {
             const fs = require('fs');
 
-            fs.writeFileSync(file, this.stringify(replacer, indent));
+            fs.truncate(file, 0, () => {
+                fs.writeFileSync(file, this.stringify(replacer, indent));
+            });
 
             return Stew.parse(fs.readFileSync(file, 'utf8'));
         }
@@ -1790,7 +1792,9 @@ class Soup {
         try {
             const fs = require('fs');
 
-            fs.writeFileSync(file, this.stringify(replacer, indent));
+            fs.truncate(file, 0, () => {
+                fs.writeFileSync(file, this.stringify(replacer, indent));
+            });
 
             return Soup.parse(fs.readFileSync(file, 'utf8'));
         }
