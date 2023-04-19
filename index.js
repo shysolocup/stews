@@ -1,4 +1,4 @@
-/* :: Stews :: Version 1.6.0 | 04/18/23 :: */
+/* :: Stews :: Version 1.6.1 | 04/19/23 :: */
 
 class Stew {
     constructor(object, splitter='') {
@@ -2621,7 +2621,9 @@ Object.defineProperty(Soup.prototype, "random", {
 
 class Bowl {
     constructor(/**/) {
-        let contents = Soup.from(Array.from(arguments));
+        let args = Array.from(arguments);
+        if (args[0] instanceof Array) args = args[0];
+        let contents = Soup.from(args);
 
         this.contents = contents;
 
@@ -2772,7 +2774,8 @@ class Bowl {
 
     // toString
     toString() {
-        return this.contents.values.map( (cont) => {
+        let stuff = this.copy();
+        return stuff.contents.values.map( (cont) => {
             return `[${cont.constructor.name}]`;
         }).join(",");
     }
@@ -2780,7 +2783,8 @@ class Bowl {
 
     // join
     join(joiner=",") {
-        return this.contents.values.map( (cont) => {
+        let stuff = this.copy();
+        return stuff.contents.values.map( (cont) => {
             return `[${cont.constructor.name}]`;
         }).join(joiner);
     }
@@ -2820,7 +2824,7 @@ class Bowl {
 
     // filter
     filter(func) {
-        var stuff = this;
+        var stuff = this.copy();
         for (let d = 0; d < stuff.depth; d++) {
             stuff.contents[d] = stuff.contents[d].filter(func);
         }
@@ -2917,7 +2921,7 @@ class Bowl {
 
     // slice
     slice(start, end) {
-        let stuff = this;
+        let stuff = this.copy();
         stuff.contents.map( (cont) => {
             return cont.slice(start, end);
         });
@@ -2970,7 +2974,7 @@ class Bowl {
     // merge
     merge(/**/) {
         var args = Array.from(arguments);
-        let stuff = this;
+        let stuff = this.copy();
         
         stuff.contents.map( (cont) => {
             return cont.merge(...args);
@@ -2983,7 +2987,7 @@ class Bowl {
 
     // flat
     flat(depth=1) {
-        let stuff = this;
+        let stuff = this.copy();
         stuff.contents.map( (cont) => {
             return cont.flat(depth);
         });
@@ -2994,7 +2998,7 @@ class Bowl {
 
     // flatMap
     flatMap(func) {
-        let stuff = this;
+        let stuff = this.copy();
         stuff.contents.map( (cont) => {
             return cont.flatMap(func);
         });
@@ -3044,6 +3048,18 @@ class Bowl {
     }
 
 
+    // filterBy
+    filterBy(obj, func) {
+        var stuff = this.copy();
+        for (let d = 0; d < stuff.depth; d++) {
+            stuff.contents[d] = stuff.contents[d].filterBy(obj, func);
+        }
+
+        return stuff;
+    }
+    filterWith(obj, func) { return this.filterBy(obj, func) }
+
+
     // startsWith
     startsWith(/**/) {
         let args = Array.from(arguments);
@@ -3070,7 +3086,7 @@ class Bowl {
 
     // toUpperCase
     toUpperCase() {
-        var stuff = this;
+        var stuff = this.copy();
         stuff.contents.map( (cont) => {
             return cont.toUpperCase();
         });
@@ -3081,7 +3097,7 @@ class Bowl {
 
     // toLowerCase
     toLowerCase() {
-        var stuff = this;
+        var stuff = this.copy();
         stuff.contents.map( (cont) => {
             return cont.toLowerCase();
         });
@@ -3092,7 +3108,7 @@ class Bowl {
 
     // replace
     replace(entry, replaceWith) {
-        let thing = this;
+        let thing = this.copy();
         
         thing.contents.map( (cont) => {
             return cont.replace(entry, replaceWith);
@@ -3105,7 +3121,7 @@ class Bowl {
 
     // replaceAll
     replaceAll(entry, replaceWith) {
-        let thing = this;
+        let thing = this.copy();
         
         thing.contents.map( (cont) => {
             return cont.replaceAll(entry, replaceWith);
@@ -3139,7 +3155,7 @@ class Bowl {
 
     // split
     split(/**/) {
-        var stuff = this;
+        var stuff = this.copy();
         var args = Array.from(arguments);
         if (args[0] instanceof Array) args = args[0];
 
@@ -3148,6 +3164,16 @@ class Bowl {
         });
 
         return stuff;
+    }
+
+
+    // copy
+    copy() {
+        let contents = new Soup(Array);
+        this.contents.forEach( (cont) => {
+            contents.push(cont.copy());
+        });
+        return new this.constructor(...contents.pour(Array));
     }
 
 
