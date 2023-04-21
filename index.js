@@ -1,4 +1,4 @@
-/* :: Stews :: Version 1.6.2 | 04/19/23 :: */
+/* :: Stews :: Version 1.6.3 | 04/20/23 :: */
 
 class Stew {
     constructor(object, splitter='') {
@@ -1140,17 +1140,15 @@ function StewProxyHandler() { return {
 
         set(target, prop, value) {
             if (target[prop]) { // if it's a main thing like insides or type
-                return target[prop] = value;
+                target[prop] = value;
             }
             else if (Number(prop)+1 && Number(prop) <= target.length-1) { // if it's a number
-                return target.set(Number(prop), value);
+                target.set(Number(prop), value);
             }
             else if (typeof prop == "string") { // if it's a string
-                return target.set(prop, value);
+                target.set(prop, value);
             }
-            else {
-                return false;
-            }
+            return true;
         },
         
 
@@ -2293,17 +2291,15 @@ function SoapProxyHandler() { return {
 
         set(target, prop, value) {
             if (target[prop]) { // if it's a main thing like insides or type
-                return target[prop] = value;
+                target[prop] = value;
             }
             else if (Number(prop)+1 && Number(prop) <= target.length-1) { // if it's a number
-                return target.set(Number(prop), value);
+                target.set(Number(prop), value);
             }
             else if (typeof prop == "string") { // if it's a string
-                return target.set(prop, value);
-            }
-            else {
-                return false;
-            }
+                target.set(prop, value);
+	    }
+		return true;
         },
         
 
@@ -3295,6 +3291,7 @@ function BowlProxyHandler() {
             else target.contents.forEach( (cont) => {
                 cont[prop] = value;
             });
+		return true;
         },
 
         deleteProperty(target, prop) {
