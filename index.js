@@ -392,7 +392,7 @@ class Stew {
             return new Map(thing);
         }
         else if (this.type == "list") {
-            let thing = Array.from(this.insides);
+            let thing = Array.from(this.copy().insides);
             this.forEach( (value, index) => {
                 thing[index] = func(value, index);
             });
@@ -406,7 +406,7 @@ class Stew {
     // mapKey
     mapKey(func) {
         if (this.type == "pair") {
-            let thing = this;
+            let thing = this.copy();
 
             this.forEach( (key, value, index) => {
                 thing.rename(index, func(key, value, index));
@@ -415,7 +415,7 @@ class Stew {
             return new Map(thing);
         }
         else if (this.type == "list") {
-            let thing = Array.from(this.insides);
+            let thing = Array.from(this.copy().insides);
             this.forEach( (value, index) => {
                 thing[index] = func(value, index);
             });
@@ -438,7 +438,7 @@ class Stew {
             return new Map(thing);
         }
         else if (this.type == "list") {
-            let thing = Array.from(this.insides);
+            let thing = Array.from(this.copy().insides);
             this.forEach( (value, index) => {
                 thing[index] = func(value, index);
             });
