@@ -389,7 +389,7 @@ class Stew {
                 thing[index][1] = func(key, value, index);
             });
             
-            return new Map(thing);
+            return new Stew(new Map(thing));
         }
         else if (this.type == "list") {
             let thing = Array.from(this.copy().insides);
@@ -397,7 +397,7 @@ class Stew {
                 thing[index] = func(value, index);
             });
 
-            return new Set(thing);
+            return new Stew(new Set(thing));
         }
     }
     mapValue(func) { return this.map(func); }
@@ -412,7 +412,7 @@ class Stew {
                 thing.rename(index, func(key, value, index));
             });
             
-            return new Map(thing);
+            return new Stew(new Map(thing));
         }
         else if (this.type == "list") {
             let thing = Array.from(this.copy().insides);
@@ -420,7 +420,7 @@ class Stew {
                 thing[index] = func(value, index);
             });
 
-            return new Set(thing);
+            return new Stew(new Set(thing));
         }
     }
 
@@ -435,7 +435,7 @@ class Stew {
                 thing[index] = stuff;
             });
             
-            return new Map(thing);
+            return new Stew(new Map(thing));
         }
         else if (this.type == "list") {
             let thing = Array.from(this.copy().insides);
@@ -443,7 +443,7 @@ class Stew {
                 thing[index] = func(value, index);
             });
 
-            return new Set(thing);
+            return new Stew(new Set(thing));
         }
     }
 
@@ -1534,7 +1534,7 @@ class Soup {
                 thing[index][1] = func(key, value, index);
             });
             
-            return Object.fromEntries(thing);
+            return new Soup(Object.fromEntries(thing));
         }
         else if (this.type == "list") {
             let thing = this.copy().insides;
@@ -1543,7 +1543,7 @@ class Soup {
                 thing[index] = func(value, index);
             });
 
-            return thing;
+            return new Soup(thing);
         }
     }
     mapValue(func) { return this.map(func); }
@@ -1558,7 +1558,7 @@ class Soup {
                 thing.rename(index, func(key, value, index));
             });
             
-            return Object.fromEntries(thing);
+            return new Soup(Object.fromEntries(thing));
         }
         else if (this.type == "list") {
             let thing = Array.from(this.copy().insides);
@@ -1566,7 +1566,7 @@ class Soup {
                 thing[index] = func(value, index);
             });
 
-            return thing;
+            return new Soup(thing);
         }
     }
 
@@ -1581,7 +1581,7 @@ class Soup {
                 thing[index] = stuff;
             });
             
-            return Object.fromEntries(thing);
+            return new Soup(Object.fromEntries(thing));
         }
         else if (this.type == "list") {
             let thing = this.copy().insides;
@@ -1590,7 +1590,7 @@ class Soup {
                 thing[index] = func(value, index);
             });
 
-            return thing;
+            return new Soup(thing);
         }
     }
 
@@ -2844,9 +2844,9 @@ class Bowl {
     // map
     map(func) {
         let stuff = this.copy();
-        return stuff.contents.map( (cont) => {
+        return new Bowl(stuff.contents.map( (cont) => {
             return cont.map(func);
-        });
+        }));
     }
     mapValue(func) { return this.map(func); }
 
@@ -2854,18 +2854,18 @@ class Bowl {
     // mapKey
     mapKey(func) {
         let stuff = this.copy();
-        return stuff.contents.map( (cont) => {
+        return new Bowl(stuff.contents.map( (cont) => {
             return cont.mapKey(func);
-        });
+        }));
     }
 
 
     // mapEntry
     mapEntry(func) {
         let stuff = this.copy();
-        return stuff.contents.map( (cont) => {
+        return new Bowl(stuff.contents.map( (cont) => {
             return cont.mapEntry(func);
-        });
+        }));
     }
 
 
