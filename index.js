@@ -1,4 +1,4 @@
-/* :: Stews :: Version 1.6.4 | 05/04/23 :: */
+/* :: Stews :: Version 1.6.5 | 05/04/23 :: */
 
 class Stew {
     constructor(object, splitter='') {
