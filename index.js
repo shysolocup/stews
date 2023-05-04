@@ -1,4 +1,4 @@
-/* :: Stews :: Version 1.6.3 | 04/20/23 :: */
+/* :: Stews :: Version 1.6.4 | 05/04/23 :: */
 
 class Stew {
     constructor(object, splitter='') {
@@ -389,8 +389,7 @@ class Stew {
                 thing[index][1] = func(key, value, index);
             });
             
-            this.insides = new Map(thing);
-            return this;
+            return new Map(thing);
         }
         else if (this.type == "list") {
             let thing = Array.from(this.insides);
@@ -398,8 +397,7 @@ class Stew {
                 thing[index] = func(value, index);
             });
 
-            this.insides = new Set(thing);
-            return this;
+            return new Set(thing);
         }
     }
     mapValue(func) { return this.map(func); }
@@ -414,8 +412,7 @@ class Stew {
                 thing.rename(index, func(key, value, index));
             });
             
-            this.insides = new Map(thing);
-            return this;
+            return new Map(thing);
         }
         else if (this.type == "list") {
             let thing = Array.from(this.insides);
@@ -423,8 +420,7 @@ class Stew {
                 thing[index] = func(value, index);
             });
 
-            this.insides = new Set(thing);
-            return this;
+            return new Set(thing);
         }
     }
 
@@ -439,8 +435,7 @@ class Stew {
                 thing[index] = stuff;
             });
             
-            this.insides = new Map(thing);
-            return this;
+            return new Map(thing);
         }
         else if (this.type == "list") {
             let thing = Array.from(this.insides);
@@ -448,8 +443,7 @@ class Stew {
                 thing[index] = func(value, index);
             });
 
-            this.insides = new Set(thing);
-            return this;
+            return new Set(thing);
         }
     }
 
@@ -1540,18 +1534,16 @@ class Soup {
                 thing[index][1] = func(key, value, index);
             });
             
-            this.insides = Object.fromEntries(thing);
-            return this;
+            return Object.fromEntries(thing);
         }
         else if (this.type == "list") {
-            let thing = this.insides;
+            let thing = this.copy().insides;
 
             this.forEach( (value, index) => {
                 thing[index] = func(value, index);
             });
 
-            this.insides = thing;
-            return this;
+            return thing;
         }
     }
     mapValue(func) { return this.map(func); }
@@ -1560,23 +1552,21 @@ class Soup {
     // mapKey
     mapKey(func) {
         if (this.type == "pair") {
-            let thing = this;
+            let thing = this.copy();
 
             this.forEach( (key, value, index) => {
                 thing.rename(index, func(key, value, index));
             });
             
-            this.insides = Object.fromEntries(thing);
-            return this;
+            return Object.fromEntries(thing);
         }
         else if (this.type == "list") {
-            let thing = Array.from(this.insides);
+            let thing = Array.from(this.copy().insides);
             this.forEach( (value, index) => {
                 thing[index] = func(value, index);
             });
 
-            this.insides = thing;
-            return this;
+            return thing;
         }
     }
 
@@ -1591,18 +1581,16 @@ class Soup {
                 thing[index] = stuff;
             });
             
-            this.insides = Object.fromEntries(thing);
-            return this;
+            return Object.fromEntries(thing);
         }
         else if (this.type == "list") {
-            let thing = this.insides;
+            let thing = this.copy().insides;
 
             this.forEach( (value, index) => {
                 thing[index] = func(value, index);
             });
 
-            this.insides = thing;
-            return this;
+            return thing;
         }
     }
 
@@ -2855,7 +2843,8 @@ class Bowl {
 
     // map
     map(func) {
-        return this.contents.map( (cont) => {
+        let stuff = this.copy();
+        return stuff.contents.map( (cont) => {
             return cont.map(func);
         });
     }
@@ -2864,7 +2853,8 @@ class Bowl {
 
     // mapKey
     mapKey(func) {
-        return this.contents.map( (cont) => {
+        let stuff = this.copy();
+        return stuff.contents.map( (cont) => {
             return cont.mapKey(func);
         });
     }
@@ -2872,7 +2862,8 @@ class Bowl {
 
     // mapEntry
     mapEntry(func) {
-        return this.contents.map( (cont) => {
+        let stuff = this.copy();
+        return stuff.contents.map( (cont) => {
             return cont.mapEntry(func);
         });
     }
