@@ -1,4 +1,4 @@
-/* :: Stews :: Version 1.6.5 | 05/04/23 :: */
+/* :: Stews :: Version 1.6.6 | 06/01/23 :: */
 
 class Stew {
     constructor(object, splitter='') {
@@ -251,7 +251,6 @@ class Stew {
             else if (this.type == "list") return Array.from(this.insides)[entry];
         }
     }
-    fetch(entry) { return this.get(entry); }
     at(entry) { return this.get(entry); }
 
 
@@ -517,59 +516,24 @@ class Stew {
 
 
     // sort
-    sort(func=null) {
+    sort(compare=null) {
+        if (this.type == "list") {
+            return new this.constructor(new Set(this.pour().sort( (rawA, rawB) => {
+                let a = (typeof rawA == "string") ? rawA.toUpperCase().localeCompare(rawB) : rawA;
+                let b = (typeof rawB == "string") ? rawB.toUpperCase().localeCompare(rawA) : rawB;
 
-        /*
-            "the dumbass shit below is so that it can check the stuff in the function to see if it needs to reverse
-             please ignore how absolutely dog shit it is"
-
-            - Megan "meg" "nut" "nutmeg" "nuttmegg" The Nut | 04/03/2023
-        */
-
-        function stupid(dumb) {
-            let args = Soup.from(dumb.toString(), ",");
-            args.replaceAll("(", "");
-            args.replaceAll(")", "");
-            args.replaceAll(" ", "");
-            args[1] = args[1].split("{");
-            args[1][0] = args[1][0].replace("=>", "");
-            args[1] = args[1][0];
-
-            const [ [a], [b]] = args;
-
-            let fixedString = dumb.toString().replace(/(?:\/\*(?:[\s\S]*?)\*\/)|(?:([\s;])+\/\/(?:.*)$)/gm, '$1')
-            let fixed = Soup.from(fixedString.substring(fixedString.indexOf('{')+1, fixedString.lastIndexOf('}')));
-
-            fixed.scoop("\n");
-            fixed.scoop(";");
-            fixed.scoop(" ");
-
-            return fixed.join("") == `return${b}-${a}`;
+                return (compare) ? compare(a, b) : a - b;
+            })));
         }
 
-        if (this.type == "pair") {
-            let thing = this.entries;
+        else if (this.type == "pair") {
+            return new this.constructor(new Map(this.entries.sort( (rawA, rawB) => {
+                let a = (typeof rawA[0] == "string") ? rawA[0].toUpperCase().localeCompare(rawB[0]) : rawA[0];
+                let b = (typeof rawB[0] == "string") ? rawB[0].toUpperCase().localeCompare(rawA[0]) : rawB[0];
 
-            if (func && stupid(func)) {
-                thing = thing.sort();
-                this.insides = new Map( thing.reverse() );
-            }
-            else {
-                this.insides = new Map( (func) ? thing.sort(func) : thing.sort() );
-            }
+                return (compare) ? compare(a, b) : a - b;
+            })));
         }
-        else if (this.type == "list") {
-            if (func && stupid(func)) {
-                this.insides = new Set(Array.from(this.insides).sort());
-                this.insides = new Set(Array.from(this.insides).reverse());
-
-            }
-            else {
-                this.insides = new Set((func) ? Array.from(this.insides).sort(func) : Array.from(this.insides).sort());
-            }
-        }
-
-        return this;
     }
 
 
@@ -1005,6 +969,109 @@ class Stew {
     }
 
 
+    // trim
+    trim() {
+        var copy = this.copy();
+
+        if (copy.type == "list") {
+            copy = copy.map( (v) => { return (typeof v == "string") ? v.trim() : v; });
+        }
+
+        else if (copy.type == "pair") {
+            copy = copy.mapKey( (k, v) => { return (typeof k == "string") ? k.trim() : k; });
+            copy = copy.map( (k, v) => { return (typeof v == "string") ? v.trim() : v; });
+        }
+
+        return copy;
+    }
+
+
+    // trimKeys
+    trimKeys() {
+        var copy = this.copy();
+
+        if (copy.type == "list") copy = copy.trim();
+
+        else if (copy.type == "pair") {
+            copy = copy.mapKey( (k, v) => { return (typeof k == "string") ? k.trim() : k; });
+        }
+
+        return copy;
+    }
+
+
+    // trimValues
+    trimValues() {
+        var copy = this.copy();
+
+        if (copy.type == "list") copy = copy.trim();
+
+        else if (copy.type == "pair") {
+            copy = copy.map( (k, v) => { return (typeof v == "string") ? v.trim() : v; });
+        }
+
+        return copy;
+    }
+	trimVals() { return this.trimValues(); }
+
+
+    // sortBy
+    sortBy(obj, compare=null) {
+        if (!obj.type) obj = Soup.from(obj);
+        obj = obj.copy();
+		var copy = this.copy();
+
+        var stuff = [];
+
+        obj.sort( (rawA, rawB) => {
+            let a = (typeof rawA == "string") ? rawA.toUpperCase().localeCompare(rawB) : rawA;
+            let b = (typeof rawB == "string") ? rawB.toUpperCase().localeCompare(rawA) : rawB;
+
+            stuff.push( [a, b] );
+
+            return (compare) ? compare(a, b) : a - b;
+        });
+
+        var i = 0;
+        
+        return new copy.constructor(copy.sort( (_a, _b) => {
+            let [a, b] = stuff[i]; i++;
+
+            return (compare) ? compare(a, b) : a - b;
+        }));
+    }
+    sortWith(obj, compare=null) { return this.sortBy(obj, compare) }
+
+
+	// fetch
+	fetch(entry) {
+		var index = (typeof entry == "string") ? this.indexOf(entry) : (typeof entry == "number") ? entry : NaN;
+		
+		var entry = this.entries[index];
+		var value = this.get(index);
+		
+		return this.vary({
+			list() { return { value: value, index: index }; },
+			pair() { return { key: entry[0], value: entry[1], index: index }; }
+		});
+	};
+
+
+	// fetchValue
+	fetchValue(entry) {
+		var index = this.values.indexOf(entry);
+		
+		var entry = this.entries[index];
+		var value = this.get(index);
+		
+		return this.vary({
+			list() { return { value: value, index: index }; },
+			pair() { return { key: entry[0], value: entry[1], index: index }; }
+		});
+	};
+	fetchVal(entry) { return this.fetchValue(entry); }
+
+
     // copy
     copy() {
         return new this.constructor(this.pour());
@@ -1403,7 +1470,6 @@ class Soup {
             else if (this.type == "list") return this.insides[entry];
         }
     }
-    fetch(entry) { return this.get(entry); }
     at(entry) { return this.get(entry); }
 
 
@@ -1664,58 +1730,24 @@ class Soup {
     
 
     // sort
-    sort(func=null) {
+    sort(compare=null) {
+        if (this.type == "list") {
+            return new this.constructor(this.copy().insides.sort( (rawA, rawB) => {
+                let a = (typeof rawA == "string") ? rawA.toUpperCase().localeCompare(rawB) : rawA;
+                let b = (typeof rawB == "string") ? rawB.toUpperCase().localeCompare(rawA) : rawB;
 
-        /*
-            "the dumbass shit below is so that it can check the stuff in the function to see if it needs to reverse
-             please ignore how absolutely dog shit it is"
-
-            - Megan "meg" "nut" "nutmeg" "nuttmegg" The Nut | 04/03/2023
-        */
-
-        function stupid(dumb) {
-            let args = Soup.from(dumb.toString(), ",");
-            args.replaceAll("(", "");
-            args.replaceAll(")", "");
-            args.replaceAll(" ", "");
-            args[1] = args[1].split("{");
-            args[1][0] = args[1][0].replace("=>", "");
-            args[1] = args[1][0];
-
-            const [ [a], [b]] = args;
-
-            let fixedString = dumb.toString().replace(/(?:\/\*(?:[\s\S]*?)\*\/)|(?:([\s;])+\/\/(?:.*)$)/gm, '$1')
-            let fixed = Soup.from(fixedString.substring(fixedString.indexOf('{')+1, fixedString.lastIndexOf('}')));
-
-            fixed.scoop("\n");
-            fixed.scoop(";");
-            fixed.scoop(" ");
-
-            return fixed.join("") == `return${b}-${a}`;
+                return (compare) ? compare(a, b) : a - b;
+            }));
         }
 
-        if (this.type == "pair") {
-            let thing = this.entries;
+        else if (this.type == "pair") {
+            return new this.constructor(Object.fromEntries(this.copy().entries.sort( (rawA, rawB) => {
+                let a = (typeof rawA[0] == "string") ? rawA[0].toUpperCase().localeCompare(rawB[0]) : rawA[0];
+                let b = (typeof rawB[0] == "string") ? rawB[0].toUpperCase().localeCompare(rawA[0]) : rawB[0];
 
-            if (func && stupid(func)) {
-                thing = thing.sort();
-                this.insides = Object.fromEntries( thing.reverse() );
-            }
-            else {
-                this.insides = Object.fromEntries( (func) ? thing.sort(func) : thing.sort() );
-            }
+                return (compare) ? compare(a, b) : a - b;
+            })));
         }
-        else if (this.type == "list") {
-            if (func && stupid(func)) {
-                this.insides = this.insides.sort();
-                this.insides = this.insides.reverse();
-            }
-            else {
-                this.insides = (func) ? this.insides.sort(func) : this.insides.sort();
-            }
-        }
-
-        return this;
     }
 
 
@@ -2148,6 +2180,109 @@ class Soup {
 
         return new this.constructor(stuff);
     }
+
+
+    // trim
+    trim() {
+        var copy = this.copy();
+
+        if (copy.type == "list") {
+            copy = copy.map( (v) => { return (typeof v == "string") ? v.trim() : v; });
+        }
+
+        else if (copy.type == "pair") {
+            copy = copy.mapKey( (k, v) => { return (typeof k == "string") ? k.trim() : k; });
+            copy = copy.map( (k, v) => { return (typeof v == "string") ? v.trim() : v; });
+        }
+
+        return copy;
+    }
+
+
+    // trimKeys
+    trimKeys() {
+        var copy = this.copy();
+
+        if (copy.type == "list") copy = copy.trim();
+
+        else if (copy.type == "pair") {
+            copy = copy.mapKey( (k, v) => { return (typeof k == "string") ? k.trim() : k; });
+        }
+
+        return copy;
+    }
+
+
+    // trimValues
+    trimValues() {
+        var copy = this.copy();
+
+        if (copy.type == "list") copy = copy.trim();
+
+        else if (copy.type == "pair") {
+            copy = copy.map( (k, v) => { return (typeof v == "string") ? v.trim() : v; });
+        }
+
+        return copy;
+    }
+	trimVals() { return this.trimValues(); }
+
+
+    // sortBy
+    sortBy(obj, compare=null) {
+        if (!obj.type) obj = Soup.from(obj);
+        obj = obj.copy();
+		var copy = this.copy();
+
+        var stuff = [];
+
+        obj.sort( (rawA, rawB) => {
+            let a = (typeof rawA == "string") ? rawA.toUpperCase().localeCompare(rawB) : rawA;
+            let b = (typeof rawB == "string") ? rawB.toUpperCase().localeCompare(rawA) : rawB;
+
+            stuff.push( [a, b] );
+
+            return (compare) ? compare(a, b) : a - b;
+        });
+
+        var i = 0;
+        
+        return new copy.constructor(copy.sort( (_a, _b) => {
+            let [a, b] = stuff[i]; i++;
+
+            return (compare) ? compare(a, b) : a - b;
+        }));
+    }
+    sortWith(obj, compare=null) { return this.sortBy(obj, compare) }
+
+
+	// fetch
+	fetch(entry) {
+		var index = (typeof entry == "string") ? this.indexOf(entry) : (typeof entry == "number") ? entry : NaN;
+		
+		var entry = this.entries[index];
+		var value = this.get(index);
+		
+		return this.vary({
+			list() { return { value: value, index: index }; },
+			pair() { return { key: entry[0], value: entry[1], index: index }; }
+		});
+	};
+
+
+	// fetchValue
+	fetchValue(entry) {
+		var index = this.values.indexOf(entry);
+		
+		var entry = this.entries[index];
+		var value = this.get(index);
+		
+		return this.vary({
+			list() { return { value: value, index: index }; },
+			pair() { return { key: entry[0], value: entry[1], index: index }; }
+		});
+	};
+	fetchVal(entry) { return this.fetchValue(entry); }
 
 
     // copy
@@ -2922,9 +3057,9 @@ class Bowl {
 
 
     // sort
-    sort(func=null) {
+    sort(compare=null) {
         this.contents.map( (cont) => {
-            return cont.sort(func);
+            return cont.sort(compare);
         });
     }
 
@@ -3158,6 +3293,40 @@ class Bowl {
     }
 
 
+	// sortBy
+    sortBy(obj, compare=null) {
+        this.contents.map( (cont) => {
+            return cont.sortBy( obj, compare);
+        });
+    }
+	sortWith(obj, compare=null) { return this.sortBy(obj, compare) }
+	
+
+	// trim
+    trim() {
+        this.contents.map( (cont) => {
+            return cont.trim();
+        });
+    }
+
+
+	// trimKeys
+    trimKeys() {
+        this.contents.map( (cont) => {
+            return cont.trimKeys();
+        });
+    }
+
+
+	// trimValues
+    trimValues() {
+        this.contents.map( (cont) => {
+            return cont.trimValues();
+        });
+    }
+	trimVals() { return this.trimValues(); }
+
+
     // copy
     copy() {
         let contents = new Soup(Array);
@@ -3343,6 +3512,8 @@ Object.defineProperty(Bowl, "primaryInfo", {
 });
 
 
+
+
 try { // check if it's a .js file
 
 	module.exports = { 
@@ -3355,4 +3526,5 @@ try { // check if it's a .js file
     };
 
 }
+	
 catch(err) {}
