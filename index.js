@@ -1,4 +1,6 @@
-/* :: Stews :: Version 1.6.6 | 06/01/23 :: */
+/* :: Stews :: Version 1.7.0 | 08/18/23 :: */
+// https://github.com/paigeroid/stews
+
 
 class Stew {
     constructor(object, splitter='') {
@@ -6,6 +8,9 @@ class Stew {
         if (object instanceof Stew || object instanceof Soup) {
             object = object.insides;
         }
+		if (object instanceof Noodle) {
+			object = object.content;
+		}
         if (!object) {
             this.insides = new Set();
             this.type = "list";
@@ -807,14 +812,29 @@ class Stew {
 
     // toUpperCase
     toUpperCase() {
+		let args = Array.from(arguments);
+		if (args[0] instanceof Array) args = args[0];
+		
         var stuff = this.copy();
+		
         if (stuff.type == "list") {
-            stuff.forEach( (value, index) => {
+			if (args.length > 0) {
+				args.forEach( (i) => {
+					if (typeof stuff[i] == "string") stuff.set(i, stuff[i].toUpperCase());
+				});
+			}
+            else stuff.forEach( (value, index) => {
                 if (typeof value == "string") stuff.set(index, value.toUpperCase());
             });
         }
         else if (stuff.type == "pair") {
-            stuff.forEach( (key, value, index) => {
+			if (args.length > 0) {
+				args.forEach( (i) => {
+					if (typeof stuff.values[i] == "string") stuff.set(i, stuff.values[i].toUpperCase());
+					if (typeof stuff.keys[i] == "string") stuff.rename(i, stuff.keys[i].toUpperCase());
+				});
+			}
+            else stuff.forEach( (key, value, index) => {
                 if (typeof value == "string") stuff.set(index, value.toUpperCase());
                 if (typeof key == "string") stuff.rename(index, key.toUpperCase());
             });
@@ -825,14 +845,29 @@ class Stew {
 
     // toLowerCase
     toLowerCase() {
+        let args = Array.from(arguments);
+		if (args[0] instanceof Array) args = args[0];
+		
         var stuff = this.copy();
+		
         if (stuff.type == "list") {
-            stuff.forEach( (value, index) => {
+			if (args.length > 0) {
+				args.forEach( (i) => {
+					if (typeof stuff[i] == "string") stuff.set(i, stuff[i].toLowerCase());
+				});
+			}
+            else stuff.forEach( (value, index) => {
                 if (typeof value == "string") stuff.set(index, value.toLowerCase());
             });
         }
         else if (stuff.type == "pair") {
-            stuff.forEach( (key, value, index) => {
+			if (args.length > 0) {
+				args.forEach( (i) => {
+					if (typeof stuff.values[i] == "string") stuff.set(i, stuff.values[i].toLowerCase());
+					if (typeof stuff.keys[i] == "string") stuff.rename(i, stuff.keys[i].toLowerCase());
+				});
+			}
+            else stuff.forEach( (key, value, index) => {
                 if (typeof value == "string") stuff.set(index, value.toLowerCase());
                 if (typeof key == "string") stuff.rename(index, key.toLowerCase());
             });
@@ -1242,6 +1277,9 @@ class Soup {
         if (object instanceof Stew || object instanceof Soup) {
             object = object.insides;
         }
+		if (object instanceof Noodle) {
+			object = object.content;
+		}
         if (!object) {
             this.insides = [];
             this.type = "list";
@@ -2022,14 +2060,29 @@ class Soup {
 
     // toUpperCase
     toUpperCase() {
+		let args = Array.from(arguments);
+		if (args[0] instanceof Array) args = args[0];
+		
         var stuff = this.copy();
+		
         if (stuff.type == "list") {
-            stuff.forEach( (value, index) => {
+			if (args.length > 0) {
+				args.forEach( (i) => {
+					if (typeof stuff[i] == "string") stuff.set(i, stuff[i].toUpperCase());
+				});
+			}
+            else stuff.forEach( (value, index) => {
                 if (typeof value == "string") stuff.set(index, value.toUpperCase());
             });
         }
         else if (stuff.type == "pair") {
-            stuff.forEach( (key, value, index) => {
+			if (args.length > 0) {
+				args.forEach( (i) => {
+					if (typeof stuff.values[i] == "string") stuff.set(i, stuff.values[i].toUpperCase());
+					if (typeof stuff.keys[i] == "string") stuff.rename(i, stuff.keys[i].toUpperCase());
+				});
+			}
+            else stuff.forEach( (key, value, index) => {
                 if (typeof value == "string") stuff.set(index, value.toUpperCase());
                 if (typeof key == "string") stuff.rename(index, key.toUpperCase());
             });
@@ -2040,14 +2093,29 @@ class Soup {
 
     // toLowerCase
     toLowerCase() {
+    	let args = Array.from(arguments);
+		if (args[0] instanceof Array) args = args[0];
+		
         var stuff = this.copy();
+		
         if (stuff.type == "list") {
-            stuff.forEach( (value, index) => {
+			if (args.length > 0) {
+				args.forEach( (i) => {
+					if (typeof stuff[i] == "string") stuff.set(i, stuff[i].toLowerCase());
+				});
+			}
+            else stuff.forEach( (value, index) => {
                 if (typeof value == "string") stuff.set(index, value.toLowerCase());
             });
         }
         else if (stuff.type == "pair") {
-            stuff.forEach( (key, value, index) => {
+			if (args.length > 0) {
+				args.forEach( (i) => {
+					if (typeof stuff.values[i] == "string") stuff.set(i, stuff.values[i].toLowerCase());
+					if (typeof stuff.keys[i] == "string") stuff.rename(i, stuff.keys[i].toLowerCase());
+				});
+			}
+            else stuff.forEach( (key, value, index) => {
                 if (typeof value == "string") stuff.set(index, value.toLowerCase());
                 if (typeof key == "string") stuff.rename(index, key.toLowerCase());
             });
@@ -2464,6 +2532,793 @@ function SoapProxyHandler() { return {
 }
 
 
+class Noodle {
+    constructor(object, joiner=",") {
+        if (object instanceof Function) object = new object();
+        if (object instanceof Stew || object instanceof Soup) {
+            object = object.join(joiner);
+        }
+        if (!object) {
+            this.content = "";
+        }
+		else if (object instanceof Noodle) {
+			this.content = object.content;
+			joiner = (joiner != object.joiner) ? joiner : object.joiner;
+		}
+        else if (typeof object == "string") {
+            this.content = object;
+        }
+        else if (typeof object == "number") {
+            this.content = object.toString(); 
+        }
+        else if (object instanceof Array) {
+            this.content = object.join(joiner);
+        }
+        else if (object instanceof Set) {
+            this.content = Array.from(object).join(joiner);
+        }
+        else if (object instanceof Map || object instanceof Object) {
+            this.content = Soup.from(object).join(joiner);
+        }
+        else if (object instanceof String) {
+            this.content = object;
+        }
+
+        Object.defineProperty(this, "joiner", {
+            value: new String(joiner)
+        });
+
+        return new Proxy(this, NoodProxyHandler());
+    }
+
+	// delete
+    delete(index) {
+        var returns;
+		
+		returns = { char: this.get(index), index: index };
+
+		let stuff = Soup.from(this.content);
+		delete stuff[index];
+
+		this.content = stuff.join("");
+		
+        return returns;
+    }
+    del(index) { return this.delete(index); }
+    remove(index) { return this.delete(index); }
+    rem(index) { return this.delete(index); }
+
+
+	// deleteWord
+    deleteWord(index) {
+        var returns;
+		
+		returns = { char: this.getWord(index), index: index };
+
+		let stuff = Soup.from(this.content, " ");
+		delete stuff[index];
+
+		this.content = stuff.join(" ");
+		
+        return returns;
+    }
+    delWord(index) { return this.deleteWord(index); }
+    removeWord(index) { return this.deleteWord(index); }
+    remWord(index) { return this.deleteWord(index); }
+
+
+    // push
+    push(value) {
+        let stuff = Soup.from(this.content);
+		stuff.push(value);
+		return this.content = stuff.join("");
+    }
+    add(value=null) { return this.push(value); }
+    push_back(value=null) { return this.push(value); }
+    
+
+    // set
+    set(index, set_to=null) {
+		let stuff = Soup.from(this.content);
+        stuff.set(index, set_to);
+		return this.content = stuff.join("");
+    }
+    edit(index, set_to=null) { return this.set(index, set_to) };
+
+	
+	// setWord
+    setWord(index, set_to=null) {
+		let stuff = Soup.from(this.content, " ");
+        stuff.set(index, set_to);
+		return this.content = stuff.join(" ");
+    }
+    editWord(index, set_to=null) { return this.setWord(index, set_to) };
+
+
+    // pull
+    pull(value) {
+        let stuff = Soup.from(this.content);
+		stuff.pull(value);
+		return this.content = stuff.join("");
+    }
+    unshift(entry, value=null) { return this.pull(entry, value); }
+    push_front(entry, value=null) { return this.pull(entry, value); }
+
+
+    // pop
+    pop(offset=0) {
+        let index = (this.length-1)-offset;
+        let returns = { value: this.get(index), index: index };
+        this.delete(index);
+        return returns;
+    }
+    unpush(offset=0) { return this.pop(offset); }
+
+
+	// popWord
+    popWord(offset=0) {
+        let index = (this.wordCount-1)-offset;
+        let returns = { value: this.getWord(index), index: index };
+        this.deleteWord(index);
+        return returns;
+	}
+	unpushWord(offset=0) { return this.popWord(offset); }
+
+
+    // shift
+    shift(offset=0) {
+        let index = 0+offset;
+        let returns = { value: this.get(index), index: index };
+        this.delete(index);
+        return returns;
+    }
+    unpull(offset=0) { return this.shift(offset); }
+
+
+	// shiftWord
+    shiftWord(offset=0) {
+        let index = 0+offset;
+        let returns = { value: this.getWord(index), index: index };
+        this.deleteWord(index);
+        return returns;
+    }
+    unpullWord(offset=0) { return this.shiftWord(offset); }
+
+
+	// indexOf
+	indexOf(entry) {
+		return this.content.indexOf(entry);
+	}
+
+
+	// lastIndexOf
+	lastIndexOf(entry) {
+		return this.content.lastIndexOf(entry);
+	}
+
+	
+	// indexesOf
+    indexesOf(entry) {
+    	let index = this.content.indexOf(entry);
+		let length = entry.length;
+
+		let stuff = [ index ];
+
+		for (let i = 1; i < length; i++) {
+			stuff.push(index + i);
+		}
+
+		return stuff;
+    }
+
+	
+	// lastIndexesOf
+    lastIndexesOf(entry) {
+    	let index = this.content.lastIndexOf(entry);
+		let length = entry.length;
+
+		let stuff = [ index ];
+
+		for (let i = 1; i < length; i++) {
+			stuff.push(index + i);
+		}
+
+		return stuff;
+    }
+	
+
+    // length
+    get length() {
+        return this.content.split("").length;
+    }
+    get size() { return this.length; }
+
+
+	// words
+	get words() {
+		return new Soup(this.content.split(" "));
+	}
+	get sections() { return this.words; }
+	
+	
+	// wordCount
+    get wordCount() {
+        return this.content.split(" ").length;
+    }
+
+
+    // get
+    get(index) {
+        return this.content.split("")[index]
+    }
+    at(index) { return this.get(index); }
+
+	
+	// getWord
+    getWord(index) {
+        return this.content.split(" ")[index]
+    }
+    wordAt(index) { return this.getWord(index); }
+
+	
+	// getCharCode
+    getCharCode(index) {
+        return this.content.charCodeAt(index);
+    }
+    charCodeAt(index) { return this.getWord(index); }
+
+	
+	// getCodePoint
+    getCodePoint(index) {
+        return this.content.codePointAt(index);
+    }
+    codePointAt(index) { return this.getWord(index); }
+
+
+    // forEach
+    forEach(func) {
+        for (let i = 0; i < this.length; i++) {
+			func(this.get(i));
+		}
+    }
+	forEachChar(func) { return this.forEach(func); }
+
+	
+	// forEachWord
+    forEachWord(func) {
+        for (let i = 0; i < this.wordCount; i++) {
+			func(this.getWord(i));
+		}
+    }
+
+
+    // includes
+    includes(/**/) {
+        let args = Array.from(arguments);
+		if (args.length == 1 && args[0] instanceof Array) args = args[0];
+
+        return args.some( (v) => { return this.content.includes(v); });
+    }
+    contains(/**/) { return this.includes(...Array.from(arguments)); }
+    has(/**/) { return this.includes(...Array.from(arguments)); }
+
+    
+    // clear
+    clear() {
+        return this.content = "";
+    }
+
+
+    // filter
+    filter(func) {
+		let stuff = Soup.from(this.copy());
+		stuff = stuff.filter(func);
+		return new this.constructor(stuff.join(""));
+    }
+	filterChars(func) { return this.filter(func); }
+
+
+	// filterWords
+    filterWords(func) {
+		let stuff = Soup.from(this.copy(), " ");
+		stuff = stuff.filter(func);
+		return new this.constructor(stuff.join(" "));
+    }
+
+
+    // map
+    map(func) {
+        let stuff = Soup.from(this.copy());
+		stuff = stuff.map(func);
+		return new this.constructor(stuff.join(""));
+    }
+	mapChars(func) { return this.map(func); }
+
+
+	// mapWords
+    mapWords(func) {
+		let stuff = Soup.from(this.copy(), " ");
+		stuff = stuff.map(func);
+		return new this.constructor(stuff.join(" "));
+    }
+	
+
+    // swig
+    swig(func) {
+        let stuff = Soup.from(this.copy(), "");
+		return stuff.swig(func);
+    }
+    some(func) { return this.swig(func); }
+
+
+	// swigWord
+    swigWord(func) {
+        let stuff = Soup.from(this.copy(), " ");
+		return stuff.swig(func);
+    }
+    someWord(func) { return this.swigWord(func); }
+
+
+    // chug
+    chug(func) {
+        let stuff = Soup.from(this.copy(), "");
+		return stuff.chug(func);
+    }
+    every(func) { return this.chug(func); }
+
+
+	// chugWord
+    chugWord(func) {
+        let stuff = Soup.from(this.copy(), " ");
+		return stuff.chug(func);
+    }
+    everyWord(func) { return this.chugWord(func); }
+	
+
+    // reverse
+    reverse() {
+		this.content = Soup.from(this.content).reverse().join("");
+		return this;
+    }
+    flip() { return this.reverse(); }
+
+
+    // front
+    front(offset=0) {
+        return this.get(0+offset);
+    }
+    first(offset=0) { return this.front(offset); }
+	start(offset=0) { return this.front(offset); }
+
+	
+	// frontWord
+    frontWord(offset=0) {
+        return this.getWord(0+offset);
+    }
+    firstWord(offset=0) { return this.frontWord(offset); }
+	startWord(offset=0) { return this.frontWord(offset); }
+
+
+    // back
+    back(offset=0) {
+        return this.get( (this.length-1)-offset );
+    }
+    last(offset=0) { return this.back(offset); }
+	end(offset=0) { return this.back(offset); }
+
+
+	// backWord
+    backWord(offset=0) {
+        return this.getWord( (this.words-1)-offset );
+    }
+    lastWord(offset=0) { return this.backWord(offset); }
+	endWord(offset=0) { return this.backWord(offset); }
+
+
+    // scoop
+    scoop(/**/) {
+        var args = Array.from(arguments);
+        var stuff = this.copy();
+
+        if (args[0] instanceof Array) args = args[0];
+		
+        this.content = Soup.from(this.content).filter( (value, index) => {
+            if (args[0] instanceof Function) return !args[0](value, index);
+            return !args.includes(index) && !args.includes(value);
+        }).join("");
+        
+		return stuff;
+    }
+	scoopChar(/**/) { return this.scoop( ...Array.from(arguments) ); }
+	scoopChars(/**/) { return this.scoop( ...Array.from(arguments) ); }
+
+
+	// scoopWord
+    scoopWord(/**/) {
+        var args = Array.from(arguments);
+        var stuff = this.copy();
+
+        if (args[0] instanceof Array) args = args[0];
+		
+        this.content = Soup.from(this.content, " ").filter( (value, index) => {
+            if (args[0] instanceof Function) return !args[0](value, index);
+            return !args.includes(index) && !args.includes(value);
+        }).join(" ");
+        
+		return stuff;
+    }
+	scoopWords(/**/) { return this.scoopWord( ...Array.from(arguments) ); }
+
+
+    // startsWith
+    startsWith(/**/) {
+        let args = Array.from(arguments);
+        if (args[0] instanceof Array) args = args[0];
+        let stuff = this.content;
+
+        for (let i = 0; i < args.length; i++) {
+            if (stuff.startsWith(args[i])) return true;
+        }
+        return false;
+    }
+
+
+    // endsWith
+    endsWith(/**/) {
+        let args = Array.from(arguments);
+        if (args[0] instanceof Array) args = args[0];
+        let stuff = this.content;
+
+        for (let i = 0; i < args.length; i++) {
+            if (stuff.endsWith(args[i])) return true;
+        }
+        return false;
+    }
+
+
+    // toUpperCase
+    toUpperCase(/**/) {
+		let args = Array.from(arguments);
+		if (args[0] instanceof Array) args = args[0];
+		let stuff = this.copy();
+
+		if (args.length > 0) {
+			args.forEach( (i) => {
+				let thing = Soup.from(stuff.content);
+				thing[i] = thing[i].toUpperCase();
+				stuff.content = thing.join("");
+				
+			});
+		}
+		else {
+			stuff.content = stuff.content.toUpperCase();
+		}
+		
+		return new this.constructor(stuff);
+    }
+
+
+    // toLowerCase
+    toLowerCase(/**/) {
+        let args = Array.from(arguments);
+		if (args[0] instanceof Array) args = args[0];
+		let stuff = this.copy();
+
+		if (args.length > 0) {
+			args.forEach( (i) => {
+				let thing = Soup.from(stuff.content);
+				thing[i] = thing[i].toLowerCase();
+				stuff.content = thing.join("");
+				
+			});
+		}
+		else {
+			stuff.content = stuff.content.toLowerCase();
+		}
+		
+		return new this.constructor(stuff);
+    }
+
+
+    // replace
+    replace(entry, replaceWith) {
+		let thing = this.copy();
+		thing.content = thing.content.replace(entry, replaceWith);
+        return new this.constructor(thing);
+    }
+    replaceOne(entry, replaceWith) { return this.replace(entry, replaceWith); }
+
+
+    // replaceAll
+    replaceAll(entry, replaceWith) {
+		let thing = this.copy();
+        for (let i = 0; i < thing.content.length; i++) thing.content = thing.content.replace(entry, replaceWith);
+
+		return new this.constructor(thing);
+    }
+
+
+    // append
+    append(index, value) {
+        var stuff;
+		stuff = new Soup(Array);
+		
+		this.content.split("").forEach( (v, i) => {
+			if (i == index) stuff.push(value);
+			stuff.push(v);
+		});
+
+		this.content = stuff.join("");
+
+		return this;
+    }
+    insert(index, value) { return this.append(index, value); }
+    push_to(index, value) { return this.append(index, value); }
+    push_at(index, value) { return this.append(index, value); }
+
+
+    // split
+    split(/**/) {
+        var args = Array.from(arguments);
+        if (args[0] instanceof Array) args = args[0];
+
+		let stuff = new Soup([this.content]);
+		stuff = stuff.split(args);
+
+		return stuff;
+    }
+
+
+    // trim
+    trim() {
+		let stuff = this.copy();
+		stuff.content = stuff.content.trim();
+        return stuff;
+    }
+
+	// trimStart
+    trimStart() {
+		let stuff = this.copy();
+		stuff.content = stuff.content.trimStart();
+        return stuff;
+    }
+
+	// trimEnd
+    trimEnd() {
+		let stuff = this.copy();
+		stuff.content = stuff.content.trimEnd();
+        return stuff;
+    }
+
+
+	// merge
+	merge(joiner=",", /**/) {
+		var args = Array.from(arguments);
+		args.shift();
+
+		let stuff = this.copy();
+		
+        if (args[0] instanceof Array) args = args[0];
+
+		for (let obj of args) {
+			let thing = new Noodle(obj);
+
+			stuff.content = stuff.content.concat(joiner, thing.content);
+		}
+
+		return stuff;
+	}
+	concat(joiner=",", /**/) { return this.merge( ...Array.from(arguments)); }
+
+
+	// compare
+	compare(x) {
+		return this.content.localeCompare(x);
+	}
+	localeCompare(x) { return this.compare(x); }
+
+
+	// match
+	match(match) {
+		return this.content.match(match);
+	}
+
+	
+	// padStart
+	padEnd(length, string) {
+		let stuff = this.copy();
+		stuff.content = stuff.content.padStart(length, string);
+		return stuff;
+	}
+
+
+	// padEnd
+	padEnd(length, string) {
+		let stuff = this.copy();
+		stuff.content = stuff.content.padEnd(length, string);
+		return stuff;
+	}
+
+
+	// search
+	search(value) {
+		return this.content.search(value);
+	}
+
+	
+	// slice
+	slice(start, end) {
+		let stuff = this.copy();
+		stuff.content = stuff.content.slice(start, end);
+		return stuff;
+	}
+
+
+	// sub
+	sub(start, length) {
+		let stuff = this.copy();
+		stuff.content = stuff.content.substr(start, length);
+		return stuff;
+	}
+
+
+	// substring
+	substring(start, end) {
+		let stuff = this.copy();
+		stuff.content = stuff.content.substring(start, end);
+		return stuff;
+	}
+	substr(start, end) { return this.substring(start, end); }
+
+
+	// toString
+	toString() {
+		return this.content;
+	}
+
+
+    // copy
+    copy() {
+        return new this.constructor(this);
+    }
+
+
+    // properties
+    get properties() {
+        let proto = Noodle.prototype;
+        let names = Object.getOwnPropertyNames(proto);
+        let info = [];
+        let methods = {}
+
+        Object.getOwnPropertyNames(this).forEach( (name) => {
+            methods[name] = (Object.getOwnPropertyDescriptors(this)[name].value) ? Object.getOwnPropertyDescriptors(this)[name].value : this[name];
+            names.unshift(name);
+        });
+
+        Object.getOwnPropertyNames(proto).forEach( (name) => {
+            if (Object.getOwnPropertyDescriptors(proto)[name].value) {
+                methods[name] = Object.getOwnPropertyDescriptors(proto)[name].value;
+            }
+            else if (name == "props" || name == "properties") {
+                methods[name] = Object.getOwnPropertyDescriptors(proto)[name].get
+            }
+            else if ( Noodle.primaryInfo.includes(name) ) {
+                let entries = [];
+
+                Object.entries(methods).forEach( (entry, index) => {
+                    if (entry[0] == "constructor") entries.push( [name, this[name]] ); entries.push(entry);
+                });
+
+                methods = Object.fromEntries(entries);
+            }
+            else {
+                methods[name] = this[name];
+            }
+        });
+
+        info = Object.fromEntries(Object.entries(methods).filter( (entry, index) => {
+            return Noodle.primaryInfo.includes(entry[0]);
+        }));
+
+        return {
+            names: names,
+            descriptors: Object.getOwnPropertyDescriptors(proto),
+            methods: methods,
+            info: info
+        }
+    }
+    get props() { return this.properties; }
+
+
+    // toPrimitive
+    [Symbol.toPrimitive](hint) {
+        if (hint === "string" || hint == "default") {
+            return this.content;
+        }
+        else if (hint == "number") {
+            return Number(this.content);
+		}
+        return this;
+    }
+
+
+    // iterator ( for..of )
+    [Symbol.iterator]() {
+        var stuff = this;
+        return {
+            current: 0,
+            last: stuff.length-1,
+
+            next() {
+                if (this.current <= this.last) {
+                    let data = stuff.get(this.current++);
+                    return { done: false, value: data };
+                } else {
+                    return { done: true };
+                }
+            }
+        };
+    }
+
+
+    // async iterator ( for await..of )
+    [Symbol.asyncIterator]() {
+        var stuff = this;
+        return {
+            current: 0,
+            last: stuff.length-1,
+
+            async next() {
+                if (this.current <= this.last) {
+                    let data = stuff.get(this.current++);
+                    return { done: false, value: data };
+                } else {
+                    return { done: true };
+                }
+            }
+        };
+    }
+}
+
+function NoodProxyHandler() { return {
+	
+		get(target, prop) {
+            if (Object.getOwnPropertyNames(Noodle.prototype).includes(prop) || target[prop]) { // if it's a function or main thing
+                return target[prop];
+            }
+            else if (Number(prop)+1 && Number(prop) <= target.length-1) { // if it's a number
+                return target.get(Number(prop));
+            }
+            else {
+                return false;
+            }
+        },
+
+
+        set(target, prop, value) {
+            if (target[prop]) { // if it's a main thing like insides or type
+                target[prop] = value;
+            }
+            else if (Number(prop)+1 && Number(prop) <= target.length-1) { // if it's a number
+                target.set(Number(prop), value);
+			}
+            return true;
+        },
+        
+
+        deleteProperty(target, prop) {
+            if (Number(prop)+1 && Number(prop) <= target.length-1) { // if it is a number
+				target.delete(Number(prop));
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+	};
+}
+
+
 // from
 Object.defineProperty( Stew, "from", {
     value: (object, splitter='') => { return new Stew(object, splitter); }
@@ -2471,6 +3326,16 @@ Object.defineProperty( Stew, "from", {
 
 Object.defineProperty( Soup, "from", {
     value: (object, splitter='') => { return new Soup(object, splitter); }
+});
+
+Object.defineProperty( Noodle, "from", {
+    value: (object, joiner=",") => { return new Noodle(object, joiner); }
+});
+
+
+// fromCharCode
+Object.defineProperty( Noodle, "fromCharCode", {
+    value: (array, joiner=",") => { return new Noodle(String.fromCharCode(...array), joiner); }
 });
 
 
@@ -2566,6 +3431,7 @@ Object.defineProperties(Stew, {
     "Func": { value: StewFunctionMaker }, "func": { value: StewFunctionMaker}
 });
 
+
 class SoapFunctionMaker {
     constructor(name, func, primary=false) {
         var stuff = (func instanceof Function) ? func : function() { return func; }
@@ -2582,6 +3448,25 @@ class SoapFunctionMaker {
 Object.defineProperties(Soup, {
     "Function": { value: SoapFunctionMaker }, "function": { value: SoapFunctionMaker },
     "Func": { value: SoapFunctionMaker }, "func": { value: SoapFunctionMaker}
+});
+
+
+class NoodFunctionMaker {
+    constructor(name, func, primary=false) {
+        var stuff = (func instanceof Function) ? func : function() { return func; }
+
+        Object.defineProperty(stuff, "name", { value: name });
+        Object.defineProperty( Noodle.prototype, name, { value: stuff });
+
+        if (primary) Noodle.primaryInfo.push(name);
+
+        return stuff;
+    }
+}
+
+Object.defineProperties(Noodle, {
+    "Function": { value: NoodFunctionMaker }, "function": { value: NoodFunctionMaker },
+    "Func": { value: NoodFunctionMaker }, "func": { value: NoodFunctionMaker}
 });
 
 
@@ -2610,6 +3495,7 @@ Object.defineProperties(Stew, {
     "Prop": { value: StewPropertyMaker }, "prop": { value: StewPropertyMaker }
 });
 
+
 class SoapPropertyMaker {
     constructor(name, value, attributes={set:undefined, enumerable:false, configurable:false, primary:false}) {
         var func = (value instanceof Function) ? value : function() { return value; };
@@ -2636,12 +3522,43 @@ Object.defineProperties(Soup, {
     "Prop": { value: SoapPropertyMaker }, "prop": { value: SoapPropertyMaker }
 });
 
+
+class NoodPropertyMaker {
+    constructor(name, value, attributes={set:undefined, enumerable:false, configurable:false, primary:false}) {
+        var func = (value instanceof Function) ? value : function() { return value; };
+        
+        Object.defineProperty(func, "name", { value: name });
+
+        Object.defineProperty(Noodle.prototype, name, {
+            get: func,
+            set: attributes.set,
+            enumerable: attributes.enumerable,
+            configurable: attributes.configurable
+        });
+
+        console.log(Object.getOwnPropertyDescriptors(Noodle.prototype)[name].get)
+
+        if (attributes.primary) Noodle.primaryInfo.push(name);
+
+        return func;
+    }
+}
+
+Object.defineProperties(Noodle, {
+    "Property": { value: NoodPropertyMaker }, "property": { value: NoodPropertyMaker },
+    "Prop": { value: NoodPropertyMaker }, "prop": { value: NoodPropertyMaker }
+});
+
 Object.defineProperty(Soup, "primaryInfo", {
     value: ["insides", "type", "splitter", "length", "size", "keys", "values", "entries", "constructor"]
 });
 
 Object.defineProperty(Stew, "primaryInfo", {
     value: ["insides", "type", "splitter", "length", "size", "keys", "values", "entries", "constructor"]
+});
+
+Object.defineProperty(Noodle, "primaryInfo", {
+    value: ["content", "joiner", "length", "size", "words", "sections", "wordCount", "constructor"]
 });
 
 
@@ -2742,776 +3659,6 @@ Object.defineProperty(Soup.prototype, "random", {
 });
 
 
-class Bowl {
-    constructor(/**/) {
-        let args = Array.from(arguments);
-        if (args[0] instanceof Array) args = args[0];
-        let contents = Soup.from(args);
-
-        this.contents = contents;
-
-        return new Proxy(this, BowlProxyHandler());     
-    }
-
-
-    // head
-    get head() {
-        return this.contents[0];
-    }
-
-
-    // depth
-    get depth() {
-        return this.contents.length;
-    }
-
-
-    // grab
-    grab(entry) {
-        return this.contents.get(entry);
-    }
-
-
-    // put
-    put(/**/) {
-        let args = Array.from(arguments);
-
-        args.forEach( (cont) => {
-            this.contents.push(cont);
-        });
-    }
-
-
-    // take
-    take(/**/) {
-        let args = Array.from(arguments);
-
-        args.forEach( (entry) => {
-            this.contents.delete(entry);
-        });
-    }
-
-
-    // stir
-    stir(head=0) {
-        let contents = this.contents.filter( (cont) => {
-            return cont != this.grab(head);
-        });
-
-        return this.grab(head).merge(...contents);
-    }
-
-
-    // delete
-    delete(entry) {
-        this.contents.forEach( (cont) => {
-            cont.delete(entry);
-        });
-    }
-    del(entry) { return this.delete(entry); }
-    remove(entry) { return this.delete(entry); }
-    rem(entry) { return this.delete(entry); }
-
-
-    // push
-    push(entry, value=null) {
-        this.contents.forEach( (cont) => {
-            cont.push(entry, value);
-        });
-    }
-    add(entry, value=null) { return this.push(entry, value); }
-    push_back(entry, value=null) { return this.push(entry, value); }
-    
-
-    // set
-    set(entry, set_to=null) {
-        this.contents.forEach( (cont) => {
-            cont.set(entry, set_to);
-        });
-    }
-    edit(entry, set_to=null) { return this.set(entry, set_to) };
-
-
-    // pull
-    pull(entry, value=null) {
-        this.contents.forEach( (cont) => {
-            cont.pull(entry, value);
-        });
-    }
-    unshift(entry, value=null) { return this.pull(entry, value); }
-    push_front(entry, value=null) { return this.pull(entry, value); }
-
-
-    // pop
-    pop(offset=0) {
-        this.contents.forEach( (cont) => {
-            cont.pop(offset);
-        });
-    }
-    unpush(offset=0) { return this.pop(offset); }
-
-
-    // shift
-    shift(offset=0) {
-        this.contents.forEach( (cont) => {
-            cont.shift(offset);
-        });
-    }
-    unpull(offset=0) { return this.shift(offset); }
-
-
-    // pour
-    pour(type=null, joiner='') {
-        return this.contents.pour(type, joiner);
-    }
-
-
-    // length
-    get length() {
-        return this.keys.length;
-    }
-    get size() { return this.length; }
-
-
-    // forEach
-    forEach(vary) {
-        this.contents.forEach( (cont) => {
-            cont.vary({
-                list() {
-                    this.forEach( (value, index) => {
-                        vary.list = vary.list.bind(this);
-                        vary.list(value, index);
-                    });
-                },
-
-                pair() {
-                    this.forEach( (key, value, index) => {
-                        vary.pair = vary.pair.bind(this);
-                        vary.pair(key, value, index);
-                    });
-                }
-            });
-        });
-    }
-
-
-    // toString
-    toString() {
-        let stuff = this.copy();
-        return stuff.contents.values.map( (cont) => {
-            return `[${cont.constructor.name}]`;
-        }).join(",");
-    }
-
-
-    // join
-    join(joiner=",") {
-        let stuff = this.copy();
-        return stuff.contents.values.map( (cont) => {
-            return `[${cont.constructor.name}]`;
-        }).join(joiner);
-    }
-
-
-    // joinKeys
-    joinKeys(joiner=", ") {
-        return this.keys.join(joiner);
-    }
-
-
-    // joinValues
-    joinValues(joiner=",") {
-        return this.values.join(joiner);
-    }
-
-
-    // includes
-    includes(/**/) {
-        let args = Array.from(arguments);
-        if (args[0] instanceof Array) args = args[0];
-
-        for (let i = 0; i < this.depth; i++) {
-            if (this.grab(i).includes(...args)) return true;
-        }
-        return false;
-    }
-    contains(/**/) { return this.includes(...Array.from(arguments)); }
-    has(/**/) { return this.includes(...Array.from(arguments)); }
-
-    
-    // clear
-    clear() {
-        this.contents.forEach( (cont) => { return cont.clear(); });
-    }
-
-
-    // filter
-    filter(func) {
-        var stuff = this.copy();
-        for (let d = 0; d < stuff.depth; d++) {
-            stuff.contents[d] = stuff.contents[d].filter(func);
-        }
-
-        return stuff;
-    }
-
-
-    // keys
-    get keys() {
-        let stuff = [];
-        this.contents.forEach( (cont) => { stuff.push(cont.keys); });
-        return stuff;
-    }
-    // values
-    get values() {
-        let stuff = [];
-        this.contents.forEach( (cont) => { stuff.push(cont.values); });
-        return stuff;
-    }
-    // entries
-    get entries() {
-        let stuff = [];
-        this.contents.forEach( (cont) => { stuff.push(cont.entries); });
-        return stuff;
-    }
-
-
-    // map
-    map(func) {
-        let stuff = this.copy();
-        return new Bowl(stuff.contents.map( (cont) => {
-            return cont.map(func);
-        }));
-    }
-    mapValue(func) { return this.map(func); }
-
-
-    // mapKey
-    mapKey(func) {
-        let stuff = this.copy();
-        return new Bowl(stuff.contents.map( (cont) => {
-            return cont.mapKey(func);
-        }));
-    }
-
-
-    // mapEntry
-    mapEntry(func) {
-        let stuff = this.copy();
-        return new Bowl(stuff.contents.map( (cont) => {
-            return cont.mapEntry(func);
-        }));
-    }
-
-
-    // isList
-    isList() {
-        return (this.head.type == "list") ? true : false;
-    }
-    isArray() { return this.isList(); }
-    isSet() { return this.isList(); }
-    
-    // isPair
-    isPair() {
-        return this.head.type == "pair" ? true : false;
-    }
-    isObject() { return this.isPair(); }
-    isMap() { return this.isPair(); }
-
-    // isStew
-    isStew() { return this.head instanceof Stew; }
-
-    // isSoup
-    isSoup() { return this.head instanceof Soup; }
-
-
-    // swig
-    swig(func) {
-        for (let i = 0; i < this.depth; i++) {
-            if (this.grab(i).swig(func)) return true;
-        }
-        return false;
-    }
-    some(func) { return this.swig(func); }
-
-
-    // chug
-    chug(func) {
-        for (let i = 0; i < this.depth; i++) {
-            if (this.grab(i).chug(func)) return true;
-        }
-        return false;
-    }
-    every(func) { return this.chug(func); }
-
-
-    // slice
-    slice(start, end) {
-        let stuff = this.copy();
-        stuff.contents.map( (cont) => {
-            return cont.slice(start, end);
-        });
-
-        return stuff;
-    }
-
-
-    // sort
-    sort(compare=null) {
-        this.contents.map( (cont) => {
-            return cont.sort(compare);
-        });
-    }
-
-
-    // reverse
-    reverse() {
-        this.contents.map( (cont) => {
-            return cont.reverse();
-        });
-    }
-    flip() { return this.reverse(); }
-
-
-    // front
-    front(offset=0) {
-        return this.head.front(offset);
-    }
-    first(offset=0) { return this.front(offset); }
-	start(offset=0) { return this.front(offset); }
-
-
-    // back
-    back(offset=0) {
-        return this.head.back(offset);
-    }
-    last(offset=0) { return this.back(offset); }
-	end(offset=0) { return this.back(offset); }
-
-
-    // rename
-    rename(entry, name) {
-        this.contents.forEach( (cont) => {
-            cont.rename(entry, name);
-        });
-    }
-
-
-    // merge
-    merge(/**/) {
-        var args = Array.from(arguments);
-        let stuff = this.copy();
-        
-        stuff.contents.map( (cont) => {
-            return cont.merge(...args);
-        });
-
-        return stuff;
-    }
-    concat(/**/) { return this.merge(...Array.from(arguments)); }
-
-
-    // flat
-    flat(depth=1) {
-        let stuff = this.copy();
-        stuff.contents.map( (cont) => {
-            return cont.flat(depth);
-        });
-
-        return stuff;
-    }
-
-
-    // flatMap
-    flatMap(func) {
-        let stuff = this.copy();
-        stuff.contents.map( (cont) => {
-            return cont.flatMap(func);
-        });
-
-        return stuff;
-    };
-
-
-    // splice
-    splice(index, amount, /**/) {
-        var args = Array.from(arguments);
-        args.shift();
-        args.shift();
-
-        this.contents.map( (cont) => {
-            return cont.splice(index, amount, ...args);
-        });
-    }
-
-
-    // includesValue
-    includesValue(/**/) {
-        let args = Array.from(arguments);
-        if (args[0] instanceof Array) args = args[0];
-
-        for (let i = 0; i < this.depth; i++) {
-            if (this.grab(i).includesValue(...args)) return true;
-        }
-        return false;
-    }
-    hasValue(/**/) { return this.includesValue(...Array.from(arguments)); }
-    containsValue(/**/) { return this.includesValue(...Array.from(arguments)); }
-    includesValues(/**/) { return this.includesValue(...Array.from(arguments)); }
-    hasValues(/**/) { return this.includesValue(...Array.from(arguments)); }
-    containsValues(/**/) { return this.includesValue(...Array.from(arguments)); }
-
-
-    // scoop
-    scoop(/**/) {
-        var args = Array.from(arguments);
-
-        if (args[0] instanceof Array) args = args[0];
-
-        this.contents.forEach( (cont) => {
-            cont.scoop(args);
-        });
-    }
-
-
-    // filterBy
-    filterBy(obj, func) {
-        var stuff = this.copy();
-        for (let d = 0; d < stuff.depth; d++) {
-            stuff.contents[d] = stuff.contents[d].filterBy(obj, func);
-        }
-
-        return stuff;
-    }
-    filterWith(obj, func) { return this.filterBy(obj, func) }
-
-
-    // startsWith
-    startsWith(/**/) {
-        let args = Array.from(arguments);
-        if (args[0] instanceof Array) args = args[0];
-
-        for (let i = 0; i < this.depth; i++) {
-            if (this.grab(i).startsWith(...args)) return true;
-        }
-        return false;
-    }
-
-
-    // endsWith
-    endsWith(/**/) {
-        let args = Array.from(arguments);
-        if (args[0] instanceof Array) args = args[0];
-
-        for (let i = 0; i < this.depth; i++) {
-            if (this.grab(i).endsWith(...args)) return true;
-        }
-        return false;
-    }
-
-
-    // toUpperCase
-    toUpperCase() {
-        var stuff = this.copy();
-        stuff.contents.map( (cont) => {
-            return cont.toUpperCase();
-        });
-
-        return stuff;
-    }
-
-
-    // toLowerCase
-    toLowerCase() {
-        var stuff = this.copy();
-        stuff.contents.map( (cont) => {
-            return cont.toLowerCase();
-        });
-
-        return stuff;
-    }
-
-
-    // replace
-    replace(entry, replaceWith) {
-        let thing = this.copy();
-        
-        thing.contents.map( (cont) => {
-            return cont.replace(entry, replaceWith);
-        });
-
-        return thing;
-    }
-    replaceOne(entry, replaceWith) { return this.replace(entry, replaceWith); }
-
-
-    // replaceAll
-    replaceAll(entry, replaceWith) {
-        let thing = this.copy();
-        
-        thing.contents.map( (cont) => {
-            return cont.replaceAll(entry, replaceWith);
-        });
-
-        return thing;
-    }
-
-
-    // append
-    append(index, key, value=null) {
-        this.contents.forEach( (cont) => {
-            cont.append(index, key, value);
-        });
-        return this;
-    }
-    insert(index, key, value=null) { return this.append(index, key, value); }
-    push_to(index, key, value=null) { return this.append(index, key, value); }
-    push_at(index, key, value=null) { return this.append(index, key, value); }
-
-
-    // vary
-    vary(obj) {
-        let thing = Soup.from(obj).toLowerCase()[this.type];
-        this.constructor.prototype.VaryFunction = thing;
-        let returns = this.VaryFunction();
-        delete this.constructor.prototype.VaryFunction;
-        return returns;
-    }
-
-
-    // split
-    split(/**/) {
-        var stuff = this.copy();
-        var args = Array.from(arguments);
-        if (args[0] instanceof Array) args = args[0];
-
-        stuff.contents.map( (cont) => {
-            return cont.split(args);
-        });
-
-        return stuff;
-    }
-
-
-	// sortBy
-    sortBy(obj, compare=null) {
-        this.contents.map( (cont) => {
-            return cont.sortBy( obj, compare);
-        });
-    }
-	sortWith(obj, compare=null) { return this.sortBy(obj, compare) }
-	
-
-	// trim
-    trim() {
-        this.contents.map( (cont) => {
-            return cont.trim();
-        });
-    }
-
-
-	// trimKeys
-    trimKeys() {
-        this.contents.map( (cont) => {
-            return cont.trimKeys();
-        });
-    }
-
-
-	// trimValues
-    trimValues() {
-        this.contents.map( (cont) => {
-            return cont.trimValues();
-        });
-    }
-	trimVals() { return this.trimValues(); }
-
-
-    // copy
-    copy() {
-        let contents = new Soup(Array);
-        this.contents.forEach( (cont) => {
-            contents.push(cont.copy());
-        });
-        return new this.constructor(...contents.pour(Array));
-    }
-
-
-    // properties
-    get properties() {
-        let proto = Bowl.prototype;
-        let names = Object.getOwnPropertyNames(proto);
-        let info = [];
-        let methods = {}
-
-        Object.getOwnPropertyNames(this).forEach( (name) => {
-            methods[name] = (Object.getOwnPropertyDescriptors(this)[name].value) ? Object.getOwnPropertyDescriptors(this)[name].value : this[name];
-            names.unshift(name);
-        });
-
-        Object.getOwnPropertyNames(proto).forEach( (name) => {
-            if (Object.getOwnPropertyDescriptors(proto)[name].value) {
-                methods[name] = Object.getOwnPropertyDescriptors(proto)[name].value;
-            }
-            else if (name == "props" || name == "properties") {
-                methods[name] = Object.getOwnPropertyDescriptors(proto)[name].get
-            }
-            else if ( Bowl.primaryInfo.includes(name) ) {
-                let entries = [];
-
-                Object.entries(methods).forEach( (entry, index) => {
-                    if (entry[0] == "constructor") entries.push( [name, this[name]] ); entries.push(entry);
-                });
-
-                methods = Object.fromEntries(entries);
-            }
-            else {
-                methods[name] = this[name];
-            }
-        });
-
-        info = Object.fromEntries(Object.entries(methods).filter( (entry, index) => {
-            return Bowl.primaryInfo.includes(entry[0]);
-        }));
-
-        return {
-            names: names,
-            descriptors: Object.getOwnPropertyDescriptors(proto),
-            methods: methods,
-            info: info
-        }
-    }
-    get props() { return this.properties; }
-
-
-    // this part isn't documented bc it's for JSON.stringify()
-    toJSON() {
-        return this.contents.pour(Object);
-    }
-
-
-    // toPrimitive
-    [Symbol.toPrimitive](hint) {
-        if (hint === "string") {
-            return this.contents.values.map( (cont) => {
-                return `[${cont.constructor.name}]`;
-            }).join(",");
-        }
-        return this;
-    }
-
-
-    // iterator ( for..of )
-    [Symbol.iterator]() {
-        var stuff = this.head;
-        return {
-            current: 0,
-            last: stuff.length-1,
-
-            next() {
-                if (this.current <= this.last) {
-                    let data = (stuff.type == "pair") ? stuff.entries[this.current++] : stuff.get(this.current++);
-                    return { done: false, value: data };
-                } else {
-                    return { done: true };
-                }
-            }
-        };
-    }
-
-
-    // async iterator ( for await..of )
-    [Symbol.asyncIterator]() {
-        var stuff = this.head;
-        return {
-            current: 0,
-            last: stuff.length-1,
-
-            async next() {
-                if (this.current <= this.last) {
-                    let data = (stuff.type == "pair") ? stuff.entries[this.current++] : stuff.get(this.current++);
-                    return { done: false, value: data };
-                } else {
-                    return { done: true };
-                }
-            }
-        };
-    }
-}
-
-function BowlProxyHandler() {
-    return {
-        get(target, prop) {
-            if (Object.getOwnPropertyNames(Bowl.prototype).includes(prop) || target[prop]) return target[prop];
-            else return target.head[prop];
-        },
-
-        set(target, prop, value) {
-            if (Object.getOwnPropertyNames(Bowl.prototype).includes(prop) || target[prop]) target[prop] = value;
-            else target.contents.forEach( (cont) => {
-                cont[prop] = value;
-            });
-		return true;
-        },
-
-        deleteProperty(target, prop) {
-            target.contents.forEach( (cont) => {
-                delete cont[prop];
-            });
-            return true;
-        }
-    }
-}
-
-
-class BowlFunctionMaker {
-    constructor(name, func, primary=false) {
-        var stuff = (func instanceof Function) ? func : function() { return func; }
-
-        Object.defineProperty(stuff, "name", { value: name });
-        Object.defineProperty( Bowl.prototype, name, { value: stuff });
-
-        if (primary) Bowl.primaryInfo.push(name);
-
-        return stuff;
-    }
-}
-
-Object.defineProperties(Bowl, {
-    "Function": { value: BowlFunctionMaker }, "function": { value: BowlFunctionMaker },
-    "Func": { value: BowlFunctionMaker }, "func": { value: BowlFunctionMaker}
-});
-
-
-class BowlPropertyMaker {
-    constructor(name, value, attributes={set:undefined, enumerable:false, configurable:false, primary:false}) {
-        var func = (value instanceof Function) ? value : function() { return value; };
-        
-        Object.defineProperty(func, "name", { value: name });
-
-        Object.defineProperty(Bowl.prototype, name, {
-            get: func,
-            set: attributes.set,
-            enumerable: attributes.enumerable,
-            configurable: attributes.configurable
-        });
-
-        if (attributes.primary) Bowl.primaryInfo.push(name);
-
-        return func;
-    }
-}
-
-Object.defineProperties(Bowl, {
-    "Property": { value: BowlPropertyMaker }, "property": { value: BowlPropertyMaker },
-    "Prop": { value: BowlPropertyMaker }, "prop": { value: BowlPropertyMaker }
-});
-
-Object.defineProperty(Bowl, "primaryInfo", {
-    value: ["contents", "head", "depth", "grab", "put", "take", "stir", "constructor"]
-});
-
-
 
 
 try { // check if it's a .js file
@@ -3519,10 +3666,10 @@ try { // check if it's a .js file
 	module.exports = { 
         Stew, 
         Soup, 
-        Bowl, 
+		Noodle,
         random, 
-        StewFunctionMaker, SoapFunctionMaker, BowlFunctionMaker, 
-        StewPropertyMaker, SoapPropertyMaker, BowlPropertyMaker
+        StewFunctionMaker, SoapFunctionMaker, NoodFunctionMaker, 
+        StewPropertyMaker, SoapPropertyMaker, NoodPropertyMaker
     };
 
 }
