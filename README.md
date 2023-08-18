@@ -29,9 +29,10 @@ npm i nuttmegg/stews
 <br>
 
 ## Types
-The two main classes included in stews are stews and soups and are both compatible with the common data types<br>
+The three main classes included in stews are stews and soups and are both compatible with the common data types<br>
 - Stews are made using [Sets](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set) and [Maps](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map) so they ***DON'T*** allow duplicate entries
 - Soups are made using [Arrays](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) and [Objects](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) so they ***DO*** allow duplicate entries
+- Noodles are made specifically using [Strings](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 <br>
 
@@ -51,6 +52,14 @@ The two main classes included in stews are stews and soups and are both compatib
 >
 > // Soup { insides: { key0: "value0", key1: "value1" }, type: "pair" }
 > new Soup( {key0: "value0", key1: "value1"} );
+> ```
+
+<br>
+
+> ## Noodle
+> ```js
+> // Noodle { contents: "abc 123" }
+> new Noodle( "abc 123" );
 > ```
 
 <br>
