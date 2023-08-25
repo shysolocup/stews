@@ -1,4 +1,4 @@
-/* :: Stews :: Version 1.7.0 | 08/18/23 :: */
+/* :: Stews :: Version 1.7.1 | 08/25/23 :: */
 // https://github.com/paigeroid/stews
 
 
@@ -2549,7 +2549,7 @@ class Noodle {
             this.content = object;
         }
         else if (typeof object == "number") {
-            this.content = object.toString(); 
+            this.content = object.toString();
         }
         else if (object instanceof Array) {
             this.content = object.join(joiner);
@@ -2971,6 +2971,19 @@ class Noodle {
 
         for (let i = 0; i < args.length; i++) {
             if (stuff.endsWith(args[i])) return true;
+        }
+        return false;
+    }
+    
+    
+    // equalTo
+    equalTo(/**/) {
+    	let args = Array.from(arguments);
+        if (args[0] instanceof Array) args = args[0];
+        let stuff = this.content;
+
+        for (let i = 0; i < args.length; i++) {
+            if (stuff == args[i]) return true;
         }
         return false;
     }
@@ -3663,12 +3676,12 @@ Object.defineProperty(Soup.prototype, "random", {
 
 try { // check if it's a .js file
 
-	module.exports = { 
-        Stew, 
-        Soup, 
+	module.exports = {
+        Stew,
+        Soup,
 		Noodle,
-        random, 
-        StewFunctionMaker, SoapFunctionMaker, NoodFunctionMaker, 
+        random,
+        StewFunctionMaker, SoapFunctionMaker, NoodFunctionMaker,
         StewPropertyMaker, SoapPropertyMaker, NoodPropertyMaker
     };
 
