@@ -2,9 +2,9 @@
 # Stews 🍲
 <a href="https://www.npmjs.com/package/stews"><img src="https://img.shields.io/npm/v/stews?style=flat&color=red&logo=npm&logoColor=white" alt="version" /></a>
 <a href="https://www.npmjs.com/package/stews"><img src="https://img.shields.io/npm/dt/stews?style=flat&logo=docusign&logoColor=white" alt="downloads" /></a>
-<a href="https://github.com/nuttmegg/stews/discussions"><img src="https://img.shields.io/github/discussions/nuttmegg/stews?logo=google%20chat&logoColor=white" alt="discussions" /></a>
-<a href="https://github.com/nuttmegg/stews/issues"><img src="https://img.shields.io/github/issues/nuttmegg/stews" alt="issues" /></a>
-<a href="https://github.com/nuttmegg/stews/wiki"><img src="https://img.shields.io/badge/docs-stews?color=purple&logo=gitbook&logoColor=white" alt="docs" /></a>
+<a href="https://github.com/paigeroid/stews/discussions"><img src="https://img.shields.io/github/discussions/paigeroid/stews?logo=google%20chat&logoColor=white" alt="discussions" /></a>
+<a href="https://github.com/paigeroid/stews/issues"><img src="https://img.shields.io/github/issues/paigeroid/stews" alt="issues" /></a>
+<a href="https://github.com/paigeroid/stews/wiki"><img src="https://img.shields.io/badge/docs-stews?color=purple&logo=gitbook&logoColor=white" alt="docs" /></a>
 
 **Stews is a [Node.JS](https://nodejs.org/en/) package meant to make storing data easier by mixing parts from common data types.**
   - Fully open source
@@ -24,7 +24,7 @@
 npm i stews
 ```
 ```console
-npm i nuttmegg/stews
+npm i paigeroid/stews
 ```
 <br>
 
