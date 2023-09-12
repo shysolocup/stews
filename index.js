@@ -1,4 +1,4 @@
-/* :: Stews :: Version 1.7.1 | 08/25/23 :: */
+/* :: Stews :: Version 1.8.0 | 09/12/23 :: */
 // https://github.com/paigeroid/stews
 
 
@@ -3425,142 +3425,12 @@ Object.defineProperty( Soup, "parse", {
 });
 
 
-// function
-class StewFunctionMaker {
-    constructor(name, func, primary=false) {
-        var stuff = (func instanceof Function) ? func : function() { return func; }
+const ClassBuilder = require('./ClassBuilder.js');
 
-        Object.defineProperty(stuff, "name", { value: name });
-        Object.defineProperty( Stew.prototype, name, { value: stuff });
+Stew = ClassBuilder(Stew);
+Soup = ClassBuilder(Soup);
+Noodle = ClassBuilder(Noodle);
 
-        if (primary) Stew.primaryInfo.push(name);
-
-        return stuff;
-    }
-}
-
-Object.defineProperties(Stew, {
-    "Function": { value: StewFunctionMaker }, "function": { value: StewFunctionMaker },
-    "Func": { value: StewFunctionMaker }, "func": { value: StewFunctionMaker}
-});
-
-
-class SoapFunctionMaker {
-    constructor(name, func, primary=false) {
-        var stuff = (func instanceof Function) ? func : function() { return func; }
-
-        Object.defineProperty(stuff, "name", { value: name });
-        Object.defineProperty( Soup.prototype, name, { value: stuff });
-
-        if (primary) Soup.primaryInfo.push(name);
-
-        return stuff;
-    }
-}
-
-Object.defineProperties(Soup, {
-    "Function": { value: SoapFunctionMaker }, "function": { value: SoapFunctionMaker },
-    "Func": { value: SoapFunctionMaker }, "func": { value: SoapFunctionMaker}
-});
-
-
-class NoodFunctionMaker {
-    constructor(name, func, primary=false) {
-        var stuff = (func instanceof Function) ? func : function() { return func; }
-
-        Object.defineProperty(stuff, "name", { value: name });
-        Object.defineProperty( Noodle.prototype, name, { value: stuff });
-
-        if (primary) Noodle.primaryInfo.push(name);
-
-        return stuff;
-    }
-}
-
-Object.defineProperties(Noodle, {
-    "Function": { value: NoodFunctionMaker }, "function": { value: NoodFunctionMaker },
-    "Func": { value: NoodFunctionMaker }, "func": { value: NoodFunctionMaker}
-});
-
-
-// property
-class StewPropertyMaker {
-    constructor(name, value, attributes={set:undefined, enumerable:false, configurable:false, primary:false}) {
-        var func = (value instanceof Function) ? value : function() { return value; };
-        
-        Object.defineProperty(func, "name", { value: name });
-
-        Object.defineProperty(Stew.prototype, name, {
-            get: func,
-            set: attributes.set,
-            enumerable: attributes.enumerable,
-            configurable: attributes.configurable
-        });
-
-        if (attributes.primary) Stew.primaryInfo.push(name);
-
-        return func;
-    }
-}
-
-Object.defineProperties(Stew, {
-    "Property": { value: StewPropertyMaker }, "property": { value: StewPropertyMaker },
-    "Prop": { value: StewPropertyMaker }, "prop": { value: StewPropertyMaker }
-});
-
-
-class SoapPropertyMaker {
-    constructor(name, value, attributes={set:undefined, enumerable:false, configurable:false, primary:false}) {
-        var func = (value instanceof Function) ? value : function() { return value; };
-        
-        Object.defineProperty(func, "name", { value: name });
-
-        Object.defineProperty(Soup.prototype, name, {
-            get: func,
-            set: attributes.set,
-            enumerable: attributes.enumerable,
-            configurable: attributes.configurable
-        });
-
-        console.log(Object.getOwnPropertyDescriptors(Soup.prototype)[name].get)
-
-        if (attributes.primary) Soup.primaryInfo.push(name);
-
-        return func;
-    }
-}
-
-Object.defineProperties(Soup, {
-    "Property": { value: SoapPropertyMaker }, "property": { value: SoapPropertyMaker },
-    "Prop": { value: SoapPropertyMaker }, "prop": { value: SoapPropertyMaker }
-});
-
-
-class NoodPropertyMaker {
-    constructor(name, value, attributes={set:undefined, enumerable:false, configurable:false, primary:false}) {
-        var func = (value instanceof Function) ? value : function() { return value; };
-        
-        Object.defineProperty(func, "name", { value: name });
-
-        Object.defineProperty(Noodle.prototype, name, {
-            get: func,
-            set: attributes.set,
-            enumerable: attributes.enumerable,
-            configurable: attributes.configurable
-        });
-
-        console.log(Object.getOwnPropertyDescriptors(Noodle.prototype)[name].get)
-
-        if (attributes.primary) Noodle.primaryInfo.push(name);
-
-        return func;
-    }
-}
-
-Object.defineProperties(Noodle, {
-    "Property": { value: NoodPropertyMaker }, "property": { value: NoodPropertyMaker },
-    "Prop": { value: NoodPropertyMaker }, "prop": { value: NoodPropertyMaker }
-});
 
 Object.defineProperty(Soup, "primaryInfo", {
     value: ["insides", "type", "splitter", "length", "size", "keys", "values", "entries", "constructor"]
@@ -3681,10 +3551,10 @@ try { // check if it's a .js file
         Soup,
 		Noodle,
         random,
-        StewFunctionMaker, SoapFunctionMaker, NoodFunctionMaker,
-        StewPropertyMaker, SoapPropertyMaker, NoodPropertyMaker
+        ClassBuilder
     };
 
 }
-	
+
+
 catch(err) {}
