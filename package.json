@@ -38,7 +38,8 @@
         "classes",
         "class",
         "types",
-        "type"
+        "type",
+        "aepl"
     ],
     "homepage": "https://youtu.be/dQw4w9WgXcQ",
     "main": "./index.js"
