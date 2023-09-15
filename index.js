@@ -1,4 +1,4 @@
-/* :: Stews :: Version 1.8.0 | 09/12/23 :: */
+/* :: Stews :: Version 1.8.1 | 09/15/23 :: */
 // https://github.com/paigeroid/stews
 
 
@@ -3425,11 +3425,11 @@ Object.defineProperty( Soup, "parse", {
 });
 
 
-const ClassBuilder = require('./ClassBuilder.js');
+const { Class } = require('aepl');
 
-Stew = ClassBuilder(Stew);
-Soup = ClassBuilder(Soup);
-Noodle = ClassBuilder(Noodle);
+Stew = new Class("Stew", Stew);
+Soup = new Class("Soup", Soup);
+Noodle = new Class("Noodle", Noodle);
 
 
 Object.defineProperty(Soup, "primaryInfo", {
@@ -3550,8 +3550,7 @@ try { // check if it's a .js file
         Stew,
         Soup,
 		Noodle,
-        random,
-        ClassBuilder
+        random
     };
 
 }
