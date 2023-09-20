@@ -1,4 +1,4 @@
-/* :: Stews :: Version 1.8.1 | 09/15/23 :: */
+/* :: Stews :: Version 1.8.2 | 09/20/23 :: */
 // https://github.com/paigeroid/stews
 
 
@@ -3425,7 +3425,7 @@ Object.defineProperty( Soup, "parse", {
 });
 
 
-const { Class } = require('aepl');
+const Class = require('aepl');
 
 Stew = new Class("Stew", Stew);
 Soup = new Class("Soup", Soup);
