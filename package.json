@@ -16,7 +16,9 @@
     },
     "dependencies": {
          "aepl": "latest",
-         "stews-soup": "latest"
+         "stews-soup": "latest",
+         "stews-stew": "latest",
+         "stews-noodle": "latest"
     },
     "keywords": [
         "nodejs",
