@@ -1,4 +1,4 @@
-/* :: Stews :: Version 1.8.2 | 09/20/23 :: */
+/* :: Stews :: Version 1.8.3 | 11/02/23 :: */
 // https://github.com/paigeroid/stews
 
 
@@ -1219,17 +1219,21 @@ class Stew {
 function StewProxyHandler() { return {
 
         get(target, prop) {
-            if (Object.getOwnPropertyNames(Stew.prototype).includes(prop) || target[prop]) { // if it's a function or main thing
+            try {
+                if (Object.getOwnPropertyNames(Stew.prototype).includes(prop) || target[prop]) { // if it's a function or main thing
+                    return target[prop];
+                }
+                else if (Number(prop)+1 && Number(prop) <= target.length-1) { // if it's a number
+                    return target.values[Number(prop)];
+                }
+                else if (typeof prop == "string") { // if it's string
+                    return target.get(prop);
+                }
+                else {
+                    return false;
+                }
+            } catch(e) {
                 return target[prop];
-            }
-            else if (Number(prop)+1 && Number(prop) <= target.length-1) { // if it's a number
-                return target.values[Number(prop)];
-            }
-            else if (typeof prop == "string") { // if it's string
-                return target.get(prop);
-            }
-            else {
-                return false;
             }
         },
 
@@ -2465,17 +2469,21 @@ class Soup {
 function SoapProxyHandler() { return {
 
         get(target, prop) {
-            if (Object.getOwnPropertyNames(Soup.prototype).includes(prop) || target[prop]) { // if it's a function or main thing
+            try {
+                if (Object.getOwnPropertyNames(Soup.prototype).includes(prop) || target[prop]) { // if it's a function or main thing
+                    return target[prop];
+                }
+                else if (Number(prop)+1 && Number(prop) <= target.length-1) { // if it's a number
+                    return target.values[Number(prop)];
+                }
+                else if (typeof prop == "string") { // if it's string
+                    return target.get(prop);
+                }
+                else {
+                    return false;
+                }
+            } catch(e) {
                 return target[prop];
-            }
-            else if (Number(prop)+1 && Number(prop) <= target.length-1) { // if it's a number
-                return target.values[Number(prop)];
-            }
-            else if (typeof prop == "string") { // if it's string
-                return target.get(prop);
-            }
-            else {
-                return false;
             }
         },
 
@@ -3296,14 +3304,18 @@ class Noodle {
 function NoodProxyHandler() { return {
 	
 		get(target, prop) {
-            if (Object.getOwnPropertyNames(Noodle.prototype).includes(prop) || target[prop]) { // if it's a function or main thing
+            try {
+                if (Object.getOwnPropertyNames(Noodle.prototype).includes(prop) || target[prop]) { // if it's a function or main thing
+                    return target[prop];
+                }
+                else if (Number(prop)+1 && Number(prop) <= target.length-1) { // if it's a number
+                    return target.get(Number(prop));
+                }
+                else {
+                    return false;
+                }
+            } catch(e) {
                 return target[prop];
-            }
-            else if (Number(prop)+1 && Number(prop) <= target.length-1) { // if it's a number
-                return target.get(Number(prop));
-            }
-            else {
-                return false;
             }
         },
 
