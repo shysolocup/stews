@@ -15,7 +15,7 @@
         "url": "https://github.com/paigeroid/stews/blob/main/LICENSE"
     },
     "dependencies": {
-         "aepl": "latest",
+         "aepl": "latest"
     },
     "keywords": [
         "nodejs",
