@@ -1,3 +1,8 @@
+const Stew = require('@stews/stew');
+const Soup = require('../index.js');
+const Noodle = require('@stews/noodle');
+
+
 module.exports = function __form(object, splitter) {
     
     // fixes uninitiated class
@@ -9,16 +14,16 @@ module.exports = function __form(object, splitter) {
 
     // if instance is a stew or soup
     // gets content of the stew/soup
-    // if (object instanceof Stew || object instanceof Soup) {
-    //     object = object.insides;
-    // }
+    if (object instanceof Stew || object instanceof Soup) {
+        object = object.insides;
+    }
 
 
     // if instance is a noodle
     // gets content of the noodle
-    // if (object instanceof Noodle) {
-    //     object = object.content;
-    // }
+    if (object instanceof Noodle) {
+        object = object.content;
+    }
 
 
     // if object is not given
