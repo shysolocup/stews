@@ -27,19 +27,24 @@ const Noodle = require('@stews/noodle');
 
 
 // constructs
-const __instance = require('./construct/__instance.js');
+const __form = require('./construct/__form.js');
+const __proxy = require('./construct/__proxy.js');
 
 
 // main class
 cl.init("Soup", class {
     constructor(object, splitter='') {
-        
+
+				
+		// formatting construct
+		__form(object, splitter);
+		
 
         Object.defineProperty(this, "splitter", {
             value: new String(splitter)
         });
 
-        return new Proxy(this, SoapProxyHandler());
+        return new Proxy(this, __proxy());
 	}
 
 
