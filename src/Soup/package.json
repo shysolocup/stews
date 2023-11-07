@@ -18,5 +18,5 @@
          "aepl": "latest"
     },
     "homepage": "https://youtu.be/dQw4w9WgXcQ",
-    "main": "./src/index.js"
+    "main": "./index.js"
 }
