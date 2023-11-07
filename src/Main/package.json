@@ -43,6 +43,6 @@
         "aepl"
     ],
     "homepage": "https://youtu.be/dQw4w9WgXcQ",
-    "readme": "../../README.md"
+    "readme": "../../README.md",
     "main": "./index.js"
 }
