@@ -1,62 +1,38 @@
+/*
+	# @stews/soup #
+	 :: Version 1.1.0 | 11/07/23 :: :: created by @paigeroid using ::
+	 - aepl: https://github.com/paigeroid/aepl
+  
+	## LINKS ##
+	- https://github.com/paigeroid/stews/tree/main/src/Soup
+	- https://npmjs.com/package/@stews/soup
+
+ 	## MAIN ##
+	- https://github.com/paigeroid/stews
+	- https://npmjs.com/package/stews
+
+ 	## PARTS ##
+   	- https://npmjs.com/package/@stews/soup
+	- https://npmjs.com/package/@stews/stew
+ 	- https://npmjs.com/package/@stews/noodle
+
+*/
+
+
+// imports
 const cl = require('aepl');
 const fs = require('fs');
 const Stew = require('@stews/stew');
 const Noodle = require('@stews/noodle');
 
 
+
+
+
 // main class
 cl.init("Soup", class {
     constructor(object, splitter='') {
-        if (object instanceof Function) object = new object();
-        if (object instanceof Stew || object instanceof Soup) {
-            object = object.insides;
-        }
-		if (object instanceof Noodle) {
-			object = object.content;
-		}
-        if (!object) {
-            this.insides = [];
-            this.type = "list";
-        }
-        else if (typeof object == "string") {
-            if (object.toLowerCase() == "set" || object.toLowerCase() == "array" || object.toLowerCase() == "list") {
-                this.insides = [];
-                this.type = "list";
-            }
-            else if (object.toLowerCase() == "map" || object.toLowerCase() == "object" || object.toLowerCase() == "pair") {
-                this.insides = {};
-                this.type = "pair";
-            }
-            else {
-                this.insides = object.split(splitter);
-                this.type = "list";
-            }
-        }
-        else if (typeof object == "number") {
-            object = object.toString().split("").map( (value) => { return Number(value) } );
-            this.insides = object;
-            this.type = "list";
-        }
-        else if (object instanceof Array) {
-            this.insides = object;
-            this.type = "list";
-        }
-        else if (object instanceof Set) {
-            this.insides = Array.from(object);
-            this.type = "list";
-        }
-        else if (object instanceof Map) {
-            this.insides = Object.fromEntries(object.entries());
-            this.type = "pair";
-        }
-        else if (object instanceof String) {
-            this.insides = [];
-            this.type = "list";
-        }
-        else if (object instanceof Object) {
-            this.insides = object;
-            this.type = "pair";
-        }
+        
 
         Object.defineProperty(this, "splitter", {
             value: new String(splitter)
