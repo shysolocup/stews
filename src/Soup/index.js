@@ -26,9 +26,11 @@ const Stew = require('@stews/stew');
 const Noodle = require('@stews/noodle');
 
 
-// constructs
+
+// constructors
 const __form = require('./construct/__form.js');
-const __proxy = require('./construct/__proxy');
+const __proxy = require('./construct/__proxy/index.js');
+
 
 
 // main class
@@ -40,13 +42,17 @@ cl.init("Soup", class {
 		__form(object, splitter);
 		
 
+		// adds splitter property
         Object.defineProperty(this, "splitter", {
             value: new String(splitter)
         });
 
+
+		// creates the proxy
         return new Proxy(this, __proxy);
 	}
 
+	
 
     // properties
     get properties() {
@@ -96,48 +102,15 @@ cl.init("Soup", class {
 });
 
 
-// functions
-Object.defineProperty( Soup, "from", {
-    value: (object, splitter='') => { return new Soup(object, splitter); }
-});
 
-Object.defineProperty( Soup, "fromEntries", {
-	value: (entries) => { return new Soup(Object.fromEntries(entries)); }
-});
-
-Object.defineProperty( Soup, "parse", {
-	value: (entries) => {
-        if (entries.startsWith("{") && entries.endsWith("}")) return new Soup(JSON.parse(entries));
-        else if (entries.startsWith("[") && entries.endsWith("]")) return new Soup(new Function(`return ${entries}`)());
-    }
-});
-
-
-
+// export
 module.exports = Soup;
 
 
 
-// compiling functions
-let func_dir = require('./functions/_funkydir');
-let functions = fs.readdirSync(func_dir).filter( file => ((file.endsWith('.js') || file.endsWith('.ts')) ));
-functions.forEach( (file) => {
-	require(`./functions/${file}`);
-});
-
-
-
-// compiling properties
-let prop_dir = require('./properties/_funkydir');
-let properties = fs.readdirSync(prop_dir).filter( file => ((file.endsWith('.js') || file.endsWith('.ts')) ));  
-properties.forEach( (file) => {
-	require(`./properties/${file}`);
-});
-
-
-// compiling symbols
-let symb_dir = require('./properties/_funkydir');
-let symbols = fs.readdirSync(symb_dir).filter( file => ((file.endsWith('.js') || file.endsWith('.ts')) ));  
-symbols.forEach( (file) => {
-	require(`./symbols/${file}`);
-});
+// compilers
+const compile = require('./compile');
+compile('builders');
+compile('functions');
+compile('properties');
+compile('symbols');
