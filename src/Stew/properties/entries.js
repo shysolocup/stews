@@ -13,4 +13,4 @@ function StewEntries() {
 }
 
 
-Soup.newP("entries", StewEntries);
+Stew.newP("entries", StewEntries);
