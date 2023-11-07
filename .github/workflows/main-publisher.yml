@@ -1,4 +1,4 @@
-name: publish my shit
+name: main publisher
 on:
   release:
     types: [published]
