@@ -1,4 +1,5 @@
 const prox = require('../index.js');
+const Soup = require('../../../index.js');
 
 
 prox.get = (target, prop) => {
