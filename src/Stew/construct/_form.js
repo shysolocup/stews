@@ -29,7 +29,7 @@ module.exports = function __form(object, splitter) {
     // if object is not given
     // defaults to a blank list type
     if (!object) {
-        this.insides = [];
+        this.insides = new Set();
         this.type = "list";
     }
 
@@ -41,18 +41,18 @@ module.exports = function __form(object, splitter) {
 
         // list
         ( ["set", "array", "list", "arr"].includes(object.toLowerCase()) ) ? [
-            [],      // insides
+            new Set(),      // insides
             "list"   // type
         ] :
 
         // object
         ( ["map", "object", "pair", "obj"].includes(object.toLowerCase()) ) ? [
-            {},      // insides
+            new Map(),      // insides
             "pair"   // type
         ] :
 
         // neither
-        [ object.split(splitter), "list" ]
+        [ new Set(object.split(splitter)), "list" ]
     }
 
 
@@ -61,7 +61,7 @@ module.exports = function __form(object, splitter) {
     // turn into string then split
     else if (typeof object == "number") {
         object = object.toString().split("").map( (value) => { return Number(value) } );
-        this.insides = object;
+        this.insides = new Set(object);
         this.type = "list";
     }
 
@@ -72,7 +72,7 @@ module.exports = function __form(object, splitter) {
     // if instance is an array
     // nothing rlly interesting happens
     else if (object instanceof Array) {
-        this.insides = object;
+        this.insides = new Set(object);
         this.type = "list";
     }
 
@@ -80,7 +80,7 @@ module.exports = function __form(object, splitter) {
     // if instance is a set
     // turn the set into an array
     else if (object instanceof Set) {
-        this.insides = Array.from(object);
+        this.insides = object;
         this.type = "list";
     }
 
@@ -88,7 +88,7 @@ module.exports = function __form(object, splitter) {
     // if instance is a map
     // turn the map into an object
     else if (object instanceof Map) {
-        this.insides = Object.fromEntries(object.entries());
+        this.insides = object
         this.type = "pair";
     }
 
@@ -96,7 +96,7 @@ module.exports = function __form(object, splitter) {
     // if instance is an object
     // nothing rlly interesting happens again
     else if (object instanceof Object) {
-        this.insides = object;
+        this.insides = new Map(Object.entries(object));
         this.type = "pair";
     }
 }
