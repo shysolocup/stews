@@ -1,7 +1,7 @@
 /*
 	# @stews/soup #
-	 :: Version 1.1.0 | 11/07/23 :: :: created by @paigeroid using ::
-	 - aepl: https://github.com/paigeroid/aepl
+	:: created by @paigeroid/@nuttmegg using ::
+	- aepl: https://github.com/paigeroid/aepl
   
 	## LINKS ##
 	- https://github.com/paigeroid/stews/tree/main/src/Soup
