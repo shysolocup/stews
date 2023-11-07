@@ -44,7 +44,7 @@ cl.init("Soup", class {
             value: new String(splitter)
         });
 
-        return new Proxy(this, __proxy());
+        return new Proxy(this, __proxy);
 	}
 
 
