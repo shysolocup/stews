@@ -22,8 +22,6 @@
 // imports
 const cl = require('aepl');
 const fs = require('fs');
-const Stew = require('@stews/stew');
-const Noodle = require('@stews/noodle');
 
 
 
@@ -39,7 +37,7 @@ cl.init("Soup", class {
 
 				
 		// formatting construct
-		__form(object, splitter);
+		__form.bind(this)(object, splitter);
 		
 
 		// adds splitter property
