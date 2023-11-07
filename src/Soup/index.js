@@ -26,7 +26,8 @@ const Stew = require('@stews/stew');
 const Noodle = require('@stews/noodle');
 
 
-
+// constructs
+const __instance = require('./construct/__instance.js');
 
 
 // main class
