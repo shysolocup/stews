@@ -142,25 +142,6 @@ cl.init("Soup", class {
             }
         };
     }
-
-
-    // async iterator ( for await..of )
-    [Symbol.asyncIterator]() {
-        var stuff = this;
-        return {
-            current: 0,
-            last: stuff.length-1,
-
-            async next() {
-                if (this.current <= this.last) {
-                    let data = (stuff.type == "pair") ? stuff.entries[this.current++] : stuff.get(this.current++);
-                    return { done: false, value: data };
-                } else {
-                    return { done: true };
-                }
-            }
-        };
-    }
 });
 
 
