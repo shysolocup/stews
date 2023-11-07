@@ -1,4 +1,6 @@
 const prox = require('./index.js');
+
+
 prox.set = (target, prop, value) => {
      if (target[prop]) { // if it's a main thing like insides or type
           target[prop] = value;
