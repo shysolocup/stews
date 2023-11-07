@@ -2,7 +2,7 @@ const Stew = require('../index.js');
 
 
 function StewEntries() {
-	return this.insides.entries;
+	return this.insides.entries();
 }
 
 
