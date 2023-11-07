@@ -28,7 +28,7 @@ const Noodle = require('@stews/noodle');
 
 // constructs
 const __form = require('./construct/__form.js');
-const __proxy = require('./construct/__proxy.js');
+const __proxy = require('./construct/__proxy');
 
 
 // main class
