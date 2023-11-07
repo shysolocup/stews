@@ -29,7 +29,7 @@ module.exports = function __form(object, splitter) {
     // if object is not given
     // defaults to a blank list type
     if (!object) {
-        this.insides = [];
+        this.insides = new Set();
         this.type = "list";
     }
 
