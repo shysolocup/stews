@@ -1,4 +1,6 @@
 const prox = require('./index.js');
+
+
 prox.get = (target, prop) => {
     if (Object.getOwnPropertyNames(Soup.prototype).includes(prop) || target[prop]) { // if it's a function or main thing
         return target[prop];
