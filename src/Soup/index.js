@@ -93,110 +93,7 @@ cl.init("Soup", class {
         }
     }
     get props() { return this.properties; }
-
-
-    // toPrimitive
-    [Symbol.toPrimitive](hint) {
-        if (hint === "string") {
-            return this.toString();
-        }
-        else if (hint == "number") {
-            return Number(this.join(""));
-        }
-        return this;
-    }
-
-
-    // iterator ( for..of )
-    [Symbol.iterator]() {
-        var stuff = this;
-        return {
-            current: 0,
-            last: stuff.length-1,
-
-            next() {
-                if (this.current <= this.last) {
-                    let data = (stuff.type == "pair") ? stuff.entries[this.current++] : stuff.get(this.current++);
-                    return { done: false, value: data };
-                } else {
-                    return { done: true };
-                }
-            }
-        };
-    }
 });
-
-
-
-function SoapProxyHandler() { return {
-
-        get(target, prop) {
-            if (Object.getOwnPropertyNames(Soup.prototype).includes(prop) || target[prop]) { // if it's a function or main thing
-                return target[prop];
-            }
-            else if (Number(prop)+1 && Number(prop) <= target.length-1) { // if it's a number
-                return target.values[Number(prop)];
-            }
-            else if (typeof prop == "string") { // if it's string
-                return target.get(prop);
-            }
-            else {
-                return false;
-            }
-        },
-
-
-        set(target, prop, value) {
-            if (target[prop]) { // if it's a main thing like insides or type
-                target[prop] = value;
-            }
-            else if (Number(prop)+1 && Number(prop) <= target.length-1) { // if it's a number
-                target.set(Number(prop), value);
-            }
-            else if (typeof prop == "string") { // if it's a string
-                target.set(prop, value);
-	    }
-		return true;
-        },
-        
-
-        deleteProperty(target, prop) {
-            if (Number(prop)+1 && Number(prop) <= target.length-1) { // if it is a number
-                if (target.type == "pair") {
-                    target.insides = Object.fromEntries(target.entries.filter( (value, index) => {
-                        return index != Number(prop);
-                    }));
-                    return true;
-                }
-                else if (target.type == "list") {
-                    target.insides = target.insides.filter( (value, index) => {
-                        return index != Number(prop);
-                    });
-                    return true;
-                }
-            }
-            else if (typeof prop == "string") { // if it is a string
-                if (target.type == "pair") {
-                    target.insides = Object.fromEntries(target.entries.filter( (value, index) => {
-                        return value[0] != prop;
-                    }));
-                    return true;
-                }
-                else if (target.type == "list") {
-                    target.insides = target.insides.filter( (value) => {
-                        return value != prop;
-                    });
-                    return true;
-                }
-            }
-            else {
-                return false;
-            }
-        }
-
-    };
-}
-
 
 
 // functions
@@ -235,4 +132,12 @@ let prop_dir = require('./properties/_funkydir');
 let properties = fs.readdirSync(prop_dir).filter( file => ((file.endsWith('.js') || file.endsWith('.ts')) ));  
 properties.forEach( (file) => {
 	require(`./properties/${file}`);
+});
+
+
+// compiling symbols
+let symb_dir = require('./properties/_funkydir');
+let symbols = fs.readdirSync(symb_dir).filter( file => ((file.endsWith('.js') || file.endsWith('.ts')) ));  
+symbols.forEach( (file) => {
+	require(`./symbols/${file}`);
 });
