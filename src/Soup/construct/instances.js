@@ -1,4 +1,4 @@
-module.exports = function instances(object, splitter) {
+module.exports = (object, splitter) => {
     
     // fixes uninitiated class
     if (object instanceof Function) object = new object();
