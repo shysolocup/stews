@@ -2,7 +2,9 @@ const Noodle = require('../index.js');
 
 
 function NoodleReverse() {
-  return this.content.split("").reverse().join("");
+  let copy = this.copy();
+  copy.content = copy.content.split("").reverse().join(""));
+  return copy;
 }
 
 
