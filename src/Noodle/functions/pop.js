@@ -1,5 +1,4 @@
 const Noodle = require('../index.js');
-const Soup = require('@stews/soup');
 
 
 function NoodlePop(offset=0) {
