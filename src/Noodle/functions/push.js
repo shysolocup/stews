@@ -1,4 +1,5 @@
 const Noodle = require('../index.js');
+const Soup = require('@stews/soup');
 
 
 function NoodlePush(entry, value=null) {
