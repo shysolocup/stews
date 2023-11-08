@@ -1,0 +1,31 @@
+name: random publisher
+on:
+  release:
+    types: [published]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: checkout stuff
+        uses: actions/checkout@v3
+
+      - name: setup
+        uses: actions/setup-node@v3
+        with:
+            node-version: '16.x'
+            registry-url: 'https://registry.npmjs.org'
+
+      - name: installer
+        working-directory: ./src/random
+        run: npm i
+
+      - name: another installer
+        working-directory: ./src/random
+        run: npm ci
+
+      - name: publish
+        working-directory: ./src/random
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
