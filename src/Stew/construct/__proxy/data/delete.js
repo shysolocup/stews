@@ -10,7 +10,7 @@ prox.deleteProperty = (target, prop) => {
             return true;
         }
         else if (target.type == "list") {
-            target.insides = new Set(target.insides.filter( (value, index) => {
+            target.insides = new Set(Array.from(target.insides).filter( (value, index) => {
                 return index != Number(prop);
             }));
             return true;
@@ -24,7 +24,7 @@ prox.deleteProperty = (target, prop) => {
             return true;
         }
         else if (target.type == "list") {
-            target.insides = new Set(target.insides.filter( (value) => {
+            target.insides = new Set(Array.from(target.insides).filter( (value) => {
                 return value != prop;
             }));
             return true;
