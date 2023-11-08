@@ -20,4 +20,4 @@ function NoodleMerge(joiner=",", /**/) {
 
 
 Noodle.newF("merge", NoodleMerge);
-Noodle.newF("concat", NoodleMerge
+Noodle.newF("concat", NoodleMerge);
