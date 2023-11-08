@@ -1,7 +1,7 @@
 const Soup = require('../index.js');
 
 
-function SoupLower() {
+function SoupToLowerCase() {
 	let args = Array.from(arguments);
 	if (args[0] instanceof Array) args = args[0];
 	
@@ -33,5 +33,4 @@ function SoupLower() {
 }
 
 
-Soup.newF("lower", SoupLower);
-Soup.newF("toLowerCase", SoupLower);
+Soup.newF("toLowerCase", SoupLowerCase);
