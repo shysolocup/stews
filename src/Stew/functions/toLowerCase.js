@@ -33,5 +33,5 @@ function StewToLowerCase() {
 }
 
 
-Stew.newF("toLowerCase", StewLowerCase);
-Stew.newF("lower", StewLowerCase);
+Stew.newF("toLowerCase", StewToLowerCase);
+Stew.newF("lower", StewToLowerCase);
