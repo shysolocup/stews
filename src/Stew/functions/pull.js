@@ -1,7 +1,7 @@
-const Soup = require('../index.js');
+const Stew = require('../index.js');
 
 
-function SoupPull(entry, value=null) {
+function StewPull(entry, value=null) {
 	if (this.type == "pair") {
             let thing = this.entries;
             thing.unshift([entry, value]);
@@ -15,6 +15,6 @@ function SoupPull(entry, value=null) {
 }
 
 
-Soup.newF("pull", SoupPull);
-Soup.newF("unshift", SoupPull);
-Soup.newF("push_front", SoupPull);
+Stew.newF("pull", StewPull);
+Stew.newF("unshift", StewPull);
+Stew.newF("push_front", StewPull);
