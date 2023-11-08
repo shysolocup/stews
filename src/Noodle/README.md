@@ -6,3 +6,4 @@ here's some related links
 - [@stews/soup](https://www.npmjs.com/package/@stews/soup)
 - [@stews/stew](https://www.npmjs.com/package/@stews/stew)
 - [@stews/noodle](https://www.npmjs.com/package/@stews/noodle) (current)
+- [@stews/random](https://www.npmjs.com/package/@stews/random)
