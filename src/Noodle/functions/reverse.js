@@ -2,7 +2,7 @@ const Noodle = require('../index.js');
 
 
 function NoodleReverse() {
-  return this.contents.split("").reverse().join("");
+  return this.content.split("").reverse().join("");
 }
 
 
