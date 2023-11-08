@@ -9,4 +9,4 @@ function NoodleSwig(func) {
 
 
 Noodle.newF("swig", NoodleSwig);
-Noodle.newF("some", NoodleSwig
+Noodle.newF("some", NoodleSwig);
