@@ -15,6 +15,7 @@
    	- https://npmjs.com/package/@stews/soup
 	- https://npmjs.com/package/@stews/stew
  	- https://npmjs.com/package/@stews/noodle
+ 	- https://npmjs.com/package/@stews/random
 
 */
 
