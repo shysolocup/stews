@@ -1,6 +1,6 @@
 /*
 	# Stews #
-	:: created by @paigeroid/@nuttmegg using ::
+	:: Version 1.9.6 :: created by @paigeroid/@nuttmegg using ::
 	- aepl: https://github.com/paigeroid/aepl
   
 	## LINKS ##
