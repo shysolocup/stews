@@ -33,7 +33,7 @@ const __proxy = require('./construct/__proxy/index.js');
 
 // main class
 cl.init("Noodle", class {
-    constructor(object, joiner='') {
+    constructor(object, joiner=',') {
 
 				
 		// formatting construct
