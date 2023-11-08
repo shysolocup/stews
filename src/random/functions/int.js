@@ -7,4 +7,5 @@ function RandomInt(min, max) {
 
 
 random.newF("int", RandomInt);
+random.newF("randint", RandomInt);
 random.newF("number", RandomInt);
