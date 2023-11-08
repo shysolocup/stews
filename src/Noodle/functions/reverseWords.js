@@ -2,7 +2,7 @@ const Noodle = require('../index.js');
 
 
 function NoodleReverseWords() {
-  return this.contents.split(" ").reverse().join(" ");
+  return this.content.split(" ").reverse().join(" ");
 }
 
 
