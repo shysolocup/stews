@@ -4,7 +4,7 @@ const Noodle = require('@stews/noodle');
 
 
 function RandomIndex(object=null) {
-    if (!object) object = this;
+    if (!object && this.binder) object = this.binder;
     
     // if object is a string
     // split then randomly choose an index
