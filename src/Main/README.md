@@ -1,3 +1,4 @@
+# \*\*UNDER MAINTENANCE\*\*
 ---
 # Stews 🍲
 <a href="https://www.npmjs.com/package/stews"><img src="https://img.shields.io/npm/v/stews?style=flat&color=red&logo=npm&logoColor=white" alt="version" /></a>
