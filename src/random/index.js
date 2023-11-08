@@ -6,3 +6,4 @@ module.exports = new random;
 
 const compile = require('./compile');
 compile('functions');
+compile('spreads');
