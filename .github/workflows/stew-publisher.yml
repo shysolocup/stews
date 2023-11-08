@@ -24,7 +24,7 @@ jobs:
         working-directory: ./src/Stew
         run: npm ci
 
-      - name: publsih
+      - name: publish
         working-directory: ./src/Stew
         run: npm publish --access public
         env:
