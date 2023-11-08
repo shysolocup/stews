@@ -24,7 +24,7 @@ jobs:
         working-directory: ./src/Main
         run: npm ci
 
-      - name: publsih
+      - name: publish
         working-directory: ./src/Main
         run: npm publish
         env:
