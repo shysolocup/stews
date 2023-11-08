@@ -11,12 +11,23 @@ function RandomChoice(object) {
         return object.split(splitter)[Math.floor(Math.random() * (Number(object.split(splitter).length)))];
     }
 
+
+    // if it's object is an object
+    // turns it into a soup and then randomly chooses
     else if (typeof object == "object" && !(object instanceof Noodle)) {
         object = Soup.from(object);
-        let index = Math.floor(Math.random() * (object.length))
+        let index = Math.floor(Math.random() * (object.length));
+        
         return (object.type == "list") ? 
             object.get(index) :
             object.entries[index]
+    }
+
+
+    // if object is a noodle
+    // gets a random character
+    else if (object instanceof Noodle) {
+        return object.get(Math.floor(Math.random() * (object.length));
     }
 }
 
