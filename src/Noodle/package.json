@@ -15,9 +15,7 @@
         "url": "https://github.com/paigeroid/stews/blob/main/LICENSE"
     },
     "dependencies": {
-         "aepl": "latest",
-         "@stews/soup": "latest",
-         "@stews/stew": "latest"
+         "aepl": "latest"
     },
     "homepage": "https://youtu.be/dQw4w9WgXcQ",
     "main": "./index.js"
