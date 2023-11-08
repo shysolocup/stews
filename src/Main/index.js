@@ -21,8 +21,9 @@
 const Stew = require('@stews/stew');
 const Soup = require('@stews/soup');
 const Noodle = require('@stews/noodle');
+const random = new (require('@stews/random'));
 
 
 
 // exports
-module.exports = { Stew, Soup, Noodle };
+module.exports = { Stew, Soup, Noodle, random };
