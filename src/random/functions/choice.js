@@ -27,7 +27,7 @@ function RandomChoice(object) {
     // if object is a noodle
     // gets a random character
     else if (object instanceof Noodle) {
-        return object.get(Math.floor(Math.random() * (object.length));
+        return object.get(Math.floor(Math.random() * (object.length)));
     }
 }
 
