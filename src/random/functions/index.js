@@ -3,7 +3,8 @@ const Soup = require('@stews/soup');
 const Noodle = require('@stews/noodle');
 
 
-function RandomIndex(object) {
+function RandomIndex(object=null) {
+    if (!object) object = this;
     
     // if object is a string
     // split then randomly choose an index
