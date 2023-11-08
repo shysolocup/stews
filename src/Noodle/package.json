@@ -17,7 +17,8 @@
     "dependencies": {
          "aepl": "latest",
          "@stews/soup": "latest",
-         "@stews/stew": "latest"
+         "@stews/stew": "latest",
+         "@stews/random": "latest"
     },
     "homepage": "https://youtu.be/dQw4w9WgXcQ",
     "main": "./index.js"
