@@ -2,7 +2,7 @@ const cl = require('aepl');
 
 cl.init("random");
 
-module.exports = new random;
+module.exports = random;
 
 const compile = require('./compile');
 compile('functions');
