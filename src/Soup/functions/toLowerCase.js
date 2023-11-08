@@ -34,3 +34,4 @@ function SoupToLowerCase() {
 
 
 Soup.newF("toLowerCase", SoupLowerCase);
+Soup.newF("lower", SoupLowerCase);
