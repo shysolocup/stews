@@ -24,7 +24,7 @@ jobs:
         working-directory: ./src/Soup
         run: npm ci
 
-      - name: publsih
+      - name: publish
         working-directory: ./src/Soup
         run: npm publish --access public
         env:
