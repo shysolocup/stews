@@ -25,15 +25,13 @@ const fs = require('fs');
 
 
 
-// constructors
-const __form = require('./construct/__form.js');
-const __proxy = require('./construct/__proxy/index.js');
-
-
-
 // main class
 cl.init("Noodle", class {
     constructor(object, joiner=',') {
+
+		// constructs
+		const __form = require('./construct/__form.js');
+		const __proxy = require('./construct/__proxy/index.js');
 
 				
 		// formatting construct
