@@ -1,7 +1,7 @@
 const Soup = require('../index.js');
 
 
-function SoupUpper(/**/) {
+function SoupToUpperCase(/**/) {
 	let args = Array.from(arguments);
 	if (args[0] instanceof Array) args = args[0];
 	
@@ -33,5 +33,5 @@ function SoupUpper(/**/) {
 }
 
 
-Soup.newF("upper", SoupUpper);
-Soup.newF("toUpperCase", SoupUpper);
+Soup.newF("upper", SoupToUpperCase);
+Soup.newF("toUpperCase", SoupToUpperCase);
