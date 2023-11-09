@@ -7,7 +7,7 @@ Soup.prototype[util.inspect.custom] = function(depth, opts) {
   if (this.type == "list") {
     data = `[ ${this.map( v => `${
       (typeof v == "string") ? `"${v}"` :
-      (typeof v == "object") ? `[${v[1].constructor.name}]` :
+      (typeof v == "object") ? `[${v.constructor.name}]` :
       v
     }`).join(", ")} ]`;
   }
