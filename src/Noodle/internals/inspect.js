@@ -3,5 +3,5 @@ const util = require('util');
 
 
 Noodle.newF([util.inspect.custom], function(depth, opts) {
-  return `Noodle(${this.length}) ${this.stringify(null, 4)}`;
+  return `Noodle(${this.length}) "${this.content}"`;
 });
