@@ -3,5 +3,24 @@ const util = require('util');
 
 
 Stew.prototype[util.inspect.custom] = function(depth, opts) {
-  return `Stew(${this.length}) ${this.stringify(null, 4)}`;
+  let data;
+  if (this.type == "list") {
+    data = `[ ${this.join(", ")} ]`;
+  }
+    
+  else if (this.type == "pair") {
+    data = thing.entries.map( v => `${
+
+            (typeof v[0] == "string" && v[0].includes(" ")) ? `"${v[0]}"` : v[0]
+
+        }: ${
+
+        (typeof v[1] == "object") ? `[${v[1].constructor.name}]` : 
+        (typeof v[1] == "string")?  `"${v[1]}"`
+        : v[1]
+
+    }`).flat().join(", ")
+  }
+  
+  return `Stew(${this.length}) ${data}`;
 }
