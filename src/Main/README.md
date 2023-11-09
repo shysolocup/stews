@@ -29,6 +29,13 @@ npm i paigeroid/stews
 
 <br>
 
+## Types
+- **Stew:** built off of [Sets](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set) and [Maps](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map) so they **DON'T** allow duplicate entries
+- **Soup:** built off of [Arrays](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) and [Objects](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) so they **DO** allow duplicate entries
+- **Noodle:** built off of [Strings](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+<br>
+
 ## Usage
 ```js
 const { Stew, Soup, Noodle, random } = require('stews');
