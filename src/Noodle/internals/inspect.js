@@ -3,5 +3,7 @@ const util = require('util');
 
 
 Noodle.prototype[util.inspect.custom] = function(depth, opts) {
-  return `Noodle(${this.length}) "${this.content}"`;
+  opts.colors = true;
+  
+  return `Noodle(${this.length}) ${util.inspect(this.contents, { colors: true })}`;
 }
