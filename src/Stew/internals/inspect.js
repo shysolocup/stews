@@ -9,7 +9,7 @@ Stew.prototype[util.inspect.custom] = function(depth, opts) {
   }
     
   else if (this.type == "pair") {
-    data = thing.entries.map( v => `${
+    data = this.entries.map( v => `${
 
             (typeof v[0] == "string" && v[0].includes(" ")) ? `"${v[0]}"` : v[0]
 
