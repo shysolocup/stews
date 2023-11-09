@@ -50,9 +50,9 @@ let str = new Noodle("abc 123");             // string stuff
 delete array[1];
 
 
-console.log(array); // Stew { insides: Set(2) { 'a', 'c' }, type: "list" };
-console.log(obj); // Soup { insides: { key1: 'val1', key2: 'val2' }, type: "pair" };
-console.log(str); // Noodle { content: "abc 123" }
+console.log(array); // Stew(2) [ 'a', 'c' ]
+console.log(obj); // Soup(2) { key1: 'val1', key2: 'val2' }
+console.log(str); // Noodle(7) "abc 123"
 
 
 console.log(obj.length); // 2
@@ -61,7 +61,7 @@ console.log(obj.values); // [ 'val1', 'val2' ]
 
 
 console.log(str.wordCount); // 2
-console.log(str.toUpperCase(0)); // Noodle { content: "Abc 123" }
+console.log(str.toUpperCase(0)); // Noodle(7) "Abc 123"
 
 
 console.log(random.int(1, 5)); // 4
