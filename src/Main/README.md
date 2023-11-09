@@ -7,7 +7,7 @@
 <a href="https://github.com/paigeroid/stews/wiki"><img src="https://img.shields.io/badge/docs-stews?color=purple&logo=gitbook&logoColor=white" alt="docs" /></a>
 
 **Stews is a [Node.JS](https://nodejs.org/en/) package meant to make storing data easier by mixing parts from common data types.**
-  - Fully open source 
+  - Fully open source
   - Fully customizable w/ modding support
   - Built in random number and choice functions
   - Easy to use index & entry systems
