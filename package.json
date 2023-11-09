@@ -4,7 +4,9 @@
     "dependencies": {
          "aepl": "latest",
          "@stews/soup": "latest",
-         "@stews/stew": "latest"
+         "@stews/stew": "latest",
+         "@stews/noodle": "latest",
+         "@stews/random": "latest"
     },
     "main": "./src/Main/index.js"
 }
