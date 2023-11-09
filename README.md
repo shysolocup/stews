@@ -42,9 +42,9 @@ npm i paigeroid/stews
 const { Stew, Soup, Noodle, random } = require('stews');
 
 
-let array = new Stew(["a", "b", "c"]);       // list type
-let obj = new Soup({ key1: "val1", key2: "val2" });  // pair type
-let str = new Noodle("abc 123");             // string stuff
+let array = new Stew(["a", "b", "c"]);                 // list type
+let obj = new Soup({ key1: "val1", key2: "val2" });    // pair type
+let str = new Noodle("abc 123");                       // string stuff
 
 
 delete array[1];
