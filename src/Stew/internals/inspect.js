@@ -5,11 +5,15 @@ const util = require('util');
 Stew.prototype[util.inspect.custom] = function(depth, opts) {
   let data;
   if (this.type == "list") {
-    data = `[ ${this.join(", ")} ]`;
+    data = `[ ${this.map( v => `${
+      (typeof v == "string") ? `"${v}"` :
+      (typeof v == "object") ? `[${v[1].constructor.name}]` :
+      v
+    }`)} ]`;
   }
     
   else if (this.type == "pair") {
-    data = this.entries.map( v => `${
+    data = `{ ${this.entries.map( v => `${
 
             (typeof v[0] == "string" && v[0].includes(" ")) ? `"${v[0]}"` : v[0]
 
@@ -19,7 +23,7 @@ Stew.prototype[util.inspect.custom] = function(depth, opts) {
         (typeof v[1] == "string")?  `"${v[1]}"`
         : v[1]
 
-    }`).flat().join(", ")
+    }`).flat().join(", ")} }`
   }
   
   return `Stew(${this.length}) ${data}`;
