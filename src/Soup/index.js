@@ -110,4 +110,4 @@ const compile = require('./compile');
 compile('builders');
 compile('functions');
 compile('properties');
-compile('symbols');
+compile('internals');
