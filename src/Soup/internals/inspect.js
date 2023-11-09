@@ -9,7 +9,7 @@ Soup.prototype[util.inspect.custom] = function(depth, opts) {
       (typeof v == "string") ? `"${v}"` :
       (typeof v == "object") ? `[${v[1].constructor.name}]` :
       v
-    }`)} ]`;
+    }`).join(", ")} ]`;
   }
     
   else if (this.type == "pair") {
