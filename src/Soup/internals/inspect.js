@@ -1,8 +1,8 @@
-const Soup = require('../index.js');
+const Stew = require('../index.js');
 const util = require('util');
 
 
-Soup.prototype[util.inspect.custom] = function(depth, opts) {
+Stew.prototype[util.inspect.custom] = function(depth, opts) {
   let data;
   if (this.type == "list") {
     data = `[ ${this.map( v => `${
@@ -26,5 +26,5 @@ Soup.prototype[util.inspect.custom] = function(depth, opts) {
     }`).flat().join(", ")} }`
   }
   
-  return `Soup(${this.length}) ${data}`;
+  return `Stew(${this.length}) ${data}`;
 }
