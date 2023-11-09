@@ -5,7 +5,11 @@ const util = require('util');
 Soup.prototype[util.inspect.custom] = function(depth, opts) {
   let data;
   if (this.type == "list") {
-    data = `[ ${this.join(", ")} ]`;
+    data = `[ ${this.map( v => `${
+      (typeof v == "string") ? `"${v}"` :
+      (typeof v == "object") ? `[${v[1].constructor.name}]` :
+      v
+    }`)} ]`;
   }
     
   else if (this.type == "pair") {
