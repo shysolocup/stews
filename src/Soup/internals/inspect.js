@@ -9,7 +9,7 @@ Soup.prototype[util.inspect.custom] = function(depth, opts) {
   }
     
   else if (this.type == "pair") {
-    data = thing.entries.map( v => `${
+    data = `{ ${thing.entries.map( v => `${
 
             (typeof v[0] == "string" && v[0].includes(" ")) ? `"${v[0]}"` : v[0]
 
@@ -19,7 +19,7 @@ Soup.prototype[util.inspect.custom] = function(depth, opts) {
         (typeof v[1] == "string")?  `"${v[1]}"`
         : v[1]
 
-    }`).flat().join(", ")
+    }`).flat().join(", ")} }`
   }
   
   return `Soup(${this.length}) ${data}`;
