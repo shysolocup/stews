@@ -59,7 +59,7 @@ module.exports = Stew;
 
 // compilers
 const compile = require('./compile');
-compile('builders');
-compile('functions');
-compile('properties');
-compile('internals');
+compile('./builders');
+compile('./functions');
+compile('./properties');
+compile('./internals');
