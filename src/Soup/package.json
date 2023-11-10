@@ -1,6 +1,6 @@
 {
     "name": "@stews/soup",
-    "version": "1.1.17",
+    "version": "1.1.18",
     "author": "paigeroid",
     "description": "Stews is a Node.JS package meant to make storing data easier by mixing parts from common data types.",
     "repository": {
