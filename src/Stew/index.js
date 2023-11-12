@@ -1,14 +1,14 @@
 /*
 	# @stews/stew #
-	:: created by @paigeroid/@nuttmegg using ::
+	:: created by @paishee/@nuttmegg using ::
 	- aepl: https://github.com/paigeroid/aepl
   
 	## LINKS ##
-	- https://github.com/paigeroid/stews/tree/main/src/Stew
+	- https://github.com/paishee/stews/tree/main/src/Stew
 	- https://npmjs.com/package/@stews/stew
 
  	## MAIN ##
-	- https://github.com/paigeroid/stews
+	- https://github.com/paishee/stews
 	- https://npmjs.com/package/stews
 
  	## PARTS ##
