@@ -1,10 +1,10 @@
 /*
 	# Stews #
-	:: created by @paigeroid/@nuttmegg using ::
-	- aepl: https://github.com/paigeroid/aepl
+	:: created by @paishee/@nuttmegg using ::
+	- aepl: https://github.com/paishee/aepl
   
 	## LINKS ##
-	- https://github.com/paigeroid/stews
+	- https://github.com/paishee/stews
 	- https://npmjs.com/package/stews
 
  	## PARTS ##
