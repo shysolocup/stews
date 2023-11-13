@@ -2,7 +2,7 @@
 # Stews 🍲
 <a href="https://www.npmjs.com/package/stews"><img src="https://img.shields.io/npm/v/stews?style=flat&color=red&logo=npm&logoColor=white" alt="version" /></a>
 <a href="https://www.npmjs.com/package/stews"><img src="https://img.shields.io/npm/dt/stews?style=flat&logo=docusign&logoColor=white" alt="downloads" /></a>
-<a href="https://github.com/paishee/stews/discussions"><img src="https://img.shields.io/github/discussions/paishee/stews?logo=google%20chat&logoColor=white" alt="discussions" /></a>
+<a href="https://npmjs.com/package/aepl"><img src="https://img.shields.io/badge/powered%20by-aepl-a?color=blue&logo=npm&logoColor=white" alt="powered by aepl" /></a>
 <a href="https://github.com/paishee/stews/issues"><img src="https://img.shields.io/github/issues/paishee/stews" alt="issues" /></a>
 <a href="https://github.com/paishee/stews/wiki"><img src="https://img.shields.io/badge/docs-stews?color=purple&logo=github&logoColor=white" alt="docs" /></a>
 
