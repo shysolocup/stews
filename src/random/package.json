@@ -1,6 +1,6 @@
 {
     "name": "@stews/random",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "author": "paishee",
     "description": "Stews is a Node.JS package meant to make storing data easier by mixing parts from common data types.",
     "repository": {
