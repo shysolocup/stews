@@ -24,3 +24,5 @@ function SoupAppend(index, key, value=null) {
 
 Soup.newF("append", SoupAppend);
 Soup.newF("insert", SoupAppend);
+Soup.newF("push_at", SoupAppend);
+Soup.newF("push_to", SoupAppend);
