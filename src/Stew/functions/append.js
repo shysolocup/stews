@@ -26,3 +26,5 @@ function StewAppend(index, key, value=null) {
 
 Stew.newF("append", StewAppend);
 Stew.newF("insert", StewAppend);
+Stew.newF("push_at", StewAppend);
+Stew.newF("push_to", StewAppend);
