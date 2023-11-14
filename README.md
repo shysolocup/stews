@@ -11,7 +11,7 @@
   - Fully customizable w/ modding support
   - Built in random number and choice functions
   - Easy to use index & entry systems
-  - Built in HTML and JSON compatability
+  - Built in JSON convert & dump
   - Detailed documentation
 
 <br>
