@@ -8,3 +8,4 @@ function NoodleLength() {
 
 Noodle.newP("length", NoodleLength);
 Noodle.newP("size", NoodleLength);
+Noodle.newP("charCount", NoodleLength);
