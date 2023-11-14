@@ -19,3 +19,5 @@ function NoodleAppend(index, set_to=null) {
 
 Noodle.newF("append", NoodleAppend);
 Noodle.newF("insert", NoodleAppend);
+Noodle.newF("push_at", NoodleAppend);
+Noodle.newF("push_to", NoodleAppend);
