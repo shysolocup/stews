@@ -7,7 +7,7 @@ function NoodleAppend(index, set_to=null) {
 		stuff = new Soup(Array);
 		
 		this.content.split("").forEach( (v, i) => {
-			if (i == index) stuff.push(value);
+			if (i == index) stuff.push(set_to);
 			stuff.push(v);
 		});
 
