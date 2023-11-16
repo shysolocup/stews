@@ -1,6 +1,6 @@
 {
     "name": "stews",
-    "author": "paigeroid",
+    "author": "paishee",
     "dependencies": {
          "aepl": "latest",
          "@stews/soup": "latest",
