@@ -2,9 +2,9 @@ const fs = require('fs');
 
 
 module.exports = (d) => {
-    let dir = require(`${d}/_funkydir`);
+    let dir = `${__dirname}${d}`
     let files = fs.readdirSync(dir).filter( file => ((file.endsWith('.js') || file.endsWith('.ts')) ));  
     files.forEach( (file) => {
-        require(`${d}/${file}`);
+        require(dir);
     });
 };
