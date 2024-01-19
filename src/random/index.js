@@ -31,5 +31,5 @@ cl.init("random", class {
 module.exports = random;
 
 const compile = require('./compile');
-compile('./functions');
-compile('./spreads');
+compile('/functions');
+compile('/spreads');
