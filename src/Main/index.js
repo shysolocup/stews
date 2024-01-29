@@ -18,11 +18,12 @@
 
 
 // imports
-const Stew = require('@stews/stew');
-const Soup = require('@stews/soup');
-const Noodle = require('@stews/noodle');
-const random = new (require('@stews/random'));
 
+let [ Stew, Soup, Noodle, random ]=[];
+try { Stew = require('../Stew'); } catch(e) { Stew = require('@stews/stew'); }
+try { Soup = require('../Soup'); } catch(e) { Soup = require('@stews/soup'); }
+try { Noodle = require('../Noodle'); } catch(e) { Noodle = require('@stews/noodle'); }
+try { random = require('../random'); } catch(e) { Stew = require('@stews/random'); }
 
 
 // exports
