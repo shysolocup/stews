@@ -23,7 +23,7 @@ let [ Stew, Soup, Noodle, random ]=[];
 try { Stew = require('../Stew'); } catch(e) { Stew = require('@stews/stew'); }
 try { Soup = require('../Soup'); } catch(e) { Soup = require('@stews/soup'); }
 try { Noodle = require('../Noodle'); } catch(e) { Noodle = require('@stews/noodle'); }
-try { random = require('../random'); } catch(e) { random = require('@stews/random'); }
+try { random = new (require('../random')); } catch(e) { random = new (require('@stews/random')); }
 
 
 // exports
