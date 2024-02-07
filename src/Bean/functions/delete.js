@@ -5,9 +5,9 @@ const Soup = require('@stews/soup');
 function BeanDelete(index) {
 	var returns;
 		
-    returns = { char: this.get(index), index: index };
+    returns = { int: this.get(index), index: index };
     
-    let stuff = Soup.from(this.content.toString());
+    let stuff = Soup.from(this.ints.flat());
     delete stuff[index];
     
     this.content = parseFloat(stuff.join(""));
