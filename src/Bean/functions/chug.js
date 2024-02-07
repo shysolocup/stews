@@ -3,7 +3,7 @@ const Soup = require('@stews/soup');
 
 
 function BeanChug(func) {
-	let stuff = Soup.from(this.copy().toString(), "");
+	let stuff = Soup.from(this.copy().toString().replace(".", ""), "");
 	return stuff.chug(func);
 }
 
