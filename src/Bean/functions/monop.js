@@ -1,7 +1,7 @@
 const Bean = require('../index.js');
 
 
-function BeanFormat(settings={}) {
+function BeanMonop(settings={}) {
 	if (!settings.roundTo) settings.roundTo = 0;
 	if (!settings.currency) settings.currency = "";
 
@@ -15,4 +15,4 @@ function BeanFormat(settings={}) {
 }
 
 
-Bean.newF("format", BeanFormat);
+Bean.newF("monop", BeanMonop);
