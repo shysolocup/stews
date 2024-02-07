@@ -8,3 +8,4 @@ function BeanDecimalPoint() {
 
 Bean.newP("decimalPoint", BeanDecimalPoint);
 Bean.newP("decPoint", BeanDecimalPoint);
+Bean.newP("point", BeanDecimalPoint);
