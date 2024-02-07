@@ -24,7 +24,7 @@ let [ Stew, Soup, Noodle, Bean, random ]=[];
 try { Stew = require('../Stew'); } catch(e) { Stew = require('@stews/stew'); }
 try { Soup = require('../Soup'); } catch(e) { Soup = require('@stews/soup'); }
 try { Noodle = require('../Noodle'); } catch(e) { Noodle = require('@stews/noodle'); }
-try { Bean = require('../Bean'); } catch(e) { Noodle = require('@stews/bean'); }
+try { Bean = require('../Bean'); } catch(e) { Bean = require('@stews/bean'); }
 try { random = new (require('../random')); } catch(e) { random = new (require('@stews/random')); }
 
 
