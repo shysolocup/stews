@@ -55,7 +55,7 @@ delete array[1];
 console.log(array); // Stew(2) [ 'a', 'c' ]
 console.log(obj); // Soup(2) { key1: 'val1', key2: 'val2' }
 console.log(str); // Noodle(7) "abc 123"
-console.log(int); // Bean(3) 1234
+console.log(int); // Bean(4) 1234
 
 
 console.log(obj.length); // 2
