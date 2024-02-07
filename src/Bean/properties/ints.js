@@ -2,7 +2,10 @@ const Bean = require('../index.js');
 
 
 function BeanInts() {
-	return this.content.toString().replace(".", "").split("").map( i => (Number(i)+1) ? Number(i) : i );
+	let seps = this.content.toString().split(".");
+	seps = seps.map( sep => sep.split("").map( i => (Number(i)+1) ? Number(i) : i );
+
+	return seps;
 }
 
 
