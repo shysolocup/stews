@@ -1,8 +1,7 @@
 const Soup = require('../index.js');
 
 
-function SoupEndsWith(/**/) {
-	let args = Array.from(arguments);
+function SoupEndsWith(...args) {
 	if (args[0] instanceof Array) args = args[0];
 	let stuff = this.join("");
 
