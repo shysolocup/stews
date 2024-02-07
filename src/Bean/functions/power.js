@@ -4,6 +4,7 @@ const Soup = require('@stews/soup');
 
 function BeanPower(...args) {
     args.forEach( a => this.content**=a );
+    return this;
 }
 
 
