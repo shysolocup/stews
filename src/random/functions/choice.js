@@ -19,9 +19,7 @@ function RandomChoice(object=null) {
         object = Soup.from(object);
         let index = Math.floor(Math.random() * (object.length));
         
-        return (object.type == "list") ? 
-            object.get(index) :
-            object.entries[index]
+        return object.get(index);
     }
 
 
