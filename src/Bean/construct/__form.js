@@ -5,6 +5,11 @@ const Bean = require('../index.js');
 
 
 module.exports = function __form(object, joiner) {
+
+    function parse(obj) {
+        return parseFloat(obj.split("").filter( i => !(("1234567890.".split("")).includes(i)) ).join(""))
+    }
+    
     
     // fixes uninitiated class
     if (object instanceof Function) object = new object();
@@ -36,11 +41,6 @@ module.exports = function __form(object, joiner) {
     // defaults to a blank string
     if (!object) {
         this.content = 0;
-    }
-
-
-    function parse(obj) {
-        return parseFloat(obj.split("").filter( i => !(("1234567890.".split("")).includes(i)) ).join(""))
     }
 
 
