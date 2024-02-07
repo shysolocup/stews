@@ -7,5 +7,4 @@ function BeanDecimalPoint() {
 
 
 Bean.newP("decimalPoint", BeanDecimalPoint);
-Bean.newP("decimal", BeanDecimalPoint);
 Bean.newP("decPoint", BeanDecimalPoint);
