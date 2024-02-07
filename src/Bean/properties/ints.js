@@ -6,4 +6,4 @@ function BeanInts() {
 }
 
 
-Noodle.newP("ints", BeanInts);
+Bean.newP("ints", BeanInts);
