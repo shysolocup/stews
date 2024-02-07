@@ -4,6 +4,7 @@ const Soup = require('@stews/soup');
 
 function BeanSub(...args) {
     args.forEach( a => this.content-=a );
+    return this;
 }
 
 
