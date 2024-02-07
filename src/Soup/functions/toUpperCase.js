@@ -1,8 +1,7 @@
 const Soup = require('../index.js');
 
 
-function SoupToUpperCase(/**/) {
-	let args = Array.from(arguments);
+function SoupToUpperCase(...args) {
 	if (args[0] instanceof Array) args = args[0];
 	
 	var stuff = this.copy();
