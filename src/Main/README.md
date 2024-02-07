@@ -39,12 +39,13 @@ npm i paishee/stews
 
 ## Usage
 ```js
-const { Stew, Soup, Noodle, random } = require('stews');
+const { Stew, Soup, Noodle, Bean, random } = require('stews');
 
 
 let array = new Stew(["a", "b", "c"]);                 // list type
 let obj = new Soup({ key1: "val1", key2: "val2" });    // pair type
 let str = new Noodle("abc 123");                       // string stuff
+let int = new Bean(1234);                              // int stuff
 
 
 delete array[1];
@@ -53,6 +54,7 @@ delete array[1];
 console.log(array); // Stew(2) [ 'a', 'c' ]
 console.log(obj); // Soup(2) { key1: 'val1', key2: 'val2' }
 console.log(str); // Noodle(7) "abc 123"
+console.log(int); // Bean(3) 1234
 
 
 console.log(obj.length); // 2
@@ -62,6 +64,11 @@ console.log(obj.values); // [ 'val1', 'val2' ]
 
 console.log(str.wordCount); // 2
 console.log(str.toUpperCase(0)); // Noodle(7) "Abc 123"
+
+
+console.log(int.format({ currency: "$", roundTo: 2 })); // "$1,234.00"
+console.log(int.even); // true
+console.log(int.odd); // false
 
 
 console.log(random.int(1, 5)); // 4
