@@ -2,10 +2,10 @@ const Bean = require('../index.js');
 const Soup = require('@stews/soup');
 
 
-function BeanSub(...args) {
+function BeanSubt(...args) {
     args.forEach( a => this.content-=a );
     return this;
 }
 
 
-Bean.newF("sub", BeanSub);
+Bean.newF("subt", BeanSubt);
