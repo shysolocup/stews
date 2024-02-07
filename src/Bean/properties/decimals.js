@@ -2,7 +2,7 @@ const Bean = require('../index.js');
 
 
 function BeanDecimals() {
-    return (this.ints[0] instanceof Array) ? this.ints.pop(); : [];
+    return (this.ints[0] instanceof Array) ? this.ints.pop() : [];
 }
 
 
