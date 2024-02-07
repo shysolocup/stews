@@ -11,7 +11,7 @@ prox.get = (target, prop) => {
             return target.get(prop);
         }
     }
-    catch() {
+    catch(e) {
         return target[prop];
     }
 }
