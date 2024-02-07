@@ -1,8 +1,7 @@
 const Soup = require('../index.js');
 
 
-function SoupScoop(/**/) {
-	var args = Array.from(arguments);
+function SoupScoop(...args) {
 	var stuff = Soup.from(this);
 
 	if (args[0] instanceof Array) args = args[0];
