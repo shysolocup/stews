@@ -2,7 +2,7 @@ const Bean = require('../index.js');
 
 
 function BeanLength() {
-	return this.content.toString().split("").length;
+	return this.ints.flat().length;
 }
 
 
