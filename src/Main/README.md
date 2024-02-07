@@ -33,6 +33,7 @@ npm i paishee/stews
 - **[Stew:](https://npmjs.com/package/@stews/stew)** built off of [Sets](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set) and [Maps](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map) so they **DON'T** allow duplicate entries
 - **[soup:](https://npmjs.com/package/@stews/soup)** built off of [Arrays](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) and [Objects](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) so they **DO** allow duplicate entries
 - **[Noodle:](https://npmjs.com/package/@stews/noodle)** built off of [Strings](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) and includes a majority of their features
+- **[Bean:](https://npmjs.com/package/@stews/bean)** built off of [Strings](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number) and includes a majority of their features
 - **[random:](https://npmjs.com/package/@stews/random)** a built in random class that works with most types
 
 <br>
