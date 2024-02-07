@@ -6,7 +6,7 @@ function BeanAppend(index, set_to=null) {
 	var stuff;
     stuff = new Soup(Array);
     
-    this.list.forEach( (v, i) => {
+    this.ints.forEach( (v, i) => {
         if (i == index) stuff.push(set_to);
         stuff.push(v);
     });
