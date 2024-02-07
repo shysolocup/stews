@@ -34,3 +34,4 @@ function RandomValueChoice(object=null) {
 
 
 random.newF("chooseVal", RandomValueChoice);
+random.newF("chooseValue", RandomValueChoice);
