@@ -9,5 +9,6 @@ function NoodleIncludes(/**/) {
 }
 
 
+Noodle.newF("includes", NoodleIncludes);
 Noodle.newF("contains", NoodleIncludes);
 Noodle.newF("has", NoodleIncludes);
