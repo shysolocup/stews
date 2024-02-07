@@ -28,7 +28,7 @@ const fs = require('fs');
 
 // main class
 cl.init("Bean", class {
-    constructor(object) {
+    constructor(object, joiner="") {
 
 		// constructs
 		const __form = require('./construct/__form.js');
@@ -37,6 +37,11 @@ cl.init("Bean", class {
 				
 		// formatting construct
 		__form.bind(this)(object, joiner);
+
+
+		Object.defineProperty(this, "joiner", {
+            value: new joiner.constructor(joiner)
+        });
 
 
 		// creates the proxy
