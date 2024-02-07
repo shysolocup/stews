@@ -3,7 +3,7 @@ const Soup = require('@stews/soup');
 
 
 function BeanChug(func) {
-	let stuff = Soup.from(this.copy().ints);
+	let stuff = Soup.from(this.copy().ints.flat());
 	return stuff.chug(func);
 }
 
