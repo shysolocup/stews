@@ -3,7 +3,7 @@ const Soup = require('@stews/soup');
 
 
 function BeanSwig(func) {
-	let stuff = Soup.from(this.ints);
+	let stuff = Soup.from(this.ints.flat());
 	return stuff.swig(func);
 }
 
