@@ -1,9 +1,7 @@
 const Soup = require('../index.js');
 
 
-function SoupIncludesVal(/**/) {
-	let args = Array.from(arguments);
-
+function SoupIncludesVal(...args) {
 	if (args.length == 1 && typeof args[0] != "object") {
 		let value = args[0];
 		return this.values.includes(value);
