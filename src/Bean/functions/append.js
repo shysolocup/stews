@@ -12,7 +12,7 @@ function BeanAppend(index, set_to=null) {
 	        stuff.push(v);
 		});
 		this.ints[1].forEach( (v, i) => {
-	        if (i+(stuff.length) == index) stuff2.push(set_to);
+	        if (i+(this.ints[0].length) == index) stuff2.push(set_to);
 	        stuff2.push(v);
 		});
 		
