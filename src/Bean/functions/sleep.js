@@ -4,7 +4,7 @@ const Bean = require('../index.js');
 
 
 function BeanSleep() {
-  return new Promise(resolve => setTimeout(resolve, this.content*1000);
+  return new Promise(resolve => setTimeout(resolve, this.content*1000));
 }
 
 
