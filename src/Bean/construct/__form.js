@@ -7,7 +7,7 @@ const Bean = require('../index.js');
 module.exports = function __form(object, joiner) {
 
     function parse(obj) {
-        return parseFloat(obj.split("").filter( i => !(("1234567890.".split("")).includes(i)) ).join(""))
+        return parseFloat(obj.split("").filter( i => (("1234567890.".split("")).includes(i)) ).join(""))
     }
     
     
@@ -21,7 +21,7 @@ module.exports = function __form(object, joiner) {
     // if instance is a stew or soup
     // gets content of the stew/soup
     if (object instanceof Stew || object instanceof Soup) {
-        object = parseFloat(object.join(joiner));
+        object = parse(object.join(joiner));
     }
 
 
@@ -47,6 +47,7 @@ module.exports = function __form(object, joiner) {
     // if instance is a string
     // nothing interesting happens
     else if (typeof object == "string") {
+        console.log(object);
         this.content = parse(object);
     }
 
