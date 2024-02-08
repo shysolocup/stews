@@ -2,7 +2,7 @@ const Bean = require('../index.js');
 const Soup = require('@stews/soup');
 
 
-function BeanPullDecimal(value=null) {
+function BeanPullDec(value=null) {
     if ( !(value instanceof Bean) ) value = Bean.from(value);
 
     let stuff = Soup.from( (this.ints[0] instanceof Array) ? this.ints[0] : this.ints );
@@ -19,5 +19,5 @@ function BeanPullDecimal(value=null) {
 }
 
 
-Bean.newF("pullDec", BeanPullDecimal);
-Bean.newF("unshiftDec", BeanPullDecimal);
+Bean.newF("pullDec", BeanPullDec);
+Bean.newF("unshiftDec", BeanPullDec);
