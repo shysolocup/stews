@@ -1,39 +1,45 @@
 const Bean = require('../index.js');
+const Soup = require('@stews/soup');
 
 
 function BeanMerge(...args) {
-    if (this.ints[0] instanceof Array) {
-		this.ints[0].forEach( (v, i) => {
-	        if (i == index) stuff.push(set_to);
-	        stuff.push(v);
-		});
-		this.ints[1].forEach( (v, i) => {
-	        if (i+(this.ints[0].length) == index) stuff2.push(set_to);
-	        stuff2.push(v);
-		});
+	let clone = this.copy();
+	
+	args.forEach( a => {
+
+		if ( !(a instanceof Bean) ) a = Bean.from(a);
 		
-		this.content = parseFloat(`${stuff.join("")}.${stuff2.join("")}`);
-	}
-	else {
-		this.ints.forEach( (v, i) => {
-	        if (i == index) stuff.push(set_to);
-	        stuff.push(v);
-		});
-		
-		this.content = parseFloat(stuff.join(""));
-	}
+		if (clone.ints[0] instanceof Array) {
+			let stuff = Soup.from(clone.ints[0]);
+			let stuff2 = Soup.from(clone.ints[1]);
 
-    let stuff = this.copy();
-    
-    if (args[0] instanceof Array) args = args[0];
+			if (a.ints[0] instanceof Array) {
+				a.ints[0].forEach( v => stuff.push(v));
+				a.ints[1].forEach( v => stuff2.push(v));
+			}
+			else {
+				a.ints.forEach( v => stuff.push(v) );
+			}
+			
+			clone.content = parseFloat(`${stuff.join("")}.${stuff2.join("")}`);
+		}
+		else {
+			let stuff = Soup.from(clone.ints);
+			let stuff2 = Soup.from(Array);
+			
+			if (a.ints[0] instanceof Array) {
+				a.ints[0].forEach( v => stuff.push(v));
+				a.ints[1].forEach( v => stuff2.push(v));
+			}
+			else {
+				a.ints.forEach( v => stuff.push(v) );
+			}
+			
+			clone.content = parseFloat(`${stuff.join("")}.${stuff2.join("")}`);
+		}
+	});
 
-    for (let obj of args) {
-        let thing = new Bean(obj);
-
-        stuff.content = stuff.content.concat(joiner, thing.content);
-    }
-
-    return stuff;
+    return clone;
 }
 
 
