@@ -3,8 +3,8 @@
 <a href="https://www.npmjs.com/package/stews"><img src="https://img.shields.io/npm/v/stews?style=flat&color=red&logo=npm&logoColor=white" alt="version" /></a>
 <a href="https://www.npmjs.com/package/stews"><img src="https://img.shields.io/npm/dt/stews?style=flat&logo=docusign&logoColor=white" alt="downloads" /></a>
 <a href="https://npmjs.com/package/aepl"><img src="https://img.shields.io/badge/powered%20by-aepl-a?color=blue&logo=npm&logoColor=white" alt="powered by aepl" /></a>
-<a href="https://github.com/paishee/stews/issues"><img src="https://img.shields.io/github/issues/paishee/stews" alt="issues" /></a>
-<a href="https://github.com/paishee/stews/wiki"><img src="https://img.shields.io/badge/docs-stews?color=purple&logo=github&logoColor=white" alt="docs" /></a>
+<a href="https://github.com/revameg/stews/issues"><img src="https://img.shields.io/github/issues/revameg/stews" alt="issues" /></a>
+<a href="https://github.com/revameg/stews/wiki"><img src="https://img.shields.io/badge/docs-stews?color=purple&logo=github&logoColor=white" alt="docs" /></a>
 
 **Stews is a [Node.JS](https://nodejs.org/en/) package meant to make storing data easier by mixing parts from common data types.**
   - Fully open source
@@ -20,7 +20,7 @@
 npm i stews
 ```
 ```console
-npm i paishee/stews
+npm i revameg/stews
 ```
 
 <br>
